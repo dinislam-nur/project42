@@ -2,11 +2,12 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.entities.order;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Guest;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 
 import java.sql.Date;
+import java.util.List;
 
 @Builder
 public class Order {
@@ -23,8 +24,9 @@ public class Order {
     private boolean isPayed;
 
     @Getter
-    @Setter
     private Table table;
+
+    private List<Food> foods;
 
     public void paid() {
         isPayed = true;
@@ -34,6 +36,10 @@ public class Order {
         return isPayed;
     }
 
-
+    public double sum() {
+        return foods.stream()
+                .mapToDouble(Food::getPrice)
+                .sum();
+    }
 
 }
