@@ -2,7 +2,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Guest;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,11 +13,13 @@ public interface SessionRepository {
 
     Session findById(int id);
 
-    Optional<Session> findByGuest(Guest guest);
+    Optional<Session> findByGuest(User user);
 
-    Optional<List<Session>> findByTable(Table table);
+    List<Session> findByTable(Table table);
 
-    Optional<List<Session>> findAllOpenedSession();
+    List<Session> findAllOpenedSession();
+
+    Session save(Session session);
 
     Session delete(Session session);
 }

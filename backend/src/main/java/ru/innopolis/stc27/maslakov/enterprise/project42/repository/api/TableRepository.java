@@ -13,9 +13,7 @@ public interface TableRepository {
 
     List<Table> findByStatus(TableStatus status);
 
-    Table update(Table updatedTable);
-
-    Table insert(Table newTable);
+    Table save(Table newTable);
 
     Table delete(Table candidate);
 }

@@ -1,15 +1,14 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.entities.table;
 
-import lombok.Setter;
-import lombok.Value;
-import lombok.experimental.NonFinal;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Value
+@Data
+@AllArgsConstructor
 public class Table {
 
-    int id;
+    private Integer id;
+    private int number;
+    private TableStatus status;
 
-    @Setter
-    @NonFinal
-    TableStatus status;
 }

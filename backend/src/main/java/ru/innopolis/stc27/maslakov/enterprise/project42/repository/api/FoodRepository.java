@@ -15,13 +15,11 @@ public interface FoodRepository {
 
     Optional<Food> findByName(String name);
 
-    Optional<List<Food>> findByCategory(FoodCategory category);
+    List<Food> findByCategory(FoodCategory category);
 
-    Optional<List<Food>> findByOrder(Order order);
+    List<Food> findByOrder(Order order);
 
-    Food update(Food updatedFood);
-
-    Food insert(Food newFood);
+    Food save(Food food);
 
     Food delete(Food candidate);
 }

@@ -1,23 +1,21 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.entities.session;
 
-import lombok.Setter;
-import lombok.Value;
-import lombok.experimental.NonFinal;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Guest;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
-@Value
+@Builder
+@ToString
+@EqualsAndHashCode
 public class Session {
 
-    int id;
+    private Integer id;
+    private SessionStatus status;
+    private final String token;
+    private long timestamp;
+    private Table table;
+    private final User user;
 
-    @NonFinal
-    @Setter
-    SessionStatus status;
-
-    String token;
-    long timestamp;
-
-    Table table;
-    Guest guest;
 }
