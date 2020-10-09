@@ -129,9 +129,8 @@ public class TableRepositoryImpl implements TableRepository {
                 @Cleanup final ResultSet generatedKeys = statement.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     final long generatedId = generatedKeys.getLong("table_id");
-                    result = new Table(generatedId,
-                            table.getNumber(),
-                            table.getStatus());
+                    table.setId(generatedId);
+                    result = table;
                 }
             } else {
                 try (final PreparedStatement statement = connection.prepareStatement(
@@ -165,8 +164,7 @@ public class TableRepositoryImpl implements TableRepository {
                             "WHERE t.table_id = ?;"
                     );
             statement.setLong(1, candidate.getId());
-            final int resultUpdate = statement.executeUpdate();
-            if (resultUpdate == 1) {
+            if (statement.executeUpdate() == 1) {
                 table = candidate;
             }
         } catch (SQLException throwables) {

@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface UserRepository {
 
-    User findById(int id);
+    List<User> findAll();
+
+    User findById(long id);
 
     Optional<User> findByLogin(String login);
 
@@ -16,5 +18,5 @@ public interface UserRepository {
 
     User save(User newUser);
 
-    User delete(User candidate);
+    Optional<User> delete(User candidate);
 }

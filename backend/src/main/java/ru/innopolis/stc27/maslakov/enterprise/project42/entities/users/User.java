@@ -10,7 +10,7 @@ import lombok.experimental.NonFinal;
 @AllArgsConstructor
 public class User {
 
-    private Integer id;
+    private Long id;
     private final String login;
     private String password;
     private int salt;

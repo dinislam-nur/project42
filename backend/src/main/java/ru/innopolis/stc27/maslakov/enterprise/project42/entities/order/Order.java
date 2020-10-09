@@ -1,9 +1,6 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.entities.order;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
@@ -12,6 +9,7 @@ import java.sql.Date;
 import java.util.List;
 
 @Builder
+@AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 public class Order {
@@ -47,3 +45,5 @@ public class Order {
     }
 
 }
+
+
