@@ -13,7 +13,19 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <description>Database migrations</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <build>
+        <resources>
+            <resource>
+                <directory>sql</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -23,6 +35,22 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>7.0.1</version>
+                <configuration>
+                    <configFiles>${pom.basedir}/conf/flyway.conf</configFiles>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.2.16.jre7</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

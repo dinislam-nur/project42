@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class Table {
 
-    private Integer id;
+    private Long id;
     private int number;
     private TableStatus status;
 
