@@ -1,39 +1,74 @@
 import React, {useState} from "react";
 import {
-    BrowserRouter as Router,
+
     Switch,
     Route,
-    Link,
     useParams
 } from "react-router-dom";
 import HomePage from "./components/pages/home";
 import LoginPage from "./components/pages/login";
 import RegistrationPage from "./components/pages/registration";
-import Menu from "./components/menu/menu";
+import Menu from "./components/pages/menu";
+import {dishes} from "./data/data";
+import {connect, useDispatch} from "react-redux";
+import {loginTokenAction, setTableAction} from "./store/actions/app";
+import {Redirect} from "react-router-dom";
 
-const Routes = () => {
+const Routes = (props) => {
 
-    return (
+    const tokenCheck = () => {
+        if (!props.token) {
+            const token = localStorage.getItem("token");
+            if (token) {
+                props.loginToken(token);
+            }
+        }
+        return props.token === "1234";
+    }
+
+    const privateRoute = (
         <Switch>
-            <Route path={'/tables/:id'}>
-                <HomeWrapper/>
+            <Route exact path={'/menu'}>
+                <Menu dishes={dishes}/>
             </Route>
+            <Redirect to={'/menu'}/>
+        </Switch>
+    );
+
+    const publicRoute = (
+        <Switch>
+
             <Route exact path={'/login'}>
                 <LoginPage/>
             </Route>
             <Route exact path={'/registration'}>
                 <RegistrationPage/>
             </Route>
-            <Route exact path={'/menu'}>
-                <Menu/>
-            </Route>
+            <Redirect to={'/login'}/>
         </Switch>
-    )
+    );
+    return (
+        <Switch>
+            <Route path={'/tables/:id'}>
+                <HomeWrapper/>
+            </Route>
+            {tokenCheck() ? privateRoute : publicRoute}
+        </Switch>
+    );
 }
 
 const HomeWrapper = () => {
     const {id} = useParams();
-    return <HomePage table={id}/>
+    const dispatch = useDispatch();
+    dispatch(setTableAction(id));
+    return <HomePage/>
 }
 
-export default Routes;
+
+const mapStateToProps = state => ({token: state.app.token, table: state.app.table});
+
+const mapDispatchToProps = dispatch => ({
+    loginToken: (token) => dispatch(loginTokenAction(token))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Routes);

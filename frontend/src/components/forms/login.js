@@ -11,7 +11,7 @@ import Button from "reactstrap/es/Button";
 
 const LoginForm = (props) => {
     const history = useHistory();
-    const handleOnClick = useCallback(() => history.push('/registration'), [history]);
+    const handleOnRegistrationClick = useCallback(() => history.push('/registration'), [history]);
     return (
         <Form>
             <FormGroup>
@@ -24,8 +24,8 @@ const LoginForm = (props) => {
                        onChange={props.onPasswordChange}/>
             </FormGroup>
             <ButtonGroup>
-                <Button color={"primary"}>Войти</Button>
-                <Button onClick={handleOnClick}>Регистрация</Button>
+                <Button color={"primary"} onClick={props.onLogin}>Войти</Button>
+                <Button onClick={handleOnRegistrationClick}>Регистрация</Button>
             </ButtonGroup>
         </Form>
     )

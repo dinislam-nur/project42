@@ -20,9 +20,9 @@ const Quantity = (props) => {
     };
     return (
         <div className={'quantity'}>
-            <ButtonGroup>
+            <ButtonGroup className={'quantity'}>
                 <Button outline color={'secondary'} onClick={decrease} size={'sm'}>-</Button>
-                <text className={'quantity'}>{quantity}</text>
+                <b className={'quantity'}>{quantity}</b>
                 <Button outline color={'secondary'} onClick={increase} size={'sm'}>+</Button>
             </ButtonGroup>
         </div>

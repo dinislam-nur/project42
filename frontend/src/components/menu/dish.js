@@ -8,7 +8,6 @@ import CardText from "reactstrap/es/CardText";
 import Button from "reactstrap/es/Button";
 import Quantity from "../util/quantity";
 
-
 const Dish = (props) => {
 
     const [quantity, setQuantity] = useState(1);

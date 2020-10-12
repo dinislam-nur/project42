@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from "react";
+import "./registration.css";
 import Form from "reactstrap/es/Form";
 import FormGroup from "reactstrap/es/FormGroup";
 import Label from "reactstrap/es/Label";
@@ -42,7 +43,7 @@ const RegistrationForm = (props) => {
                 <Button onClick={handleOnClick}>Отмена</Button>
             </ButtonGroup>
             {state.isPasswordEquals ? null :
-                <Alert color="danger">
+                <Alert color="danger" className={"registration_alert"}>
                     Пароли не совпадают
                 </Alert>
             }
