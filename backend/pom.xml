@@ -67,6 +67,11 @@
             <version>42.2.16.jre7</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>org.flywaydb.enterprise</groupId>-->
 <!--            <artifactId>flyway-core</artifactId>-->

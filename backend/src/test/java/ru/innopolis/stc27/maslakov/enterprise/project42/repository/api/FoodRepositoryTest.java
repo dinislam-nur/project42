@@ -70,7 +70,7 @@ class FoodRepositoryTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     void findByNameTest() {
         final Food compot = foodRepository.findByName("compot").orElse(null);
         final Food borsh = foodRepository.findByName("borsh").orElse(null);
