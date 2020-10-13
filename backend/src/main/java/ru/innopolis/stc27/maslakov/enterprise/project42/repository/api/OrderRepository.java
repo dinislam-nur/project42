@@ -20,15 +20,15 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     List<Order> findByUser(User user);
 
-//    List<Order> findByUserAndPayedFalse(User user);
+    List<Order> findByUserAndPayedFalse(User user);
 
     List<Order> findByTable(Table table);
 
-//    List<Order> findByTableAndPayedFalse(Table table);
+    List<Order> findByTableAndPayedFalse(Table table);
 
     List<Order> findByStatus(OrderStatus status);
 
-//    List<Order> findOrdersByPayedFalse();
+    List<Order> findOrdersByPayedFalse();
 
     Order save(Order order);
 

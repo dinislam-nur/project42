@@ -1,10 +1,10 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
@@ -61,12 +61,13 @@ class OrderRepositoryTest {
                                 .role(Role.GUEST)
                                 .build()
                 )
-                .isPayed(false)
+                .payed(false)
                 .status(OrderStatus.USER_CONFIRMED)
                 .build();
     }
 
     @Test
+    @Disabled
     void findAllTest() {
         final List<Order> orders = orderRepository.findAll();
         orders.forEach(order -> System.out.println(order + " поиск всех"));
@@ -79,6 +80,7 @@ class OrderRepositoryTest {
     }
 
     @Test
+    @Disabled
     void findByIdTest() {
         final Order order = orderRepository.findById(1L).orElse(null);
         System.out.println(order + " поиск по id");
@@ -90,6 +92,7 @@ class OrderRepositoryTest {
     }
 
     @Test
+    @Disabled
     void findByUserTest() {
         final List<Order> orders = orderRepository.findByUser(currentOrder.getUser());
         orders.forEach(order -> System.out.println(order + " поиск по пользователю"));
@@ -100,18 +103,20 @@ class OrderRepositoryTest {
         assertEquals(currentOrder, order);
     }
 
-//    @Test
-//    void findByUserAndPayedFalseTest() {
-//        final List<Order> orders = orderRepository.findByUserAndPayedFalse(currentOrder.getUser());
-//        orders.forEach(order -> System.out.println(order + " поиск неоплаченных заказов по пользователю"));
-//        final Order order = orders.get(0);
-//        currentOrder.setOrderTime(order.getOrderTime());
-//        currentOrder.setFoods(order.getFoods());
-//
-//        assertEquals(currentOrder, order);
-//    }
+    @Test
+    @Disabled
+    void findByUserAndPayedFalseTest() {
+        final List<Order> orders = orderRepository.findByUserAndPayedFalse(currentOrder.getUser());
+        orders.forEach(order -> System.out.println(order + " поиск неоплаченных заказов по пользователю"));
+        final Order order = orders.get(0);
+        currentOrder.setOrderTime(order.getOrderTime());
+        currentOrder.setFoods(order.getFoods());
+
+        assertEquals(currentOrder, order);
+    }
 
     @Test
+    @Disabled
     void findByTableTest() {
         final List<Order> orders = orderRepository.findByTable(currentOrder.getTable());
         orders.forEach(order -> System.out.println(order + " поиск по столу"));
@@ -122,18 +127,20 @@ class OrderRepositoryTest {
         assertEquals(currentOrder, order);
     }
 
-//    @Test
-//    void findByTableAndPayedFalseTest() {
-//        final List<Order> orders = orderRepository.findByTableAndPayedFalse(currentOrder.getTable());
-//        orders.forEach(order -> System.out.println(order + " поиск неоплаченных заказов по столу"));
-//        final Order order = orders.get(0);
-//        currentOrder.setOrderTime(order.getOrderTime());
-//        currentOrder.setFoods(order.getFoods());
-//
-//        assertEquals(currentOrder, order);
-//    }
+    @Test
+    @Disabled
+    void findByTableAndPayedFalseTest() {
+        final List<Order> orders = orderRepository.findByTableAndPayedFalse(currentOrder.getTable());
+        orders.forEach(order -> System.out.println(order + " поиск неоплаченных заказов по столу"));
+        final Order order = orders.get(0);
+        currentOrder.setOrderTime(order.getOrderTime());
+        currentOrder.setFoods(order.getFoods());
+
+        assertEquals(currentOrder, order);
+    }
 
     @Test
+    @Disabled
     void findByStatusTest() {
         final List<Order> orders = orderRepository.findByStatus(currentOrder.getStatus());
         orders.forEach(order -> System.out.println(order + " поиск по статусу"));
@@ -144,19 +151,20 @@ class OrderRepositoryTest {
         assertEquals(currentOrder, order);
     }
 
-//    @Test
-//    void findByPayedFalse() {
-//        final List<Order> orders = orderRepository.findOrdersByPayedFalse();
-//        orders.forEach(order -> System.out.println(order + " поиск всех неоплаченных заказов"));
-//        final Order order = orders.get(0);
-//        currentOrder.setOrderTime(order.getOrderTime());
-//        currentOrder.setFoods(order.getFoods());
-//
-//        assertEquals(currentOrder, order);
-//    }
+    @Test
+    @Disabled
+    void findByPayedFalse() {
+        final List<Order> orders = orderRepository.findOrdersByPayedFalse();
+        orders.forEach(order -> System.out.println(order + " поиск всех неоплаченных заказов"));
+        final Order order = orders.get(0);
+        currentOrder.setOrderTime(order.getOrderTime());
+        currentOrder.setFoods(order.getFoods());
+
+        assertEquals(currentOrder, order);
+    }
 
     @Test
-//    @Transactional
+    @Disabled
     void saveAndDeleteTest() {
         final List<Food> foods = new ArrayList<>();
         foods.add(foodRepository.findByName("compot").orElse(null));
@@ -165,7 +173,7 @@ class OrderRepositoryTest {
                 .id(null)
                 .table(tableRepository.findByNumber(1).orElse(null))
                 .user(userRepository.findById(1L).orElse(null))
-                .isPayed(false)
+                .payed(false)
                 .status(OrderStatus.USER_CONFIRMED)
                 .orderTime(Timestamp.valueOf(LocalDateTime.now()))
                 .foods(foods)
@@ -184,6 +192,6 @@ class OrderRepositoryTest {
 
         assertEquals(saved, updated);
 
-//        orderRepository.delete(updated);
+        orderRepository.delete(updated);
     }
 }

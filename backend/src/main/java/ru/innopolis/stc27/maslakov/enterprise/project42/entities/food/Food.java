@@ -5,6 +5,7 @@ import lombok.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -34,19 +35,6 @@ public class Food {
     @Convert(converter = FoodCategoryAttributeConverter.class)
     @Column(name = "food_category_id")
     private FoodCategory foodCategory;
-
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "foods2order",
-//            joinColumns = {
-//                    @JoinColumn(name = "food_id")
-//            },
-//            inverseJoinColumns = {
-//                    @JoinColumn(name = "order_id")
-//            }
-//    )
-//    @ToString.Exclude
-//    private List<Order> orders;
 }
 
 

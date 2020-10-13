@@ -8,6 +8,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 
 @Data
@@ -34,7 +35,7 @@ public class Order {
     private User user;
 
     @Column(name = "is_payed", nullable = false)
-    private boolean isPayed;
+    private boolean payed;
 
     @ManyToOne
     @JoinColumn(name = "table_id")
@@ -44,7 +45,7 @@ public class Order {
     @Column(name = "order_status_id", nullable = false)
     private OrderStatus status;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "foods2order",
             joinColumns = {
@@ -56,13 +57,30 @@ public class Order {
     )
     private List<Food> foods;
 
-//    public void paid() {
-//        isPayed = true;
-//    }
-//
-//    public boolean isPayed() {
-//        return isPayed;
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (payed != order.payed) return false;
+        if (!Objects.equals(id, order.id)) return false;
+        if (!Objects.equals(orderTime, order.orderTime)) return false;
+        if (!Objects.equals(user, order.user)) return false;
+        if (!Objects.equals(table, order.table)) return false;
+        if (status != order.status) return false;
+        if (foods != null) {
+            boolean checker = true;
+            if (order.foods != null) {
+                for (int i = 0; i < foods.size(); i++) {
+                    checker &= foods.get(i).equals(order.foods.get(i));
+                }
+                return checker;
+            }
+        }
+        return false;
+    }
 
     public double sum() {
         return foods.stream()
