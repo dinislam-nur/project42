@@ -8,17 +8,22 @@ const LoginForm = ({onLogin, onLoginChange, onPasswordChange}) => {
 
     const lockClickHandler = e => setState({isPasswordShow: !state.isPasswordShow});
 
-    const lock = <Button icon={state.isPasswordShow ? "unlock" : "lock"} onClick={lockClickHandler}/>;
+    const lock = <Button icon={state.isPasswordShow ? "unlock" : "lock"} onMouseDown={lockClickHandler}
+                         onMouseUp={lockClickHandler} minimal={true} tabIndex={-1}/>;
 
     return (
-        <FormGroup>
-            <InputGroup id={"login"} name={"Логин"} leftIcon={"user"} onChange={onLoginChange}/>
-            <InputGroup id={"password"} name={"Пароль"} type={state.isPasswordShow ? "text" : "password"}
-                        leftElement={lock} onChange={onPasswordChange}/>
+        <div className={"login-form"}>
+            <FormGroup label={"Логин"}>
+                <InputGroup id={"login"} title={"Логин"} leftIcon={"user"} onChange={onLoginChange}/>
+            </FormGroup>
+            <FormGroup label={"Пароль"}>
+                <InputGroup id={"password"} title={"Пароль"} type={state.isPasswordShow ? "text" : "password"}
+                            leftElement={lock} onChange={onPasswordChange}/>
+            </FormGroup>
             <ButtonGroup>
-                <Button id={"login"} placeholder={"Войти"} onClick={onLogin} intent={"success"}/>
+                <Button id={"login"} text={"Войти"} onClick={onLogin} intent={"success"} />
             </ButtonGroup>
-        </FormGroup>
+        </div>
     )
 }
 

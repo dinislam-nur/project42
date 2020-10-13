@@ -1,9 +1,11 @@
 import React from "react";
 import LoginForm from "../../forms/login";
+import {connect} from "react-redux";
+import {loginAction} from "../../../store/actions/app";
 
 const initState = {
-    username:"",
-    password:""
+    username: "",
+    password: ""
 }
 
 class LoginPage extends React.Component {
@@ -16,17 +18,23 @@ class LoginPage extends React.Component {
 
     passwordChangeHandler = e => this.setState({...this.state, password: e.target.value});
 
-    loginHandler = () => console.log(this.state);
+    onLoginSubmit = () => this.props.login(this.state.username, this.state.password)
 
     render() {
         return (
-            <div>
+            <div className={"login-page"}>
                 <LoginForm onLoginChange={this.loginChangeHandler} onPasswordChange={this.passwordChangeHandler}
-                           onLogin={this.loginHandler}/>
+                           onLogin={this.onLoginSubmit} type={"submit"}/>
             </div>
         )
     }
 }
 
 
-export default LoginPage;
+const mapDispatchToProps = dispatch => {
+    return {
+        login: (login, password) => dispatch(loginAction(login, password))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(LoginPage);
