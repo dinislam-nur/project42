@@ -1,16 +1,19 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface TableRepository {
+@Repository
+public interface TableRepository extends CrudRepository<Table, Long> {
 
     List<Table> findAll();
 
-    Table findById(long id);
+    Optional<Table> findById(Long id);
 
     Optional<Table> findByNumber(int number);
 
@@ -18,5 +21,5 @@ public interface TableRepository {
 
     Table save(Table newTable);
 
-    Table delete(Table candidate);
+    void delete(Table candidate);
 }

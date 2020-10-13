@@ -1,9 +1,9 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.entities.order;
 
 public enum OrderStatus {
-    PREPARE,
+    COLLECT,
     USER_CONFIRMED,
     STAFF_CONFIRMED,
-    PROGRESS,
+    PREPARING,
     DONE
 }
