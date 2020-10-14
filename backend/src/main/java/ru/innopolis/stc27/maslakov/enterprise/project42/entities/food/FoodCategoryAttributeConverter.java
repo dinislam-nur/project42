@@ -19,7 +19,7 @@ public class FoodCategoryAttributeConverter implements AttributeConverter<FoodCa
             case SOMETHING_ELSE:
                 return 3;
             default:
-                throw new IllegalArgumentException("Нет соответсвующего значения для категории еды: " + category);
+                throw new IllegalArgumentException("Нет соответствующего значения для категории еды: " + category);
         }
     }
 
@@ -36,7 +36,7 @@ public class FoodCategoryAttributeConverter implements AttributeConverter<FoodCa
             case 3:
                 return FoodCategory.SOMETHING_ELSE;
             default:
-                throw new IllegalArgumentException("Нет соответсвующей категории еды для значения: " + dbInteger);
+                throw new IllegalArgumentException("Нет соответствующей категории еды для значения: " + dbInteger);
         }
     }
 }

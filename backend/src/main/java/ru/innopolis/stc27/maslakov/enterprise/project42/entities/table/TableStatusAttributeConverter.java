@@ -16,7 +16,7 @@ public class TableStatusAttributeConverter implements AttributeConverter<TableSt
             case NOT_RESERVED:
                 return 2;
             default:
-                throw new IllegalArgumentException("Нет соответсвующего значения для статуса");
+                throw new IllegalArgumentException("Нет соответствующего значения для статуса: " + status);
         }
     }
 
@@ -31,7 +31,7 @@ public class TableStatusAttributeConverter implements AttributeConverter<TableSt
             case 2:
                 return TableStatus.NOT_RESERVED;
             default:
-                throw new IllegalArgumentException("Нет соответсвующего статуса для значения");
+                throw new IllegalArgumentException("Нет соответствующего статуса для значения: " + dbInteger);
         }
     }
 }

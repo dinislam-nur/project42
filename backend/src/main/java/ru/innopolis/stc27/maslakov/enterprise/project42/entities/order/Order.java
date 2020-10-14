@@ -57,6 +57,11 @@ public class Order {
     )
     private List<Food> foods;
 
+    @PrePersist
+    public void createdAt() {
+        this.orderTime = new Timestamp(System.currentTimeMillis());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

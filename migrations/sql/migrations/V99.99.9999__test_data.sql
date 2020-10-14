@@ -8,11 +8,13 @@ INSERT INTO tables (number, table_status_id)
 VALUES (1, 2);
 
 INSERT INTO user_roles (user_role_id, role_name)
-VALUES (1, 'STAFF'),
-       (2, 'GUEST');
+VALUES (1, 'CHIEF'),
+       (2, 'WAITER'),
+       (3, 'ADMIN'),
+       (4, 'GUEST');
 
 INSERT INTO users (login, password, salt, user_role_id)
-VALUES ('admin', 'admin', 123, 2);
+VALUES ('user', 'user', 123, 4);
 
 INSERT INTO food_categories (food_category_id, category_name)
 VALUES (1, 'DRINK'),
@@ -24,15 +26,22 @@ VALUES ('compot', 1.0, 'test.ru', 1),
        ('borsh', 2.0, 'test.ru', 2);
 
 INSERT INTO order_statuses (order_status_id, order_status_name)
-VALUES (1, 'COLLECT'),
-       (2, 'USER_CONFIRMED'),
-       (3, 'STAFF_CONFIRMED'),
-       (4, 'PREPARING'),
-       (5, 'DONE');
+VALUES (1, 'USER_CONFIRMED'),
+       (2, 'CANCELED'),
+       (3, 'PREPARING'),
+       (4, 'DONE'),
+       (5, 'DELIVERED');
 
 INSERT INTO orders (order_time, user_id, is_payed, table_id, order_status_id)
-VALUES (current_timestamp, 1, false, 1, 2);
+VALUES (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 1);
 
 INSERT INTO foods2order (order_id, food_id)
 VALUES (1, 1),
        (1, 2);
+
+INSERT INTO session_statuses (session_status_id, session_status_name)
+VALUES (1, 'OPENED'),
+       (2, 'CLOSED');
+
+INSERT INTO sessions (session_status_id, token, timeout, table_id, user_id)
+VALUES (1, 'some_token', to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, 1);

@@ -1,12 +1,14 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
-import org.junit.jupiter.api.Disabled;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
-import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
 
 import java.util.List;
 
@@ -15,23 +17,48 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserRepositoryTest {
 
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final SessionRepository sessionRepository;
+    private final Flyway flyway;
+
+    private User answer;
+
     @Autowired
-    private UserRepository userRepository;
+    UserRepositoryTest(UserRepository userRepository,
+                       OrderRepository orderRepository,
+                       SessionRepository sessionRepository,
+                       Flyway flyway) {
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
+        this.sessionRepository = sessionRepository;
+        this.flyway = flyway;
+    }
 
-    @Test
-    @Disabled
-    void findAllTest() {
-        final User answer = new User(1L, "admin", "admin", 1, Role.GUEST);
-        final List<User> users = userRepository.findAll();
-        users.forEach(user -> System.out.println(user + " - поиск всех"));
-
-        assertEquals(answer, users.get(0));
+    @BeforeEach
+    void setUp() {
+        flyway.clean();
+        flyway.migrate();
+        answer = User.builder()
+                .id(1L)
+                .login("user")
+                .password("user")
+                .salt(123)
+                .role(Role.GUEST)
+                .build();
     }
 
     @Test
-    @Disabled
-    void findById() {
-        final User answer = new User(1L, "admin", "admin", 1, Role.GUEST);
+    void findAllTest() {
+        final Iterable<User> users = userRepository.findAll();
+        users.forEach(user -> System.out.println(user + " - поиск всех"));
+        final User result = users.iterator().next();
+
+        assertEquals(answer, result);
+    }
+
+    @Test
+    void findByIdTest() {
         final User user = userRepository.findById(answer.getId()).orElse(null);
         System.out.println(user + " - поиск по id");
 
@@ -39,9 +66,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    @Disabled
-    void findByLogin() {
-        final User answer = new User(1L, "admin", "admin", 1, Role.GUEST);
+    void findByLoginTest() {
         final User user = userRepository.findByLogin(answer.getLogin()).orElse(null);
         System.out.println(user + " - поиск по логину");
 
@@ -49,34 +74,39 @@ class UserRepositoryTest {
     }
 
     @Test
-    @Disabled
-    void findByRole() {
-        final User answer = new User(1L, "admin", "admin", 1, Role.GUEST);
+    void findByRoleTest() {
         final List<User> users = userRepository.findByRole(Role.GUEST);
         users.forEach(user -> System.out.println(user + " - поиск по роли"));
 
         assertEquals(answer, users.get(0));
-
-        assertEquals(0, userRepository.findByRole(Role.STAFF).size());
     }
 
     @Test
-    @Disabled
-    void save() {
-        final User answer = new User(null, "user", "user", 2, Role.GUEST);
-        final User savedUser = userRepository.save(answer);
-        answer.setId(savedUser.getId());
-        System.out.println(savedUser + " - добавлен пользователь");
+    void insertTest() {
+        final User admin = new User(null, "admin", "admin", 456, Role.ADMIN);
+        final User saved = userRepository.save(admin);
+        admin.setId(saved.getId());
+        System.out.println(saved + " - запись сохранена");
 
-        assertEquals(answer, savedUser);
+        assertEquals(admin, saved);
+    }
 
-        savedUser.setRole(Role.STAFF);
-        final User updatedUser = userRepository.save(savedUser);
-        answer.setRole(Role.STAFF);
-        System.out.println(savedUser + " - пользователь обновлен");
+    @Test
+    void updateTest() {
+        answer.setRole(Role.WAITER);
+        final User updated = userRepository.save(answer);
+        System.out.println(updated + " - запись обновлена");
 
-        assertEquals(answer, updatedUser);
+        assertEquals(answer, updated);
+    }
 
-        userRepository.delete(updatedUser);
+    @Test
+    void deleteTest() {
+        orderRepository.delete(Order.builder().id(1L).build());
+        sessionRepository.delete(Session.builder().id(1L).build());
+        userRepository.delete(answer);
+        System.out.println(answer + " - запись удалена");
+
+        assertNull(userRepository.findById(answer.getId()).orElse(null));
     }
 }
