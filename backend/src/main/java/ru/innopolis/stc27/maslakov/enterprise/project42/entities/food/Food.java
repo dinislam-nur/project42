@@ -2,11 +2,8 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.entities.food;
 
 
 import lombok.*;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.List;
 
 
 @Data

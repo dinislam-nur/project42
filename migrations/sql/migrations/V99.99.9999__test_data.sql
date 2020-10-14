@@ -36,3 +36,10 @@ VALUES (current_timestamp, 1, false, 1, 2);
 INSERT INTO foods2order (order_id, food_id)
 VALUES (1, 1),
        (1, 2);
+
+INSERT INTO session_statuses (session_status_id, session_status_name)
+VALUES (1, 'OPENED'),
+       (2, 'CLOSED');
+
+INSERT INTO sessions (session_status_id, token, timeout, table_id, user_id)
+VALUES (1, 'some_token', current_timestamp, 1, 1);
