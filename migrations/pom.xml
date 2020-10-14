@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>project42</artifactId>
         <groupId>ru.innopolis.stc27.maslakov.enterprise</groupId>
@@ -10,10 +11,22 @@
     </parent>
     <artifactId>migrations</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-    <modelVersion>4.0.0</modelVersion>
+
+    <description>Database migrations</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>sql</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -23,6 +36,22 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>7.0.1</version>
+                <configuration>
+                    <configFiles>${pom.basedir}/conf/flyway.conf</configFiles>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.2.16.jre7</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
