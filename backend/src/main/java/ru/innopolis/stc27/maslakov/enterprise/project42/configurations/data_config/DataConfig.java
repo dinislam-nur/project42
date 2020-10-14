@@ -2,39 +2,30 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.configurations.data_con
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
 @Configuration
+@PropertySource("classpath:connection.properties")
 public class DataConfig {
 
-    @Value("${spring.datasource.url}")
-    private String url;
-    @Value("${spring.datasource.data-username}")
-    private String username;
-    @Value("${spring.datasource.data-password}")
-    private String password;
-    @Value("${spring.datasource.driver-class-name}")
-    private String driver;
-
     @Bean
-    public DataSource dataSource() {
-        final DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName(driver);
-        dataSourceBuilder.url(url);
-        dataSourceBuilder.username(username);
-        dataSourceBuilder.password(password);
-        return dataSourceBuilder.build();
+    public DataSource dataSource(@Value("${db.url}") String url,
+                                 @Value("${db.username}") String username,
+                                 @Value("${db.password}") String password) {
+        return new DriverManagerDataSource(url, username, password);
     }
 
+
     @Bean
-    public Flyway flyway() {
+    public Flyway flyway(DataSource dataSource) {
         return Flyway.configure()
                 .cleanOnValidationError(true)
-                .dataSource(dataSource())
+                .dataSource(dataSource)
                 .locations("classpath:/migrations")
                 .load();
     }
