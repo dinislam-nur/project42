@@ -6,6 +6,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.concurrent.TimeUnit;
 
 @Data
 @Entity
@@ -38,5 +39,11 @@ public class Session {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    public void willBeClosedAt() {
+        final long day = TimeUnit.DAYS.toMillis(1);
+        timeout = new Timestamp(System.currentTimeMillis() + day);
+    }
 
 }

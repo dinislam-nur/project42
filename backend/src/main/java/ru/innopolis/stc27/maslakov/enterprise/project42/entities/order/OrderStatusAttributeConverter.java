@@ -12,15 +12,15 @@ public class OrderStatusAttributeConverter implements AttributeConverter<OrderSt
             return null;
         }
         switch (status) {
-            case COLLECT:
-                return 1;
             case USER_CONFIRMED:
+                return 1;
+            case CANCELLED:
                 return 2;
-            case STAFF_CONFIRMED:
-                return 3;
             case PREPARING:
-                return 4;
+                return 3;
             case DONE:
+                return 4;
+            case DELIVERED:
                 return 5;
             default:
                 throw new IllegalArgumentException("Нет соответствующего значения для статуса заказа: " + status);
@@ -34,15 +34,15 @@ public class OrderStatusAttributeConverter implements AttributeConverter<OrderSt
         }
         switch (dbInteger) {
             case 1:
-                return OrderStatus.COLLECT;
-            case 2:
                 return OrderStatus.USER_CONFIRMED;
+            case 2:
+                return OrderStatus.CANCELLED;
             case 3:
-                return OrderStatus.STAFF_CONFIRMED;
-            case 4:
                 return OrderStatus.PREPARING;
-            case 5:
+            case 4:
                 return OrderStatus.DONE;
+            case 5:
+                return OrderStatus.DELIVERED;
             default:
                 throw new IllegalArgumentException("Нет соответствующего статуса заказа для значения: " + dbInteger);
         }

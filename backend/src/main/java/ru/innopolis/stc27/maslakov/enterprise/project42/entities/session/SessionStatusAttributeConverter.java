@@ -17,7 +17,7 @@ public class SessionStatusAttributeConverter implements AttributeConverter<Sessi
             case CLOSED:
                 return 2;
             default:
-                throw new IllegalArgumentException("Нет соответствующего значения для статуса: " + sessionStatus);
+                throw new IllegalArgumentException("Нет соответствующего значения для статуса сессии: " + sessionStatus);
         }
     }
 
@@ -32,7 +32,7 @@ public class SessionStatusAttributeConverter implements AttributeConverter<Sessi
             case 2:
                 return SessionStatus.CLOSED;
             default:
-                throw new IllegalArgumentException("Нет соответствующего статуса для значения: " + dbInteger);
+                throw new IllegalArgumentException("Нет соответствующего статуса сессии для значения: " + dbInteger);
         }
     }
 }

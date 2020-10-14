@@ -1,5 +1,6 @@
-package ru.innopolis.stc27.maslakov.enterprise.project42.config.data_config;
+package ru.innopolis.stc27.maslakov.enterprise.project42.configurations.data_config;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-public class JdbcConfig {
+public class DataConfig {
 
     @Value("${spring.datasource.url}")
     private String url;
@@ -20,12 +21,21 @@ public class JdbcConfig {
     private String driver;
 
     @Bean
-    public DataSource getDataSource() {
+    public DataSource dataSource() {
         final DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName(driver);
         dataSourceBuilder.url(url);
         dataSourceBuilder.username(username);
         dataSourceBuilder.password(password);
         return dataSourceBuilder.build();
+    }
+
+    @Bean
+    public Flyway flyway() {
+        return Flyway.configure()
+                .cleanOnValidationError(true)
+                .dataSource(dataSource())
+                .locations("classpath:/migrations")
+                .load();
     }
 }

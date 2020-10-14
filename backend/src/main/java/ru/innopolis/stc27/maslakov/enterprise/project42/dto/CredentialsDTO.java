@@ -4,6 +4,7 @@ import lombok.Value;
 
 @Value
 public class CredentialsDTO {
+
     String login;
 
     String password;
