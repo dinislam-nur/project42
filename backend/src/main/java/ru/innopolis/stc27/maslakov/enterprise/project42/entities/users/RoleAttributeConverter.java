@@ -12,13 +12,13 @@ public class RoleAttributeConverter implements AttributeConverter<Role, Integer>
             return null;
         }
         switch (role) {
-            case CHIEF:
+            case ROLE_CHIEF:
                 return 1;
-            case WAITER:
+            case ROLE_WAITER:
                 return 2;
-            case ADMIN:
+            case ROLE_ADMIN:
                 return 3;
-            case GUEST:
+            case ROLE_GUEST:
                 return 4;
             default:
                 throw new IllegalArgumentException("Нет соответствующего значения для роли: " + role);
@@ -32,13 +32,13 @@ public class RoleAttributeConverter implements AttributeConverter<Role, Integer>
         }
         switch (dbInteger) {
             case 1:
-                return Role.CHIEF;
+                return Role.ROLE_CHIEF;
             case 2:
-                return Role.WAITER;
+                return Role.ROLE_WAITER;
             case 3:
-                return Role.ADMIN;
+                return Role.ROLE_ADMIN;
             case 4:
-                return Role.GUEST;
+                return Role.ROLE_GUEST;
             default:
                 throw new IllegalArgumentException("Нет соответствующей роли для значения: " + dbInteger);
         }

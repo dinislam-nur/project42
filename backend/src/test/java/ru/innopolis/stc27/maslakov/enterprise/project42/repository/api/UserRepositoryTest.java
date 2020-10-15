@@ -44,7 +44,7 @@ class UserRepositoryTest {
                 .login("user")
                 .password("user")
                 .salt(123)
-                .role(Role.GUEST)
+                .role(Role.ROLE_GUEST)
                 .build();
     }
 
@@ -75,7 +75,7 @@ class UserRepositoryTest {
 
     @Test
     void findByRoleTest() {
-        final List<User> users = userRepository.findByRole(Role.GUEST);
+        final List<User> users = userRepository.findByRole(Role.ROLE_GUEST);
         users.forEach(user -> System.out.println(user + " - поиск по роли"));
 
         assertEquals(answer, users.get(0));
@@ -83,7 +83,7 @@ class UserRepositoryTest {
 
     @Test
     void insertTest() {
-        final User admin = new User(null, "admin", "admin", 456, Role.ADMIN);
+        final User admin = new User(null, "admin", "admin", 456, Role.ROLE_ADMIN);
         final User saved = userRepository.save(admin);
         admin.setId(saved.getId());
         System.out.println(saved + " - запись сохранена");
@@ -93,7 +93,7 @@ class UserRepositoryTest {
 
     @Test
     void updateTest() {
-        answer.setRole(Role.WAITER);
+        answer.setRole(Role.ROLE_WAITER);
         final User updated = userRepository.save(answer);
         System.out.println(updated + " - запись обновлена");
 
