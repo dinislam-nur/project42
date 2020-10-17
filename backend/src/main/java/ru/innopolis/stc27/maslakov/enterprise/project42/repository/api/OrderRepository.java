@@ -8,6 +8,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
@@ -23,4 +24,6 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
     List<Order> findByStatus(OrderStatus status);
 
     List<Order> findOrdersByPayedFalse();
+
+    Set<Order> findOrdersByStatusBetween(OrderStatus from, OrderStatus to);
 }

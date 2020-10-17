@@ -8,13 +8,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.innopolis.stc27.maslakov.enterprise.project42.services.RegisterService;
+import ru.innopolis.stc27.maslakov.enterprise.project42.services.LoginService;
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final RegisterService registerService;
+    private final LoginService loginService;
 
     private final BCryptPasswordEncoder encoder;
 
@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(registerService)
+        auth.userDetailsService(loginService)
                 .passwordEncoder(encoder);
     }
 

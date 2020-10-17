@@ -2,9 +2,13 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
@@ -73,6 +77,18 @@ class FoodRepositoryTest {
         System.out.println(food + " - поиск по id");
 
         assertEquals(answer.get(0), food);
+    }
+
+    @Test
+    void findAllByIdTest() {
+        final List<Long> foodsId = new ArrayList<Long>() {{ add(1L); add(2L);}};
+        final Iterable<Food> foodsIterable = foodRepository.findAllById(foodsId);
+        final ArrayList<Food> foods = new ArrayList<>();
+        foodsIterable.forEach(foods::add);
+
+        for (int i = 0; i < answer.size(); i++) {
+            assertEquals(answer.get(i), foods.get(i));
+        }
     }
 
     @Test

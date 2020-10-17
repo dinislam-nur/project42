@@ -17,6 +17,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,7 +73,6 @@ class OrderRepositoryTest {
                                 .id(1L)
                                 .login("user")
                                 .password("user")
-                                .salt(123)
                                 .role(Role.ROLE_GUEST)
                                 .build()
                 )
@@ -80,6 +80,7 @@ class OrderRepositoryTest {
                 .status(OrderStatus.USER_CONFIRMED)
                 .foods(foods)
                 .orderTime(Timestamp.valueOf("2020-10-15 00:00:00.000000"))
+                .totalSum(3.0)
                 .build();
     }
 
@@ -182,13 +183,13 @@ class OrderRepositoryTest {
                                 .id(1L)
                                 .login("user")
                                 .password("user")
-                                .salt(123)
                                 .role(Role.ROLE_GUEST)
                                 .build()
                 )
                 .payed(false)
                 .status(OrderStatus.USER_CONFIRMED)
                 .foods(foods)
+                .totalSum(3.0)
                 .build();
 
         final Order saved = orderRepository.save(newOrder);
@@ -213,5 +214,13 @@ class OrderRepositoryTest {
         System.out.println(answer + " - запись удалена");
 
         assertNull(orderRepository.findById(answer.getId()).orElse(null));
+    }
+
+    @Test
+    void findOrderByStatusBetweenTest() {
+        final Set<Order> orders = orderRepository
+                .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DONE);
+
+        assertEquals(2, orders.size());
     }
 }

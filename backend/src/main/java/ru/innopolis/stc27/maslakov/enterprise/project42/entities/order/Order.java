@@ -25,10 +25,8 @@ public class Order {
     @SequenceGenerator(name = "ORDER_ID_GENERATOR", allocationSize = 1, sequenceName = "orders_order_id_seq")
     private Long id;
 
-
     @Column(name = "order_time", nullable = false)
     private Timestamp orderTime;
-
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -57,9 +55,12 @@ public class Order {
     )
     private List<Food> foods;
 
+    @JoinColumn(name = "total_sum", nullable = false)
+    Double totalSum;
+
     @PrePersist
-    public void createdAt() {
-        this.orderTime = new Timestamp(System.currentTimeMillis());
+    public void prepare() {
+        orderTime = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
@@ -85,12 +86,6 @@ public class Order {
             }
         }
         return false;
-    }
-
-    public double sum() {
-        return foods.stream()
-                .mapToDouble(Food::getPrice)
-                .sum();
     }
 
 }

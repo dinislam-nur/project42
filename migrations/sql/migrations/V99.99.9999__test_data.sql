@@ -13,8 +13,8 @@ VALUES (1, 'CHIEF'),
        (3, 'ADMIN'),
        (4, 'GUEST');
 
-INSERT INTO users (login, password, salt, user_role_id)
-VALUES ('user', 'user', 123, 4);
+INSERT INTO users (login, password, user_role_id)
+VALUES ('user', 'user', 4);
 
 INSERT INTO food_categories (food_category_id, category_name)
 VALUES (1, 'DRINK'),
@@ -32,8 +32,10 @@ VALUES (1, 'USER_CONFIRMED'),
        (4, 'DONE'),
        (5, 'DELIVERED');
 
-INSERT INTO orders (order_time, user_id, is_payed, table_id, order_status_id)
-VALUES (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 1);
+INSERT INTO orders (order_time, user_id, is_payed, table_id, order_status_id, total_sum)
+VALUES (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 1, 3.0),
+       (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 3, 3.0),
+       (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 4, 3.0);
 
 INSERT INTO foods2order (order_id, food_id)
 VALUES (1, 1),

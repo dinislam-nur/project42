@@ -32,9 +32,6 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "salt", nullable = false)
-    private int salt;
-
     @Convert(converter = RoleAttributeConverter.class)
     @Column(name = "user_role_id", nullable = false)
     private Role role;

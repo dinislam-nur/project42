@@ -11,13 +11,17 @@ public class OrderDTO {
 
     Long id;
 
-    UserDTO user;
+    Long userId;
 
     Timestamp timestamp;
 
     OrderStatus status;
 
-    List<FoodsDTO> foods;
+    List<Long> foodsId;
+
+    Long TableId;
+
+    Boolean payed;
 
     /**
      * Сумма заказа
