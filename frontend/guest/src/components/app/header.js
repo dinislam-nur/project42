@@ -6,9 +6,9 @@ import Collapse from "reactstrap/es/Collapse";
 import Nav from "reactstrap/es/Nav";
 import NavItem from "reactstrap/es/NavItem";
 import NavLink from "reactstrap/es/NavLink";
-import {logoutAction} from "../../store/actions/app";
 import {connect} from "react-redux";
 import Button from "reactstrap/es/Button";
+import {logout} from "../../store/actions/app";
 
 
 const Header = (props) => {
@@ -47,7 +47,7 @@ const Header = (props) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    logout: () => dispatch(logoutAction())
+    logout: () => dispatch(logout())
 });
 
 export default connect(null, mapDispatchToProps)(Header);

@@ -11,13 +11,13 @@ import Alert from "reactstrap/es/Alert";
 
 
 const RegistrationForm = (props) => {
-    const [state, setState] = useState({isPasswordEquals: true, password: ""});
+    const [state, setState] = useState({isPasswordEquals: false, password: ""});
     const history = useHistory();
-    const handleOnClick = useCallback(() => history.push('/'), [history]);
+    const handleOnCancelClick = useCallback(() => history.push('/' + props.tableId + '/login'), [history, props.tableId]);
     const handlePassCheck = (e) => {
         if (e.target.value === state.password) {
             setState({...state, isPasswordEquals: true});
-            props.setPassword(state.password);
+            props.onPasswordChange(e);
         } else {
             setState({...state, isPasswordEquals: false});
         }
@@ -30,17 +30,16 @@ const RegistrationForm = (props) => {
             </FormGroup>
             <FormGroup>
                 <Label for="password">Пароль</Label>
-                <Input type="password" id="password" onChange={(e) => {
-                    setState({...state, password: e.target.value})
-                }}/>
+                <Input type="password" id="password" onChange={(e) => setState({...state, password: e.target.value})}/>
             </FormGroup>
             <FormGroup>
                 <Label for="passwordConfirm">Подтвердите пароль</Label>
                 <Input type="password" id="passwordConfirm" onChange={handlePassCheck}/>
             </FormGroup>
             <ButtonGroup>
-                <Button color={"primary"} active={!state.isPasswordEquals} onClick={props.onConfirm}>Зарегистрироваться</Button>
-                <Button onClick={handleOnClick}>Отмена</Button>
+                <Button color={"primary"} active={!state.isPasswordEquals}
+                        onClick={props.onConfirm}>Зарегистрироваться</Button>
+                <Button onClick={handleOnCancelClick}>Отмена</Button>
             </ButtonGroup>
             {state.isPasswordEquals ? null :
                 <Alert color="danger" className={"registration_alert"}>
