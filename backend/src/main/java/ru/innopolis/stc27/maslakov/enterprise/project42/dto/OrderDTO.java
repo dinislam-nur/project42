@@ -5,19 +5,24 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStat
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Value
 public class OrderDTO {
 
     Long id;
 
-    UserDTO user;
+    Long userId;
 
     Timestamp timestamp;
 
     OrderStatus status;
 
-    List<FoodsDTO> foods;
+    List<Long> foodsId;
+
+    UUID TableId;
+
+    Boolean payed;
 
     /**
      * Сумма заказа

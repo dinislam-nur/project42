@@ -2,6 +2,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -47,7 +49,7 @@ class SessionRepositoryTest {
                         .build())
                 .token("some_token")
                 .table(Table.builder()
-                        .id(1L)
+                        .id(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"))
                         .number(1)
                         .status(TableStatus.NOT_RESERVED)
                         .build())
@@ -118,7 +120,7 @@ class SessionRepositoryTest {
                         .build())
                 .token("other_token")
                 .table(Table.builder()
-                        .id(1L)
+                        .id(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"))
                         .number(1)
                         .status(TableStatus.NOT_RESERVED)
                         .build())

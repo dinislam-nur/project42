@@ -76,6 +76,18 @@ class FoodRepositoryTest {
     }
 
     @Test
+    void findAllByIdTest() {
+        final List<Long> foodsId = new ArrayList<Long>() {{ add(1L); add(2L);}};
+        final Iterable<Food> foodsIterable = foodRepository.findAllById(foodsId);
+        final ArrayList<Food> foods = new ArrayList<>();
+        foodsIterable.forEach(foods::add);
+
+        for (int i = 0; i < answer.size(); i++) {
+            assertEquals(answer.get(i), foods.get(i));
+        }
+    }
+
+    @Test
     void findByNameTest() {
         final Food compot = foodRepository.findByName("compot").orElse(null);
         final Food borsh = foodRepository.findByName("borsh").orElse(null);

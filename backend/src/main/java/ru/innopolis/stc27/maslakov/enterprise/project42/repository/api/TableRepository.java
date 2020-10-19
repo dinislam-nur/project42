@@ -7,9 +7,10 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStat
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface TableRepository extends PagingAndSortingRepository<Table, Long> {
+public interface TableRepository extends PagingAndSortingRepository<Table, UUID> {
 
     Optional<Table> findByNumber(int number);
 

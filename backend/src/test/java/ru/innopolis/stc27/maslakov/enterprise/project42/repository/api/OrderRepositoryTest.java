@@ -17,6 +17,8 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,7 +64,7 @@ class OrderRepositoryTest {
                 .id(1L)
                 .table(
                         Table.builder()
-                                .id(1L)
+                                .id(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"))
                                 .number(1)
                                 .status(TableStatus.NOT_RESERVED)
                                 .build()
@@ -79,6 +81,7 @@ class OrderRepositoryTest {
                 .status(OrderStatus.USER_CONFIRMED)
                 .foods(foods)
                 .orderTime(Timestamp.valueOf("2020-10-15 00:00:00.000000"))
+                .totalSum(3.0)
                 .build();
     }
 
@@ -171,7 +174,7 @@ class OrderRepositoryTest {
                 .id(null)
                 .table(
                         Table.builder()
-                                .id(1L)
+                                .id(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"))
                                 .number(1)
                                 .status(TableStatus.NOT_RESERVED)
                                 .build()
@@ -187,6 +190,7 @@ class OrderRepositoryTest {
                 .payed(false)
                 .status(OrderStatus.USER_CONFIRMED)
                 .foods(foods)
+                .totalSum(3.0)
                 .build();
 
         final Order saved = orderRepository.save(newOrder);
@@ -211,5 +215,13 @@ class OrderRepositoryTest {
         System.out.println(answer + " - запись удалена");
 
         assertNull(orderRepository.findById(answer.getId()).orElse(null));
+    }
+
+    @Test
+    void findOrderByStatusBetweenTest() {
+        final Set<Order> orders = orderRepository
+                .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DONE);
+
+        assertEquals(2, orders.size());
     }
 }
