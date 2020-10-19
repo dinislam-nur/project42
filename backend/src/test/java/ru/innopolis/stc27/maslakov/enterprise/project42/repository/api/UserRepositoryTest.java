@@ -43,7 +43,6 @@ class UserRepositoryTest {
                 .id(1L)
                 .login("user")
                 .password("user")
-                .salt(123)
                 .role(Role.ROLE_GUEST)
                 .build();
     }
@@ -83,7 +82,7 @@ class UserRepositoryTest {
 
     @Test
     void insertTest() {
-        final User admin = new User(null, "admin", "admin", 456, Role.ROLE_ADMIN);
+        final User admin = new User(null, "admin", "admin", Role.ROLE_ADMIN);
         final User saved = userRepository.save(admin);
         admin.setId(saved.getId());
         System.out.println(saved + " - запись сохранена");

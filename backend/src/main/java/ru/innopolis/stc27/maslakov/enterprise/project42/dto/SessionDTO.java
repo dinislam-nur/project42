@@ -1,16 +1,16 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.dto;
 
+import lombok.Builder;
 import lombok.Value;
 
 @Value
+@Builder
 public class SessionDTO {
-
-    Long id;
 
     String token;
 
     UserDTO user;
 
-    TableDTO table;
+    Long tableId;
 
 }

@@ -13,8 +13,8 @@ VALUES (1, 'CHIEF'),
        (3, 'ADMIN'),
        (4, 'GUEST');
 
-INSERT INTO users (login, password, salt, user_role_id)
-VALUES ('user', 'user', 123, 4);
+INSERT INTO users (login, password, user_role_id)
+VALUES ('user', 'user', 4);
 
 INSERT INTO food_categories (food_category_id, category_name)
 VALUES (1, 'DRINK'),
