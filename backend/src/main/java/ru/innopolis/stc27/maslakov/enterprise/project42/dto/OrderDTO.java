@@ -5,6 +5,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStat
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Value
 public class OrderDTO {
@@ -19,7 +20,7 @@ public class OrderDTO {
 
     List<Long> foodsId;
 
-    Long TableId;
+    UUID TableId;
 
     Boolean payed;
 

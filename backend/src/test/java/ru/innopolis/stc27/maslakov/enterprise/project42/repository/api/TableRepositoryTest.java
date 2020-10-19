@@ -12,6 +12,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,7 +44,7 @@ class TableRepositoryTest {
         flyway.clean();
         flyway.migrate();
         answer = Table.builder()
-                .id(1L)
+                .id(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"))
                 .number(1)
                 .status(TableStatus.NOT_RESERVED)
                 .build();
@@ -60,7 +61,7 @@ class TableRepositoryTest {
 
     @Test
     void findByIdTest() {
-        final Table result = tableRepository.findById(1L).orElse(null);
+        final Table result = tableRepository.findById(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002")).orElse(null);
         System.out.println(result + " - поиск по id");
 
         assertEquals(answer, result);
@@ -85,7 +86,6 @@ class TableRepositoryTest {
     @Test
     void insertTest() {
         final Table newTable = Table.builder()
-                .id(null)
                 .number(42)
                 .status(TableStatus.NOT_RESERVED)
                 .build();

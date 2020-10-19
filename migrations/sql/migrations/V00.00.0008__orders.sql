@@ -6,7 +6,7 @@ CREATE TABLE orders
     order_time TIMESTAMP NOT NULL,
     user_id BIGINT NOT NULL,
     is_payed BOOLEAN NOT NULL,
-    table_id BIGINT NOT NULL,
+    table_id UUID NOT NULL,
     order_status_id INTEGER NOT NULL,
     total_sum DOUBLE PRECISION NOT NULL,
     CONSTRAINT pk_orders_order_id PRIMARY KEY (order_id),

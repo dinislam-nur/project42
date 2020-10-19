@@ -47,8 +47,8 @@ class OrderServiceImplTest {
         Mockito.when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user));
 
-        final Table table = new Table(1L, 1, TableStatus.NOT_RESERVED);
-        Mockito.when(tableRepository.findById(1L))
+        final Table table = new Table(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"), 1, TableStatus.NOT_RESERVED);
+        Mockito.when(tableRepository.findById(table.getId()))
                 .thenReturn(Optional.of(table));
 
         final List<Food> foods = new ArrayList<Food>() {{
@@ -91,7 +91,7 @@ class OrderServiceImplTest {
                 TIMESTAMP,
                 OrderStatus.USER_CONFIRMED,
                 foodIdList,
-                1L,
+                UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"),
                 true,
                 3.0
         );
@@ -105,7 +105,7 @@ class OrderServiceImplTest {
                 null,
                 OrderStatus.USER_CONFIRMED,
                 foodIdList,
-                1L,
+                UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"),
                 true,
                 3.0
         );
@@ -122,7 +122,7 @@ class OrderServiceImplTest {
                 null,
                 OrderStatus.USER_CONFIRMED,
                 foodIdList,
-                1L,
+                UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"),
                 true,
                 3.0
         );
@@ -134,7 +134,7 @@ class OrderServiceImplTest {
                 null,
                 OrderStatus.USER_CONFIRMED,
                 foodIdList,
-                3L,
+                UUID.randomUUID(),
                 true,
                 3.0
         );

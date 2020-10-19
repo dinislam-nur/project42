@@ -2,7 +2,7 @@
 
 CREATE TABLE tables
 (
-    table_id BIGSERIAL,
+    table_id UUID,
     number INTEGER NOT NULL,
     table_status_id INTEGER NOT NULL,
     CONSTRAINT pk_tables PRIMARY KEY (table_id),

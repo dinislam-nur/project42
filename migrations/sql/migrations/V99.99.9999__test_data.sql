@@ -4,8 +4,9 @@ INSERT INTO table_statuses (table_status_id, table_status_name)
 VALUES (1, 'RESERVED'),
        (2, 'NOT_RESERVED');
 
-INSERT INTO tables (number, table_status_id)
-VALUES (1, 2);
+INSERT INTO tables (table_id, number, table_status_id)
+VALUES (uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 2);
+
 
 INSERT INTO user_roles (user_role_id, role_name)
 VALUES (1, 'CHIEF'),
@@ -33,9 +34,9 @@ VALUES (1, 'USER_CONFIRMED'),
        (5, 'DELIVERED');
 
 INSERT INTO orders (order_time, user_id, is_payed, table_id, order_status_id, total_sum)
-VALUES (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 1, 3.0),
-       (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 3, 3.0),
-       (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, 1, 4, 3.0);
+VALUES (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 3.0),
+       (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 3, 3.0),
+       (to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 4, 3.0);
 
 INSERT INTO foods2order (order_id, food_id)
 VALUES (1, 1),
@@ -46,4 +47,4 @@ VALUES (1, 'OPENED'),
        (2, 'CLOSED');
 
 INSERT INTO sessions (session_status_id, token, timeout, table_id, user_id)
-VALUES (1, 'some_token', to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), 1, 1);
+VALUES (1, 'some_token', to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1);

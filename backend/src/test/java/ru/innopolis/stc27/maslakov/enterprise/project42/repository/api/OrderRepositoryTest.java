@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,7 +64,7 @@ class OrderRepositoryTest {
                 .id(1L)
                 .table(
                         Table.builder()
-                                .id(1L)
+                                .id(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"))
                                 .number(1)
                                 .status(TableStatus.NOT_RESERVED)
                                 .build()
@@ -173,7 +174,7 @@ class OrderRepositoryTest {
                 .id(null)
                 .table(
                         Table.builder()
-                                .id(1L)
+                                .id(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002"))
                                 .number(1)
                                 .status(TableStatus.NOT_RESERVED)
                                 .build()
