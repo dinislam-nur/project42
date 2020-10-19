@@ -12,7 +12,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepo
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.OrderDTOConverter;
-import ru.innopolis.stc27.maslakov.enterprise.project42.utils.OrderServiceUtils;
+import ru.innopolis.stc27.maslakov.enterprise.project42.utils.ServicesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO) {
-        OrderServiceUtils.checkOrderDTO(orderDTO);
+        ServicesUtils.checkOrderDTO(orderDTO);
         val userId = orderDTO.getUserId();
         val user = userRepository
                 .findById(userId)

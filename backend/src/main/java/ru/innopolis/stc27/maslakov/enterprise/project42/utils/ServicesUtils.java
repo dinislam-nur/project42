@@ -1,11 +1,13 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.utils;
 
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
 
 import java.util.List;
 import java.util.Objects;
 
-public class OrderServiceUtils {
+public class ServicesUtils {
+
     public static void checkOrderDTO(OrderDTO orderDTO) {
         if (orderDTO == null) {
             throw new IllegalArgumentException("OrderDTO - null");
@@ -30,6 +32,16 @@ public class OrderServiceUtils {
             } else if (!foodsId.stream().allMatch(Objects::nonNull)) {
                     throw new IllegalStateException("Nullable id у блюда");
                 }
+        }
+    }
+
+    public static void checkTableDTO(TableDTO tableDTO, boolean nullableId) {
+        if (!nullableId && tableDTO.getId() == null) {
+            throw new IllegalStateException("Поле id объекта TableDTO равняется null");
+        } else if (tableDTO.getNumber() == null) {
+            throw new IllegalStateException("Поле number объекта TableDTO равняется null");
+        } else if (tableDTO.getStatus() == null) {
+            throw new IllegalStateException("Поле status объекта TableDTO равняется null");
         }
     }
 }

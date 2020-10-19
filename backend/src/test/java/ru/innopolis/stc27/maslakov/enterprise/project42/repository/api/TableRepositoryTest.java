@@ -2,12 +2,9 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
 
@@ -18,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-@Disabled
 class TableRepositoryTest {
 
     private final TableRepository tableRepository;
@@ -107,8 +103,7 @@ class TableRepositoryTest {
 
     @Test
     void deleteTest() {
-        orderRepository.delete(Order.builder().id(1L).build());
-        sessionRepository.delete(Session.builder().id(1L).build());
+        answer.setId(UUID.fromString("57874486-11f8-11eb-adc1-0242ac120003"));
         tableRepository.delete(answer);
         System.out.println(answer + " - запись удалена");
 

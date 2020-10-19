@@ -20,9 +20,9 @@ public class TableController {
     }
 
     @ResponseBody
-    @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String tableNotFoundHandler(IllegalStateException exception) {
+    @ExceptionHandler(IllegalStateException.class)
+    public String tableNotFoundHandler(IllegalStateException exception) {
         return exception.getMessage();
     }
 }

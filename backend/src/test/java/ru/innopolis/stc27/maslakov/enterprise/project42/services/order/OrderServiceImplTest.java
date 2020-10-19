@@ -111,9 +111,7 @@ class OrderServiceImplTest {
         );
         final OrderDTO result = orderService.createOrder(inputDTO);
 
-        Mockito.verify(orderRepository).save(Mockito.any());
         assertEquals(answer, result);
-
         assertThrows(IllegalArgumentException.class, () -> orderService.createOrder(null));
 
         val inputDTOWithNotExistUser = new OrderDTO(
@@ -145,7 +143,6 @@ class OrderServiceImplTest {
     void findByIdTest() {
         final OrderDTO result = orderService.findOrderById(1L);
 
-        Mockito.verify(orderRepository).findById(Mockito.anyLong());
         assertEquals(answer, result);
     }
 
@@ -153,7 +150,6 @@ class OrderServiceImplTest {
     void changeStatusTest() {
         final OrderDTO result = orderService.changeStatus(1L, OrderStatus.PREPARING);
 
-        Mockito.verify(orderRepository).findById(Mockito.anyLong());
         assertEquals(OrderStatus.PREPARING, result.getStatus());
     }
 
@@ -161,17 +157,12 @@ class OrderServiceImplTest {
     void getOrdersForWaitersTest() {
         final Set<OrderDTO> result = orderService.getOrdersForWaiters();
 
-        Mockito.verify(orderRepository)
-                .findOrdersByStatusBetween(Mockito.any(OrderStatus.class), Mockito.any(OrderStatus.class));
-
         assertEquals(0, result.size());
     }
 
     @Test
     void getOrdersByStatusTest() {
         final Set<OrderDTO> result = orderService.getOrdersByStatus(OrderStatus.PREPARING);
-
-        Mockito.verify(orderRepository).findByStatus(Mockito.any(OrderStatus.class));
 
         assertEquals(0, result.size());
     }

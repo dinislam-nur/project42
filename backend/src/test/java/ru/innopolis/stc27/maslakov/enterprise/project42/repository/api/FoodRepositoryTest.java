@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +134,6 @@ class FoodRepositoryTest {
 
     @Test
     void deleteTest() {
-        orderRepository.delete(Order.builder().id(1L).build());
         final Food borsh = answer.get(1);
         foodRepository.delete(borsh);
         System.out.println(borsh + " - запись удалена");
