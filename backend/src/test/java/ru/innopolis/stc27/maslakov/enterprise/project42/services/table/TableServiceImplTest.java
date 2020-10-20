@@ -56,23 +56,14 @@ class TableServiceImplTest {
     }
 
     @Test
-    void openTableTest() {
-        table.setStatus(TableStatus.NOT_RESERVED);
+    void changeStatus() {
+
         Mockito.when(tableRepository.findById(TABLE_ID))
                 .thenReturn(Optional.of(table));
-        table.setStatus(TableStatus.RESERVED);
+        table.setStatus(TableStatus.NOT_RESERVED);
         Mockito.when(tableRepository.save(table))
                 .thenReturn(table);
 
-        val result = tableService.openTable(TABLE_ID);
-
-        assertEquals(this.answer, result);
-        assertThrows(IllegalStateException.class,
-                () -> tableService.openTable(UUID.randomUUID() /*new TableDTO(UUID.randomUUID(), 1, TableStatus.NOT_RESERVED)*/));
-    }
-
-    @Test
-    void closeTableTest() {
         val sessions = new ArrayList<Session>() {{
             add(new Session());
             add(new Session());
@@ -80,13 +71,8 @@ class TableServiceImplTest {
         }};
         Mockito.when(sessionRepository.findByTableId(TABLE_ID))
                 .thenReturn(sessions);
-        Mockito.when(tableRepository.findById(TABLE_ID))
-                .thenReturn(Optional.of(table));
-        table.setStatus(TableStatus.NOT_RESERVED);
-        Mockito.when(tableRepository.save(table))
-                .thenReturn(table);
 
-        val result = tableService.closeTable(TABLE_ID);
+        val result = tableService.changeStatus(TABLE_ID, TableStatus.NOT_RESERVED);
         val answer = new TableDTO(TABLE_ID, 1, TableStatus.NOT_RESERVED);
 
         Mockito.verify(sessionRepository).findByTableId(TABLE_ID);
@@ -94,7 +80,7 @@ class TableServiceImplTest {
                 .delete(Mockito.any(Session.class));
         assertEquals(answer, result);
         assertThrows(IllegalStateException.class,
-                () -> tableService.closeTable(UUID.randomUUID() /*new TableDTO(UUID.randomUUID(), 1, TableStatus.RESERVED)*/));
+                () -> tableService.closeTable(UUID.randomUUID()));
     }
 
     @Test

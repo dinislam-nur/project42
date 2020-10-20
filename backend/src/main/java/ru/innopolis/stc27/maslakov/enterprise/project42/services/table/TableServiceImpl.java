@@ -14,8 +14,10 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepo
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.ServicesUtils;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.TableDTOConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,25 @@ public class TableServiceImpl implements TableService {
 
     private final TableRepository tableRepository;
     private final SessionRepository sessionRepository;
+
+    @Override
+    public List<TableDTO> getTables(TableStatus status) {
+        if (status != null) {
+            return tableRepository
+                    .findByStatus(status)
+                    .stream()
+                    .map(TableDTOConverter::convert)
+                    .collect(Collectors.toList());
+        } else {
+            val tables = new ArrayList<TableDTO>();
+            tableRepository
+                    .findAll()
+                    .forEach(
+                            table -> tables.add(TableDTOConverter.convert(table))
+                    );
+            return tables;
+        }
+    }
 
     @Override
     @Transactional
@@ -34,18 +55,6 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public TableDTO openTable(UUID id) {
-        return changeStatus(id, TableStatus.RESERVED);
-    }
-
-    @Override
-    public TableDTO closeTable(UUID id) {
-        final List<Session> sessions = sessionRepository
-                .findByTableId(id);
-        sessions.forEach(sessionRepository::delete);
-        return changeStatus(id, TableStatus.NOT_RESERVED);
-    }
-
     @Transactional
     public TableDTO changeStatus(UUID id, TableStatus status) {
         var table = tableRepository
@@ -56,6 +65,11 @@ public class TableServiceImpl implements TableService {
         if (!table.getStatus().equals(status)) {
             table.setStatus(status);
             table = tableRepository.save(table);
+        }
+        if (status.equals(TableStatus.NOT_RESERVED)) {
+            final List<Session> sessions = sessionRepository
+                    .findByTableId(id);
+            sessions.forEach(sessionRepository::delete);
         }
         return TableDTOConverter.convert(table);
     }
