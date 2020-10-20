@@ -155,14 +155,14 @@ class OrderServiceImplTest {
 
     @Test
     void getOrdersForWaitersTest() {
-        final Set<OrderDTO> result = orderService.getOrdersForWaiters();
+        final Collection<OrderDTO> result = orderService.getOrdersForWaiters();
 
         assertEquals(0, result.size());
     }
 
     @Test
     void getOrdersByStatusTest() {
-        final Set<OrderDTO> result = orderService.getOrdersByStatus(OrderStatus.PREPARING);
+        final Collection<OrderDTO> result = orderService.getOrdersByStatus(OrderStatus.PREPARING);
 
         assertEquals(0, result.size());
     }

@@ -3,7 +3,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface OrderService {
 
@@ -13,7 +13,11 @@ public interface OrderService {
 
     OrderDTO changeStatus(Long id, OrderStatus status);
 
-    Set<OrderDTO> getOrdersForWaiters();
+    Collection<OrderDTO> deleteOrder(Long id);
 
-    Set<OrderDTO> getOrdersByStatus(OrderStatus status);
+    Collection<OrderDTO> getOrdersForWaiters();
+
+    Collection<OrderDTO> getOrdersByStatus(OrderStatus status);
+
+    Collection<OrderDTO> getListOrders();
 }

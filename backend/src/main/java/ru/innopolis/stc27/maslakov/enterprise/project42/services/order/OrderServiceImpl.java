@@ -14,9 +14,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepos
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.OrderDTOConverter;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.ServicesUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("orderService")
@@ -79,20 +77,37 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Set<OrderDTO> getOrdersForWaiters() {
+    public Collection<OrderDTO> deleteOrder(Long id) {
+        orderRepository.deleteById(id);
+        return getListOrders();
+    }
+
+    @Override
+    public Collection<OrderDTO> getOrdersForWaiters() {
         return orderRepository
-                .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DELIVERED)
+                .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DONE)
                 .stream()
                 .map(OrderDTOConverter::convert)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<OrderDTO> getOrdersByStatus(OrderStatus status) {
+    public Collection<OrderDTO> getOrdersByStatus(OrderStatus status) {
         return orderRepository
                 .findByStatus(status)
                 .stream()
                 .map(OrderDTOConverter::convert)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Collection<OrderDTO> getListOrders() {
+        List<OrderDTO> list = new ArrayList<>();
+        Iterable<Order> all = orderRepository.findAll();
+        for (Order order:all) {
+            list.add(OrderDTOConverter.convert(order));
+        }
+        list.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
+        return list;
     }
 }
