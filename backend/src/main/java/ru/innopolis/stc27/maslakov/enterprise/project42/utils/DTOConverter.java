@@ -38,7 +38,7 @@ public class DTOConverter {
 
     public static SessionDTO convertToDTO(Session session) {
         return SessionDTO.builder()
-                .tableId(session.getTable().getId())
+                .tableId(session.getTable() == null ? null : session.getTable().getId())
                 .user(convertToDTO(session.getUser()))
                 .token(session.getToken())
                 .build();

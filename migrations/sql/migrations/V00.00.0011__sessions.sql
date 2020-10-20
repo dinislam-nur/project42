@@ -6,7 +6,7 @@ CREATE TABLE sessions
     session_status_id INTEGER NOT NULL,
     token TEXT NOT NULL,
     timeout TIMESTAMP NOT NULL,
-    table_id UUID NOT NULL,
+    table_id UUID,
     user_id BIGINT NOT NULL,
     CONSTRAINT pk_sessions_session_id PRIMARY KEY (session_id),
     CONSTRAINT fk_sessions_session_statuses_sessions_status_id FOREIGN KEY (session_status_id) REFERENCES session_statuses (session_status_id),

@@ -11,10 +11,10 @@ public class TokenAuthentication extends AbstractAuthenticationToken {
 
     private final String login;
 
-    public TokenAuthentication(String token) {
+    public TokenAuthentication(Session session) {
         super(Collections.emptyList());
         setAuthenticated(false);
-        setDetails(token);
+        setDetails(session);
         login = "";
     }
 

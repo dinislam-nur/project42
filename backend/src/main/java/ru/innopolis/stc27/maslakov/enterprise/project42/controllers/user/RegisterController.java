@@ -21,16 +21,14 @@ public class RegisterController {
 
     @ResponseBody
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity register(@RequestBody CredentialsDTO credentials) {
-        Optional<User> user = registerService.signup(SignupDTO.builder()
-                .login(credentials.getLogin())
-                .password(credentials.getPassword())
-                .build());
+    public ResponseEntity register(@RequestBody SignupDTO data) {
+        Optional<User> user = registerService.signup(data);
         return user.isPresent() ?
                 ResponseEntity.ok().build() : ResponseEntity.badRequest()
                 .body(new ErrorMessageDTO("Пользователь с таким именем уже существует."));
     }
 
+    //TODO Доступ по роли ROLE_ADMIN
     @PostMapping(value = "/staff/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity staffRegister(@RequestBody SignupDTO data) {
         Optional<User> user = registerService.signup(data);
