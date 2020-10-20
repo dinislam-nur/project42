@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Set<OrderDTO> getOrdersForWaiters() {
         return orderRepository
-                .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DELIVERED)
+                .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DONE)
                 .stream()
                 .map(OrderDTOConverter::convert)
                 .collect(Collectors.toSet());

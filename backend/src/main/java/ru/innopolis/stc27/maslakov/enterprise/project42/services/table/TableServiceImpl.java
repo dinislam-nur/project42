@@ -2,15 +2,19 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.table;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import lombok.var;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
+import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.ServicesUtils;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.TableDTOConverter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,6 +22,7 @@ import java.util.UUID;
 public class TableServiceImpl implements TableService {
 
     private final TableRepository tableRepository;
+    private final SessionRepository sessionRepository;
 
     @Override
     @Transactional
@@ -29,36 +34,30 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public TableDTO openTable(TableDTO tableDTO) {
-        ServicesUtils.checkTableDTO(tableDTO, false);
-        if (tableDTO.getStatus() != TableStatus.RESERVED) {
-            return changeStatus(tableDTO, TableStatus.RESERVED);
-        }
-        return tableDTO;
+    public TableDTO openTable(UUID id) {
+        return changeStatus(id, TableStatus.RESERVED);
     }
 
     @Override
-    public TableDTO closeTable(TableDTO tableDTO) {
-        ServicesUtils.checkTableDTO(tableDTO, false);
-        if (tableDTO.getStatus() != TableStatus.NOT_RESERVED) {
-            return changeStatus(tableDTO, TableStatus.NOT_RESERVED);
-        }
-        return tableDTO;
+    public TableDTO closeTable(UUID id) {
+        final List<Session> sessions = sessionRepository
+                .findByTableId(id);
+        sessions.forEach(sessionRepository::delete);
+        return changeStatus(id, TableStatus.NOT_RESERVED);
     }
 
     @Transactional
-    public TableDTO changeStatus(TableDTO tableDTO, TableStatus status) {
-        val id = tableDTO.getId();
-        if (tableRepository.existsById(id)) {
-            val table = TableDTOConverter.convertDTO(tableDTO);
+    public TableDTO changeStatus(UUID id, TableStatus status) {
+        var table = tableRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new IllegalStateException("Стола с id #" + id + " не существует")
+                );
+        if (!table.getStatus().equals(status)) {
             table.setStatus(status);
-            return TableDTOConverter.convert(
-                    tableRepository.save(table)
-            );
-        } else {
-            throw new IllegalStateException("Стола с id #" + id + " не существует");
+            table = tableRepository.save(table);
         }
-
+        return TableDTOConverter.convert(table);
     }
 
     @Override
@@ -84,13 +83,11 @@ public class TableServiceImpl implements TableService {
 
     @Override
     @Transactional
-    public void deleteTable(TableDTO tableDTO) {
-        ServicesUtils.checkTableDTO(tableDTO, false);
-        val id = tableDTO.getId();
-        if (tableRepository.existsById(id)) {
-            tableRepository.delete(TableDTOConverter.convertDTO(tableDTO));
+    public void deleteTable(UUID tableId) {
+        if (tableRepository.existsById(tableId)) {
+            tableRepository.deleteById(tableId);
         } else {
-            throw new IllegalStateException("Удаление невозможно: стола с id #" + id + " не существует");
+            throw new IllegalStateException("Удаление невозможно: стола с id #" + tableId + " не существует");
         }
     }
 }

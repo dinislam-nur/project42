@@ -6,11 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
+import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.TableDTOConverter;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +24,7 @@ class TableServiceImplTest {
     private static final UUID TABLE_ID = UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002");
 
     private TableRepository tableRepository;
+    private SessionRepository sessionRepository;
     private TableService tableService;
 
     private Table table;
@@ -29,7 +33,8 @@ class TableServiceImplTest {
     @BeforeEach
     void setUp() {
         tableRepository = Mockito.mock(TableRepository.class);
-        tableService = new TableServiceImpl(tableRepository);
+        sessionRepository = Mockito.mock(SessionRepository.class);
+        tableService = new TableServiceImpl(tableRepository, sessionRepository);
 
         table = new Table(
                 TABLE_ID,
@@ -52,42 +57,44 @@ class TableServiceImplTest {
 
     @Test
     void openTableTest() {
-        Mockito.when(tableRepository.existsById(TABLE_ID))
-                .thenReturn(true);
+        table.setStatus(TableStatus.NOT_RESERVED);
+        Mockito.when(tableRepository.findById(TABLE_ID))
+                .thenReturn(Optional.of(table));
+        table.setStatus(TableStatus.RESERVED);
         Mockito.when(tableRepository.save(table))
                 .thenReturn(table);
 
-        val tableDTO = new TableDTO(
-                TABLE_ID,
-                1,
-                TableStatus.NOT_RESERVED
-        );
-        val result = tableService.openTable(tableDTO);
+        val result = tableService.openTable(TABLE_ID);
 
         assertEquals(this.answer, result);
         assertThrows(IllegalStateException.class,
-                () -> tableService.openTable(new TableDTO(UUID.randomUUID(), 1, TableStatus.NOT_RESERVED)));
+                () -> tableService.openTable(UUID.randomUUID() /*new TableDTO(UUID.randomUUID(), 1, TableStatus.NOT_RESERVED)*/));
     }
 
     @Test
     void closeTableTest() {
-        Mockito.when(tableRepository.existsById(TABLE_ID))
-                .thenReturn(true);
+        val sessions = new ArrayList<Session>() {{
+            add(new Session());
+            add(new Session());
+            add(new Session());
+        }};
+        Mockito.when(sessionRepository.findByTableId(TABLE_ID))
+                .thenReturn(sessions);
+        Mockito.when(tableRepository.findById(TABLE_ID))
+                .thenReturn(Optional.of(table));
         table.setStatus(TableStatus.NOT_RESERVED);
         Mockito.when(tableRepository.save(table))
                 .thenReturn(table);
 
-        val tableDTO = answer;
-        answer = new TableDTO(
-                TABLE_ID,
-                1,
-                TableStatus.NOT_RESERVED
-        );
-        val result = tableService.closeTable(tableDTO);
+        val result = tableService.closeTable(TABLE_ID);
+        val answer = new TableDTO(TABLE_ID, 1, TableStatus.NOT_RESERVED);
 
+        Mockito.verify(sessionRepository).findByTableId(TABLE_ID);
+        Mockito.verify(sessionRepository, Mockito.times(sessions.size()))
+                .delete(Mockito.any(Session.class));
         assertEquals(answer, result);
         assertThrows(IllegalStateException.class,
-                () -> tableService.closeTable(new TableDTO(UUID.randomUUID(), 1, TableStatus.RESERVED)));
+                () -> tableService.closeTable(UUID.randomUUID() /*new TableDTO(UUID.randomUUID(), 1, TableStatus.RESERVED)*/));
     }
 
     @Test
@@ -118,12 +125,12 @@ class TableServiceImplTest {
         Mockito.when(tableRepository.existsById(TABLE_ID))
                 .thenReturn(true);
 
-        tableService.deleteTable(answer);
+        tableService.deleteTable(answer.getId());
 
-        Mockito.verify(tableRepository).delete(table);
+        Mockito.verify(tableRepository).deleteById(TABLE_ID);
 
         Mockito.when(tableRepository.existsById(Mockito.any(UUID.class)))
                 .thenReturn(false);
-        assertThrows(IllegalStateException.class, () -> tableService.deleteTable(answer));
+        assertThrows(IllegalStateException.class, () -> tableService.deleteTable(answer.getId()));
     }
 }

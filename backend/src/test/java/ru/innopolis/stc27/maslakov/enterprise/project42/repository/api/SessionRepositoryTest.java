@@ -100,8 +100,8 @@ class SessionRepositoryTest {
     }
 
     @Test
-    void findByTableTest() {
-        final List<Session> sessions = sessionRepository.findByTable(answer.getTable());
+    void findByTableIdTest() {
+        final List<Session> sessions = sessionRepository.findByTableId(answer.getTable().getId());
         sessions.forEach(session -> System.out.println(session + " - поиск по столу"));
 
         assertEquals(answer, sessions.get(0));

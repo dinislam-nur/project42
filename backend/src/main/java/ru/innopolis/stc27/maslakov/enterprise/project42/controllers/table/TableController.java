@@ -19,8 +19,18 @@ public class TableController {
         return tableService.getTable(tableId);
     }
 
+    @PatchMapping(path = "/tables/{table_id}/close")
+    public TableDTO close(@PathVariable("table_id") UUID tableId) {
+        return tableService.closeTable(tableId);
+    }
+
+    @DeleteMapping(path = "/tables/{table_id}")
+    public void delete(@PathVariable("table_id") UUID tableId) {
+        tableService.deleteTable(tableId);
+    }
+
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(IllegalStateException.class)
     public String tableNotFoundHandler(IllegalStateException exception) {
         return exception.getMessage();
