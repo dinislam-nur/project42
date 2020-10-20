@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
-import ru.innopolis.stc27.maslakov.enterprise.project42.utils.TableDTOConverter;
+import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public TableDTO getTable(UUID tableId) {
-        return TableDTOConverter.convert(
+        return DTOConverter.convertToDTO(
                 tableRepository.findById(tableId)
                         .orElseThrow(() -> new IllegalStateException("Стола с id #" + tableId + " не существует"))
         );

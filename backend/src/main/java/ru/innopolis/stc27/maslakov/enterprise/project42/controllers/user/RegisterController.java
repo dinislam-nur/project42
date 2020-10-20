@@ -8,7 +8,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.dto.CredentialsDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.ErrorMessageDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SignupDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
-import ru.innopolis.stc27.maslakov.enterprise.project42.services.api.RegisterService;
+import ru.innopolis.stc27.maslakov.enterprise.project42.services.register.RegisterService;
 
 import java.util.Optional;
 

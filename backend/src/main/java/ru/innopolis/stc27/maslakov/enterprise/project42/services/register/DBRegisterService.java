@@ -1,4 +1,4 @@
-package ru.innopolis.stc27.maslakov.enterprise.project42.services;
+package ru.innopolis.stc27.maslakov.enterprise.project42.services.register;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -8,7 +8,6 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SignupDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
-import ru.innopolis.stc27.maslakov.enterprise.project42.services.api.RegisterService;
 
 import java.util.Optional;
 

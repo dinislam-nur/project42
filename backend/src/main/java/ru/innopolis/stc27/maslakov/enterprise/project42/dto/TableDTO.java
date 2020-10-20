@@ -10,7 +10,7 @@ public class TableDTO {
 
     UUID id;
 
-    Integer table;
+    Integer number;
 
     TableStatus status;
 

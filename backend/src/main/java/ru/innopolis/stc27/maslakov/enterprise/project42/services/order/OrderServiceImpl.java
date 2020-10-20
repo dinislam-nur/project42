@@ -11,7 +11,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepos
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
-import ru.innopolis.stc27.maslakov.enterprise.project42.utils.OrderDTOConverter;
+import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.OrderServiceUtils;
 
 import java.util.ArrayList;
@@ -58,12 +58,12 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         val saved = orderRepository.save(currentOrder);
-        return OrderDTOConverter.convert(saved);
+        return DTOConverter.convertToDTO(saved);
     }
 
     @Override
     public OrderDTO findOrderById(Long id) {
-        return OrderDTOConverter.convert(
+        return DTOConverter.convertToDTO(
                 orderRepository
                         .findById(id)
                         .orElseThrow(() -> new IllegalStateException("В БД не существует заказа с id #" + id)));
@@ -75,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new IllegalStateException("В БД не существует заказа с id #" + id));
         order.setStatus(status);
         final Order updated = orderRepository.save(order);
-        return OrderDTOConverter.convert(updated);
+        return DTOConverter.convertToDTO(updated);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository
                 .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DELIVERED)
                 .stream()
-                .map(OrderDTOConverter::convert)
+                .map(DTOConverter::convertToDTO)
                 .collect(Collectors.toSet());
     }
 
@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository
                 .findByStatus(status)
                 .stream()
-                .map(OrderDTOConverter::convert)
+                .map(DTOConverter::convertToDTO)
                 .collect(Collectors.toSet());
     }
 }

@@ -1,4 +1,4 @@
-package ru.innopolis.stc27.maslakov.enterprise.project42.services.api;
+package ru.innopolis.stc27.maslakov.enterprise.project42.services.register;
 
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SignupDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
