@@ -6,8 +6,8 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 
 import java.util.stream.Collectors;
 
-public class OrderDTOConverter {
-    public static OrderDTO convert(Order order) {
+public class DTOConverter {
+    public static OrderDTO convertToDTO(Order order) {
         return new OrderDTO(
                 order.getId(),
                 order.getUser().getId(),
@@ -19,4 +19,22 @@ public class OrderDTOConverter {
                 order.getTotalSum()
         );
     }
+
+    /*public static Order convert(OrderDTO orderDTO) {
+//        return new Order(
+//                orderDTO.getId(),
+//                orderDTO.getTimestamp(),
+//                orderDTO.getUserId(),
+//                orderDTO.getPayed(),
+//                orderDTO.getFoodsId(),
+//                orderDTO.getStatus(),
+//                orderDTO.getTableId(),
+//                orderDTO.getTotal()
+//        );
+        return Order.builder()
+                .id(orderDTO.getId())
+                .orderTime(orderDTO.getTimestamp())
+                .status(orderDTO.getStatus())
+                .
+    }*/
 }

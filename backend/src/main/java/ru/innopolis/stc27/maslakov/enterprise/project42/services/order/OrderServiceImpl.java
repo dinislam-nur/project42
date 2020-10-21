@@ -3,6 +3,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.order;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
@@ -11,7 +12,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepos
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
-import ru.innopolis.stc27.maslakov.enterprise.project42.utils.OrderDTOConverter;
+import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.ServicesUtils;
 
 import java.util.*;
@@ -27,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private final FoodRepository foodRepository;
 
     @Override
-    public OrderDTO createOrder(OrderDTO orderDTO) {
+    public OrderDTO createNewOrder(OrderDTO orderDTO) {
         ServicesUtils.checkOrderDTO(orderDTO);
         val userId = orderDTO.getUserId();
         val user = userRepository
@@ -56,30 +57,35 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         val saved = orderRepository.save(currentOrder);
-        return OrderDTOConverter.convert(saved);
+        return DTOConverter.convertToDTO(saved);
     }
 
     @Override
     public OrderDTO findOrderById(Long id) {
-        return OrderDTOConverter.convert(
+        return DTOConverter.convertToDTO(
                 orderRepository
                         .findById(id)
                         .orElseThrow(() -> new IllegalStateException("В БД не существует заказа с id #" + id)));
     }
 
     @Override
-    public OrderDTO changeStatus(Long id, OrderStatus status) {
-        val order = orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("В БД не существует заказа с id #" + id));
-        order.setStatus(status);
-        final Order updated = orderRepository.save(order);
-        return OrderDTOConverter.convert(updated);
+    @Transactional
+    public void updateOrder(Long id, OrderDTO orderDTO) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Заказа с id = %d е существует", id)));
+        order.setStatus(orderDTO.getStatus());
+        order.setPayed(orderDTO.getPayed());
+        order.setTotalSum(orderDTO.getTotal());
+        if (id.equals(orderDTO.getId())) {
+            orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Неправильный запрос");
+        }
     }
 
     @Override
-    public Collection<OrderDTO> deleteOrder(Long id) {
+    public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
-        return getListOrders();
     }
 
     @Override
@@ -87,27 +93,26 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository
                 .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DONE)
                 .stream()
-                .map(OrderDTOConverter::convert)
+                .map(DTOConverter::convertToDTO)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public Collection<OrderDTO> getOrdersByStatus(OrderStatus status) {
-        return orderRepository
-                .findByStatus(status)
-                .stream()
-                .map(OrderDTOConverter::convert)
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Collection<OrderDTO> getListOrders() {
-        List<OrderDTO> list = new ArrayList<>();
-        Iterable<Order> all = orderRepository.findAll();
-        for (Order order:all) {
-            list.add(OrderDTOConverter.convert(order));
+    public Collection<OrderDTO> getOrders(OrderStatus status) {
+        if (status != null) {
+            return orderRepository
+                    .findByStatus(status)
+                    .stream()
+                    .map(DTOConverter::convertToDTO)
+                    .collect(Collectors.toSet());
+        } else {
+            List<OrderDTO> list = new ArrayList<>();
+            Iterable<Order> all = orderRepository.findAll();
+            for (Order order:all) {
+                list.add(DTOConverter.convertToDTO(order));
+            }
+            list.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
+            return list;
         }
-        list.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
-        return list;
     }
 }

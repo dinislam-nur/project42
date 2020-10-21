@@ -17,6 +17,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepos
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
+import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -109,10 +110,10 @@ class OrderServiceImplTest {
                 true,
                 3.0
         );
-        final OrderDTO result = orderService.createOrder(inputDTO);
+        final OrderDTO result = orderService.createNewOrder(inputDTO);
 
         assertEquals(answer, result);
-        assertThrows(IllegalArgumentException.class, () -> orderService.createOrder(null));
+        assertThrows(IllegalArgumentException.class, () -> orderService.createNewOrder(null));
 
         val inputDTOWithNotExistUser = new OrderDTO(
                 null,
@@ -124,7 +125,7 @@ class OrderServiceImplTest {
                 true,
                 3.0
         );
-        assertThrows(IllegalStateException.class, () -> orderService.createOrder(inputDTOWithNotExistUser));
+        assertThrows(IllegalStateException.class, () -> orderService.createNewOrder(inputDTOWithNotExistUser));
 
         val inputDTOWithNotExistTable = new OrderDTO(
                 null,
@@ -136,7 +137,7 @@ class OrderServiceImplTest {
                 true,
                 3.0
         );
-        assertThrows(IllegalStateException.class, () -> orderService.createOrder(inputDTOWithNotExistTable));
+        assertThrows(IllegalStateException.class, () -> orderService.createNewOrder(inputDTOWithNotExistTable));
     }
 
     @Test
@@ -146,12 +147,12 @@ class OrderServiceImplTest {
         assertEquals(answer, result);
     }
 
-    @Test
+    /*@Test
     void changeStatusTest() {
-        final OrderDTO result = orderService.changeStatus(1L, OrderStatus.PREPARING);
+        final OrderDTO result = orderService.updateOrder(1L, OrderStatus.PREPARING);
 
         assertEquals(OrderStatus.PREPARING, result.getStatus());
-    }
+    }*/
 
     @Test
     void getOrdersForWaitersTest() {
@@ -162,7 +163,7 @@ class OrderServiceImplTest {
 
     @Test
     void getOrdersByStatusTest() {
-        final Collection<OrderDTO> result = orderService.getOrdersByStatus(OrderStatus.PREPARING);
+        final Collection<OrderDTO> result = orderService.getOrders(OrderStatus.PREPARING);
 
         assertEquals(0, result.size());
     }

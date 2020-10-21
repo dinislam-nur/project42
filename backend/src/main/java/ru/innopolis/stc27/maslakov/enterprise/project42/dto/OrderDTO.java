@@ -21,7 +21,7 @@ public class OrderDTO {
 
     List<Long> foodsId;
 
-    UUID TableId;
+    UUID tableId;
 
     Boolean payed;
 

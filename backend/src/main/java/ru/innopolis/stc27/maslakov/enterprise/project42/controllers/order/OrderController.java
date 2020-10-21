@@ -1,28 +1,24 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.controllers.order;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.order.OrderService;
+import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 import java.util.Collection;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
-
-    @GetMapping(value = "/orders/{status}")
-    public Collection<OrderDTO> orders(@PathVariable("status") OrderStatus status) {
-        return orderService.getOrdersByStatus(status);
-    }
-
     @GetMapping(value = "/orders")
-    public Collection<OrderDTO> listOrders() {
-        return orderService.getListOrders();
+    public Collection<OrderDTO> orders(
+            @RequestParam(value = "status", required = false) OrderStatus status) {
+        return orderService.getOrders(status);
     }
 
     @GetMapping(value = "/orders/{id}")
@@ -37,16 +33,18 @@ public class OrderController {
 
     @PostMapping(value = "/orders")
     public OrderDTO createOrder(OrderDTO orderDTO) {
-        return orderService.createOrder(orderDTO);
+        return orderService.createNewOrder(orderDTO);
     }
 
-    @PostMapping(value = "/orders/{id}/{status}")
-    public OrderDTO changeStatus(@PathVariable("id") Long id, @PathVariable("status") OrderStatus status) {
-        return orderService.changeStatus(id, status);
+    @PutMapping(value = "/orders/{id}")
+    public void updateOrder(
+            @PathVariable("id") Long id,
+            @RequestBody @NonNull OrderDTO orderDTO) {
+        orderService.updateOrder(id, orderDTO);
     }
 
     @DeleteMapping(value = "/orders/delete/{id}")
-    public Collection<OrderDTO> deleteOrder(@PathVariable("id") Long id) {
-        return orderService.deleteOrder(id);
+    public void deleteOrder(@PathVariable("id") Long id) {
+        orderService.deleteOrder(id);
     }
 }
