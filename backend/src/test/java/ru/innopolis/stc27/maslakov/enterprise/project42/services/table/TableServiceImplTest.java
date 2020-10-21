@@ -14,6 +14,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepo
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.TableDTOConverter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,14 +57,29 @@ class TableServiceImplTest {
     }
 
     @Test
-    void changeStatus() {
-
-        Mockito.when(tableRepository.findById(TABLE_ID))
+    void getTablesTest(){
+        Mockito.when(tableRepository.findByNumber(table.getNumber()))
                 .thenReturn(Optional.of(table));
-        table.setStatus(TableStatus.NOT_RESERVED);
-        Mockito.when(tableRepository.save(table))
-                .thenReturn(table);
+        val tablesDTOByNumber = tableService.getTables(null, 1);
 
+        assertEquals(answer, tablesDTOByNumber.get(0));
+        assertThrows(IllegalStateException.class, () -> tableService.getTables(null, 2));
+
+        Mockito.when(tableRepository.findByStatus(table.getStatus()))
+                .thenReturn(Collections.singletonList(table));
+        val tablesDTOByStatus = tableService.getTables("RESERVED", null);
+
+        assertEquals(answer, tablesDTOByStatus.get(0));
+
+        Mockito.when(tableRepository.findAll())
+                .thenReturn(Collections.singletonList(table));
+        val tablesDTO = tableService.getTables(null, null);
+
+        assertEquals(answer, tablesDTO.get(0));
+    }
+
+    @Test
+    void updateTest() {
         val sessions = new ArrayList<Session>() {{
             add(new Session());
             add(new Session());
@@ -72,15 +88,18 @@ class TableServiceImplTest {
         Mockito.when(sessionRepository.findByTableId(TABLE_ID))
                 .thenReturn(sessions);
 
-        val result = tableService.changeStatus(TABLE_ID, TableStatus.NOT_RESERVED);
-        val answer = new TableDTO(TABLE_ID, 1, TableStatus.NOT_RESERVED);
+        val inputTableDTO = new TableDTO(TABLE_ID, 1, TableStatus.NOT_RESERVED);
+        tableService.updateTable(TABLE_ID, inputTableDTO);
 
+        table.setStatus(TableStatus.NOT_RESERVED);
+        Mockito.verify(tableRepository).save(table);
         Mockito.verify(sessionRepository).findByTableId(TABLE_ID);
         Mockito.verify(sessionRepository, Mockito.times(sessions.size()))
                 .delete(Mockito.any(Session.class));
-        assertEquals(answer, result);
-        assertThrows(IllegalStateException.class,
-                () -> tableService.closeTable(UUID.randomUUID()));
+        assertThrows(
+                RuntimeException.class,
+                () -> tableService.updateTable(UUID.randomUUID(), inputTableDTO)
+                );
     }
 
     @Test

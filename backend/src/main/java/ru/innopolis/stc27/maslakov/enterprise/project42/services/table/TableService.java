@@ -1,20 +1,19 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.services.table;
 
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface TableService {
 
-    List<TableDTO> getTables(TableStatus status);
+    TableDTO createTable(TableDTO tableDTO);
 
     TableDTO getTable(UUID id);
 
-    TableDTO changeStatus(UUID id, TableStatus status);
+    List<TableDTO> getTables(String status, Integer number);
 
-    TableDTO createTable(TableDTO tableDTO);
+    void updateTable(UUID id, TableDTO tableDTO);
 
     void deleteTable(UUID tableId);
 
