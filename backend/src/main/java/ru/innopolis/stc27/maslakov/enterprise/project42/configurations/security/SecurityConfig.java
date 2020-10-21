@@ -14,30 +14,16 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.services.LoginService;
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final LoginService loginService;
 
     private final BCryptPasswordEncoder encoder;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable();
-
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/signup/**", "/signin/**")
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/signin")
-//                .permitAll();
     }
 
     @Autowired
