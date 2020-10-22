@@ -2,10 +2,11 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.controllers.food;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.FoodsDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.food.FoodService;
 
 @RestController
@@ -14,10 +15,28 @@ public class FoodController {
 
     private final FoodService foodService;
 
-    @GetMapping(value = "/foods")
-    private Page<Food> getFoods(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return foodService.getPageFoods(page, size);
+    @GetMapping(value = "/foods/{category}")
+    private Page<Food> getPageFoods(@PathVariable(value = "category") FoodCategory foodCategory,
+                                    @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                    @RequestParam(value = "size", defaultValue = "10") Integer size) {
+        return foodService.getPageFoods(page, size, foodCategory);
+    }
+
+    @PostMapping(value = "/foods/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    private void getFood(@RequestBody FoodsDTO foodsDTO) {
+        foodService.createOrUpdateFood(foodsDTO);
+    }
+
+    @GetMapping(value = "/foods/delete")
+    @ResponseStatus(HttpStatus.OK)
+    private void changeFood(@RequestParam(value = "id") Long foodID) {
+        foodService.deleteFood(foodID);
+    }
+
+    @GetMapping(value = "/foods/get")
+    private FoodsDTO getFood(@RequestParam(value = "id") Long foodsDTO) {
+        return foodService.getFood(foodsDTO);
     }
 
 }

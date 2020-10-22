@@ -1,9 +1,6 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.utils;
 
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SessionDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.UserDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
@@ -49,6 +46,16 @@ public class DTOConverter {
                 .id(user.getId())
                 .login(user.getLogin())
                 .role(user.getRole())
+                .build();
+    }
+
+    public static FoodsDTO convertToDTO(Food food) {
+        return FoodsDTO.builder()
+                .id(food.getId())
+                .name(food.getName())
+                .category(food.getFoodCategory())
+                .picture(food.getPicture())
+                .price(food.getPrice())
                 .build();
     }
 }
