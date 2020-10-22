@@ -30,4 +30,8 @@ public class Table {
     @Column(name = "table_status_id")
     private TableStatus status;
 
+    @PrePersist
+    public void defaultStatus() {
+        status = TableStatus.NOT_RESERVED;
+    }
 }

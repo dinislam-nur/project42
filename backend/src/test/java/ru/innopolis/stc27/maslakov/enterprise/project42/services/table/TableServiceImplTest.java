@@ -4,14 +4,13 @@ import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.dao.DataIntegrityViolationException;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
-import ru.innopolis.stc27.maslakov.enterprise.project42.utils.TableDTOConverter;
+import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +42,7 @@ class TableServiceImplTest {
                 TableStatus.RESERVED
         );
 
-        answer = TableDTOConverter.convert(table);
+        answer = DTOConverter.convert(table);
     }
 
     @Test
@@ -114,14 +113,8 @@ class TableServiceImplTest {
         val result = tableService.createTable(inputTableDTO);
 
         assertEquals(answer, result);
-        assertThrows(IllegalStateException.class,
+        assertThrows(RuntimeException.class,
                 () -> tableService.createTable(new TableDTO(TABLE_ID, 1, TableStatus.NOT_RESERVED)));
-
-        val throwableTable = new Table(UUID.randomUUID(), 1, TableStatus.NOT_RESERVED);
-        Mockito.when(tableRepository.save(throwableTable))
-                .thenThrow(DataIntegrityViolationException.class);
-        assertThrows(IllegalStateException.class,
-                () -> tableService.createTable(TableDTOConverter.convert(throwableTable)));
     }
 
     @Test

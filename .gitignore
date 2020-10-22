@@ -35,3 +35,4 @@ build/
 /mvnw.cmd
 /.mvn/
 /backend/src/main/resources/connection.properties
+/backend/app.log

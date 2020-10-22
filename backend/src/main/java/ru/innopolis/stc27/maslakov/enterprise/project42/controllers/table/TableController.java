@@ -2,6 +2,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.controllers.table;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class TableController {
@@ -76,7 +78,9 @@ public class TableController {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
-    public String badRequestHandler(RuntimeException exception) {
-        return exception.getMessage();
+    public String badRequestHandler() {
+        val message = "Некорректный запрос";
+        log.warn(message);
+        return message;
     }
 }
