@@ -37,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
                         "Пользователя с id #" + userId + " не найдено в базе"));
 
         val tableId = orderDTO.getTableId();
+
         val table = tableRepository
                 .findById(tableId)
                 .orElseThrow(() -> new IllegalStateException(
@@ -46,14 +47,22 @@ public class OrderServiceImpl implements OrderService {
         foodRepository
                 .findAllById(orderDTO.getFoodsId())
                 .forEach(foods::add);
+        final List<Food> listFoods = new ArrayList<>();
+        orderDTO.getFoodsId().forEach(id -> {
+            foods.forEach(entity -> {
+                if (entity.getId() == id) {
+                    listFoods.add(entity);
+                }
+            });
+        });
         val currentOrder = Order.builder()
                 .id(null)
                 .user(user)
                 .table(table)
-                .foods(foods)
+                .foods(listFoods)
                 .status(OrderStatus.USER_CONFIRMED)
-                .payed(orderDTO.getPayed())
-                .totalSum(orderDTO.getTotal())
+                .payed(true)
+                .totalSum(listFoods.stream().mapToDouble(Food::getPrice).sum())
                 .build();
 
         val saved = orderRepository.save(currentOrder);
@@ -108,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             List<OrderDTO> list = new ArrayList<>();
             Iterable<Order> all = orderRepository.findAll();
-            for (Order order:all) {
+            for (Order order : all) {
                 list.add(DTOConverter.convertToDTO(order));
             }
             list.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
