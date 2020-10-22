@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         final List<Food> listFoods = new ArrayList<>();
         orderDTO.getFoodsId().forEach(id -> {
             foods.forEach(entity -> {
-                if (entity.getId() == id) {
+                if (entity.getId().equals(id)) {
                     listFoods.add(entity);
                 }
             });
@@ -107,13 +107,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Collection<OrderDTO> getOrders(OrderStatus status) {
+    public Collection<OrderDTO> getOrders(OrderStatus status, Long id) {
         if (status != null) {
             return orderRepository
                     .findByStatus(status)
                     .stream()
                     .map(DTOConverter::convertToDTO)
                     .collect(Collectors.toSet());
+        }
+        else if (id != null) {
+            List<OrderDTO> listId = new ArrayList<>();
+            Iterable<Order> all = orderRepository.findAll();
+            for (Order order : all) {
+                if (order.getId().equals(id)) {
+                    listId.add(DTOConverter.convertToDTO(order));
+                }
+            }
+            listId.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
+            return listId;
         } else {
             List<OrderDTO> list = new ArrayList<>();
             Iterable<Order> all = orderRepository.findAll();

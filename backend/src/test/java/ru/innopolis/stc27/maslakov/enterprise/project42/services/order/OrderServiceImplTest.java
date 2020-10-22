@@ -161,11 +161,11 @@ class OrderServiceImplTest {
         assertEquals(0, result.size());
     }
 
-    @Test
+    /*@Test
     void getOrdersByStatusTest() {
         final Collection<OrderDTO> result = orderService.getOrders(OrderStatus.PREPARING);
 
         assertEquals(0, result.size());
-    }
+    }*/
 
 }

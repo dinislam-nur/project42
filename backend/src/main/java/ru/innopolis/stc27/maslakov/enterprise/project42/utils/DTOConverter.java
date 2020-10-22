@@ -19,22 +19,4 @@ public class DTOConverter {
                 order.getTotalSum()
         );
     }
-
-    /*public static Order convert(OrderDTO orderDTO) {
-//        return new Order(
-//                orderDTO.getId(),
-//                orderDTO.getTimestamp(),
-//                orderDTO.getUserId(),
-//                orderDTO.getPayed(),
-//                orderDTO.getFoodsId(),
-//                orderDTO.getStatus(),
-//                orderDTO.getTableId(),
-//                orderDTO.getTotal()
-//        );
-        return Order.builder()
-                .id(orderDTO.getId())
-                .orderTime(orderDTO.getTimestamp())
-                .status(orderDTO.getStatus())
-                .
-    }*/
 }

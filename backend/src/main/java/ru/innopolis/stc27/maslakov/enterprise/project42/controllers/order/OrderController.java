@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.order.OrderService;
-import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 import java.util.Collection;
 
@@ -17,8 +16,9 @@ public class OrderController {
     private final OrderService orderService;
     @GetMapping(value = "/orders")
     public Collection<OrderDTO> orders(
-            @RequestParam(value = "status", required = false) OrderStatus status) {
-        return orderService.getOrders(status);
+            @RequestParam(value = "status", required = false) OrderStatus status,
+            @RequestParam(value = "id", required = false) Long id) {
+        return orderService.getOrders(status, id);
     }
 
     @GetMapping(value = "/orders/{id}")
@@ -32,7 +32,8 @@ public class OrderController {
     }
 
     @PostMapping(value = "/orders")
-    public OrderDTO createOrder(OrderDTO orderDTO) {
+    public OrderDTO createOrder(
+            @RequestBody @NonNull OrderDTO orderDTO) {
         return orderService.createNewOrder(orderDTO);
     }
 
