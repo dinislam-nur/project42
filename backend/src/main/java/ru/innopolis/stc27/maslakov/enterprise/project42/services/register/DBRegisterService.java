@@ -22,7 +22,6 @@ public class DBRegisterService implements RegisterService {
 
     @Override
     public Optional<User> signup(SignupDTO data) {
-        //TODO Добавить валидацию данных
         val encryptedPassword = encoder.encode(data.getPassword());
         val user = User.builder()
                 .login(data.getLogin())
