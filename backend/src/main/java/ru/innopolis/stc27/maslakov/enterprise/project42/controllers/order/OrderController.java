@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.order.OrderService;
 
 import java.util.Collection;
@@ -17,7 +18,7 @@ public class OrderController {
     @GetMapping(value = "/orders")
     public Collection<OrderDTO> orders(
             @RequestParam(value = "status", required = false) OrderStatus status,
-            @RequestParam(value = "id", required = false) Long id) {
+            @RequestParam(value = "id", required = false) User id) {
         return orderService.getOrders(status, id);
     }
 

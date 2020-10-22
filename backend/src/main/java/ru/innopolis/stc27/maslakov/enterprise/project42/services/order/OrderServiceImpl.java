@@ -8,6 +8,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
@@ -107,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Collection<OrderDTO> getOrders(OrderStatus status, Long id) {
+    public Collection<OrderDTO> getOrders(OrderStatus status, User id) {
         if (status != null) {
             return orderRepository
                     .findByStatus(status)
@@ -117,9 +118,9 @@ public class OrderServiceImpl implements OrderService {
         }
         else if (id != null) {
             List<OrderDTO> listId = new ArrayList<>();
-            Iterable<Order> all = orderRepository.findAll();
+            Iterable<Order> all = orderRepository.findByUser(id);
             for (Order order : all) {
-                if (order.getId().equals(id)) {
+                if (order.getUser().equals(id)) {
                     listId.add(DTOConverter.convertToDTO(order));
                 }
             }

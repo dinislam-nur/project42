@@ -2,6 +2,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.order;
 
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
 import java.util.Collection;
 
@@ -17,5 +18,5 @@ public interface OrderService {
 
     Collection<OrderDTO> getOrdersForWaiters();
 
-    Collection<OrderDTO> getOrders(OrderStatus status, Long id);
+    Collection<OrderDTO> getOrders(OrderStatus status, User id);
 }
