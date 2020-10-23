@@ -2,7 +2,6 @@ import React from "react";
 import LoginForm from "../forms/login";
 import {connect} from "react-redux";
 import {loginAction} from "../../store/actions/app";
-import mapStateToProps from "react-redux/lib/connect/mapStateToProps";
 
 const initState = {
     login: "",

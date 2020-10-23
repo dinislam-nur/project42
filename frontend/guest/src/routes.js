@@ -1,16 +1,13 @@
-import React, {useState} from "react";
-import {
-    Switch,
-    Route,
-    useParams
-} from "react-router-dom";
+import React from "react";
+import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import LoginPage from "./components/pages/login";
 import RegistrationPage from "./components/pages/registration";
 import {connect} from "react-redux";
-import {fetchTable, loginTokenAction, setTableAction} from "./store/actions/app";
-import {Redirect} from "react-router-dom";
+import {changeDishes, fetchTable, loginTokenAction, setTableAction} from "./store/actions/app";
 import Menu from "./components/pages/menu";
-import {dishes} from "./data/data";
+import OrdersPage from "./components/pages/orders";
+import Header from "./components/app/header";
+import {FocusStyleManager} from "@blueprintjs/core";
 
 const Routes = (props) => {
 
@@ -18,18 +15,30 @@ const Routes = (props) => {
         if (!props.token) {
             const token = localStorage.getItem("token");
             if (token !== null && token !== 'null') {
-                 await props.loginToken(token);
+                await props.loginToken(token);
             }
         }
-        return props.token !== null;
+        return await props.token !== null;
     }
+    FocusStyleManager.onlyShowFocusOnTabs();
+    const history = useHistory();
+
+    const handleCategoryChange = async category => {
+        await props.changeDishes(category);
+        history.push('/menu')
+    };
 
     return (
         <>
             {tokenCheck() ?
                 <Switch>
                     <Route exact path={'/menu'}>
-                        <Menu dishes={dishes}/>
+                        <Header setCategory={handleCategoryChange} name={"Меню"}/>
+                        <Menu dishes={props.dishes}/>
+                    </Route>
+                    <Route exact path={'/orders'}>
+                        <Header setCategory={handleCategoryChange} name={"Заказ"}/>
+                        <OrdersPage/>
                     </Route>
                     <Redirect to={'/menu'}/>
                 </Switch>
@@ -70,12 +79,13 @@ class LoginWrapper extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({token: state.app.token, table: state.app.table});
+const mapStateToProps = state => ({token: state.app.token, table: state.app.table, dishes: state.app.dishes});
 
 const mapDispatchToProps = dispatch => ({
     loginToken: (token) => dispatch(loginTokenAction(token)),
     fetchTable: (id) => dispatch(fetchTable(id)),
-    setTable: (table) => dispatch(setTableAction(table))
+    setTable: (table) => dispatch(setTableAction(table)),
+    changeDishes: category => dispatch(changeDishes(category))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Routes);

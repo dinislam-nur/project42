@@ -18,13 +18,12 @@ const Dish = (props) => {
         <div className={'dish_card'}>
             <Card>
                 <CardImg top className={'dish_pic'} src={props.dish.picture} alt="Card image cap"/>
-                <CardBody className={'dish_card_body '}>
+                <CardBody >
                     <CardTitle><b>{props.dish.name}</b></CardTitle>
                     <CardSubtitle>{props.dish.price}₽</CardSubtitle>
-                    <CardText>{props.dish.composition}</CardText>
-                    <div>
-                        <Quantity onQuantityChange={quantityChangeHandler}/>
-                        <Button onClick={addButtonHandler}>Добавить</Button>
+                    <div className={'dish_card_button'}>
+                        {/*<Quantity onQuantityChange={quantityChangeHandler}/>*/}
+                        <Button style={{marginTop: "5px"}} onClick={addButtonHandler}>Добавить</Button>
                     </div>
                 </CardBody>
             </Card>

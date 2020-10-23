@@ -34,8 +34,45 @@ code {
 
 }
 
+.del_butt {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+}
+
 .quantity {
   float: left;
   padding-bottom: 2px;
+}
+
+.orders_page_card_button {
+  float: right;
+  width: 30%;
+  margin: auto;
+}
+
+.orders_page_card_body {
+  float: left;
+  width: 70%;
+}
+
+.orders_page_buttongroup {
+  margin-left: 20%;
+  margin-right: 30%;
+  padding-top: 1px;
+  padding-bottom: 3px;
+}
+
+.empty_order{
+  padding-top: 20px;
+  padding-bottom: 15px;
+  margin-left: 32%;
+  margin-right: 30%;
+}
+
+.dish_card_button {
+  margin-left: 30%;
+  margin-right: 50%;
 }
 

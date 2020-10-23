@@ -7,8 +7,10 @@ import Nav from "reactstrap/es/Nav";
 import NavItem from "reactstrap/es/NavItem";
 import NavLink from "reactstrap/es/NavLink";
 import {connect} from "react-redux";
-import Button from "reactstrap/es/Button";
 import {logout} from "../../store/actions/app";
+import {Button} from "@blueprintjs/core";
+import Badge from "reactstrap/es/Badge";
+import {useHistory} from "react-router";
 
 
 const Header = (props) => {
@@ -25,10 +27,15 @@ const Header = (props) => {
         props.setCategory("SOUP");
     };
 
+    const history = useHistory();
+
     return (
         <div>
             <Navbar light fixed={"top"} color={"light"}>
-                <NavbarBrand className="mr-auto">Меню</NavbarBrand>
+                <NavbarBrand className="mr-auto">{props.name}</NavbarBrand>
+                <Button icon={"shopping-cart"} style={{marginRight:"5px"}} minimal={true} onClick={()=>history.push('/orders')}>
+                    <Badge color="secondary">{props.order.foods.length}</Badge>
+                </Button>
                 <NavbarToggler onClick={toggleNavbar} className="mr-2"/>
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav navbar>
@@ -38,16 +45,24 @@ const Header = (props) => {
                         <NavItem>
                             <NavLink onClick={soupClickHandler}>Суп</NavLink>
                         </NavItem>
+                        <NavItem>
+                            <NavLink onClick={props.logout}>Выйти</NavLink>
+                        </NavItem>
                     </Nav>
-                    <Button onClick={props.logout}>Exit</Button>
                 </Collapse>
             </Navbar>
         </div>
     );
 }
 
+const mapStateToProps = state => {
+    return {
+        order: state.app.order
+    }
+}
+
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logout())
 });
 
-export default connect(null, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -1,33 +1,38 @@
 import React from "react";
 import Dish from "../menu/dish";
-import Header from "../app/header";
-
+import {addDishToOrder} from "../../store/actions/app";
+import {connect} from "react-redux";
 
 class Menu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {category: "SOUP"};
     }
 
-    addHandler = (dish) => console.log(dish);
-
-    handle = category => this.setState({...this.state, category});
+    addHandler = (dish) => {
+        this.props.addDish(dish);
+    };
 
     render() {
         const listDishes = this.props.dishes.map((dish) => {
-            if (dish.type === this.state.category) {
-                return <Dish key={dish.id} dish={dish} onAdd={this.addHandler}/>;
-            } else return null;
+            console.log(dish)
+            return <Dish key={dish.id} dish={dish} onAdd={this.addHandler}/>;
         });
         return (
-            <>
-                <Header setCategory={this.handle}/>
-                <div style={{paddingTop: "60px"}}>
-                    {listDishes}
-                </div>
-            </>
+            <div style={{paddingTop: "60px"}}>
+                {listDishes} {console.log("props: " + this.props)}
+            </div>
         )
     }
 }
 
-export default Menu;
+
+const mapStateToProps = state => (
+    {}
+)
+
+
+const mapDispatchToProps = dispatch => ({
+    addDish: dish => dispatch(addDishToOrder(dish))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -1,4 +1,4 @@
-import {tablesList} from "../../data/data";
+import {pasta, soup} from "../../data/data";
 
 export const LOGIN = "APP/LOGIN";
 export const LOGIN_TOKEN = "APP/LOGIN_TOKEN";
@@ -6,6 +6,9 @@ export const LOGOUT = "APP/LOGOUT";
 export const SET_TABLE = "APP/SET_TABLE";
 export const SHOW_ERROR = "APP/SHOW_ERROR";
 export const SHOW_SUCCESS = "APP/SHOW_SUCCESS";
+export const ADD_DISH_TO_ORDER = "APP/ADD_DISH_TO_ORDER";
+export const REMOVE_DISH_FROM_ORDER = "APP/REMOVE_DISH_FROM_ORDER";
+export const CHANGE_DISHES = "APP/CHANGE_DISHES";
 export const SHOW_LOADER = "APP/SHOW_LOADER";
 export const HIDE_LOADER = "APP/HIDE_LOADER";
 
@@ -22,7 +25,16 @@ export const registerAction = (login, password, history) => {
             dispatch(showSuccess("Пользователь успешно создан"));
             history.push('/login');
         } else {
-            dispatch(showError("Пользователь с таким именем уже существует"));
+            const data = response.json();
+            if (data.message) {
+                dispatch(showError(data.message));
+            } else if (data.login) {
+                dispatch(showError(data.login))
+            } else if (data.password) {
+                dispatch(showError(data.password))
+            } else {
+                dispatch(showError("Произошла ошибка. Попробуйте еще раз."))
+            }
         }
     }
 }
@@ -58,14 +70,11 @@ export const loginTokenAction = (token) => {
                 'JSESSIONID': token
             }
         });
-
-        const data = await response.json();
-        console.log(data);
         if (response.ok) {
+            const data = await response.json();
             dispatch(setCredentials(data.user.login, data.token));
         } else {
             dispatch(logoutAction());
-            showError(data.message);
         }
     }
 }
@@ -109,11 +118,48 @@ export const setTableAction = table => ({
 })
 
 const setCredentials = (login, token) => {
-    console.log({login, token})
     return {
         type: LOGIN,
         username: login,
         token
+    }
+}
+
+export const addDishToOrder = (dish) => {
+    return {
+        type: ADD_DISH_TO_ORDER,
+        dish: {
+            id: dish.id,
+            name: dish.name,
+            category: dish.category,
+            price: dish.price
+        }
+    }
+}
+
+export const removeDishFromOrder = (dish) => {
+    return {
+        type: REMOVE_DISH_FROM_ORDER,
+        dish
+    }
+}
+
+export const changeDishes = (category) => {
+    return async (dispatch) => {
+        switch (category) {
+            case "SOUP":
+                dispatch({
+                    type: CHANGE_DISHES,
+                    dishes: soup
+                });
+                break;
+            case "PASTA":
+                dispatch({
+                    type: CHANGE_DISHES,
+                    dishes: pasta
+                });
+                break;
+        }
     }
 }
 
