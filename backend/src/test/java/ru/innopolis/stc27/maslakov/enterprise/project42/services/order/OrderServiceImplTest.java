@@ -113,7 +113,6 @@ class OrderServiceImplTest {
         final OrderDTO result = orderService.createNewOrder(inputDTO);
 
         assertEquals(answer, result);
-        assertThrows(IllegalArgumentException.class, () -> orderService.createNewOrder(null));
 
         val inputDTOWithNotExistUser = new OrderDTO(
                 null,

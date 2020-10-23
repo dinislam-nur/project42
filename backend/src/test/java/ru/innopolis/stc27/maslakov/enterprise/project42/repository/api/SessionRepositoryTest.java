@@ -2,6 +2,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
+@Disabled
 class SessionRepositoryTest {
 
     private final SessionRepository sessionRepository;
