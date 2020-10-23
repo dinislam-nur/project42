@@ -42,7 +42,7 @@ class FoodRepositoryTest {
                             .name("compot")
                             .picture("test.ru")
                             .price(1.0)
-                            .foodCategory(FoodCategory.DRINK)
+                            .foodCategory(FoodCategory.DRINKS)
                             .build()
             );
             add(
@@ -112,7 +112,7 @@ class FoodRepositoryTest {
                 .name("salat")
                 .picture("test.ru")
                 .price(1.0)
-                .foodCategory(FoodCategory.SOMETHING_ELSE)
+                .foodCategory(FoodCategory.SALADS)
                 .build();
 
         final Food saved = foodRepository.save(salat);

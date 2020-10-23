@@ -47,7 +47,7 @@ class OrderRepositoryTest {
                             .name("compot")
                             .picture("test.ru")
                             .price(1.0)
-                            .foodCategory(FoodCategory.DRINK)
+                            .foodCategory(FoodCategory.DRINKS)
                             .build()
             );
             add(

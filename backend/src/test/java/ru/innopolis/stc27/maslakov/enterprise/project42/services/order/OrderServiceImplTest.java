@@ -53,7 +53,7 @@ class OrderServiceImplTest {
                 .thenReturn(Optional.of(table));
 
         final List<Food> foods = new ArrayList<Food>() {{
-            add(new Food(1L, "compot", 1.0, "test.ru", FoodCategory.DRINK));
+            add(new Food(1L, "compot", 1.0, "test.ru", FoodCategory.DRINKS));
             add(new Food(2L, "borsh", 2.0, "test.ru", FoodCategory.HOT_DISHES));
         }};
         Mockito.when(foodRepository.findAllById(Mockito.anyIterable()))
