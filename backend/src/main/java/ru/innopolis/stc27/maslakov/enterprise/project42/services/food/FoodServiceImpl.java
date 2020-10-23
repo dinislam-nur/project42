@@ -20,7 +20,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public Page<Food> getPageFoods(Integer page, Integer size, FoodCategory foodCategory) {
-        Pageable foods = PageRequest.of(page, size, Sort.by("name"));
+        Pageable foods = PageRequest.of(page, size, Sort.by("id"));
         return foodRepository.findAllByFoodCategory(foodCategory, foods);
     }
 

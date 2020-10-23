@@ -28,9 +28,15 @@ public class FoodController {
         foodService.createOrUpdateFood(foodsDTO);
     }
 
-    @GetMapping(value = "/foods/delete")
+    @PutMapping(value = "/foods")
+    @ResponseStatus(HttpStatus.CREATED)
+    private void update(@RequestBody FoodsDTO foodsDTO) {
+        foodService.createOrUpdateFood(foodsDTO);
+    }
+
+    @DeleteMapping(value = "/foods/{id}")
     @ResponseStatus(HttpStatus.OK)
-    private void changeFood(@RequestParam(value = "id") Long foodID) {
+    private void changeFood(@PathVariable(value = "id") Long foodID) {
         foodService.deleteFood(foodID);
     }
 

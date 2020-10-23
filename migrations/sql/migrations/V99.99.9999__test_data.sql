@@ -15,7 +15,7 @@ VALUES (1, 'CHIEF'),
        (4, 'GUEST');
 
 INSERT INTO users (login, password, user_role_id)
-VALUES ('user', 'user', 4);
+VALUES ('user', '$2y$10$MfJEpQhrvAo0M4lJXMfFCuTOtGyy8x79PpavQ7T.GnMPorKbTFzHy', 4);
 
 INSERT INTO food_categories (food_category_id, category_name)
 VALUES (1, 'DRINK'),
