@@ -16,6 +16,8 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepos
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.ServicesUtils;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
         val currentOrder = Order.builder()
                 .id(null)
                 .user(user)
+                .orderTime(new Timestamp(Instant.now().getEpochSecond()))
                 .table(table)
                 .foods(listFoods)
                 .status(OrderStatus.USER_CONFIRMED)
