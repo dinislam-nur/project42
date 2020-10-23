@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import LoginPage from "./components/pages/login";
 import RegistrationPage from "./components/pages/registration";
@@ -9,60 +9,73 @@ import OrdersPage from "./components/pages/orders";
 import Header from "./components/app/header";
 import {FocusStyleManager} from "@blueprintjs/core";
 
-const Routes = (props) => {
+class Routes extends React.Component {
 
-    const tokenCheck = async () => {
-        if (!props.token) {
-            const token = localStorage.getItem("token");
-            if (token !== null && token !== 'null') {
-                await props.loginToken(token);
-            }
+    constructor(props) {
+        super(props);
+        this.state = {
+            loaded: false,
+            authenticated: false
         }
-        return await props.token !== null;
+        FocusStyleManager.onlyShowFocusOnTabs();
     }
-    FocusStyleManager.onlyShowFocusOnTabs();
-    const history = useHistory();
 
-    const handleCategoryChange = async category => {
-        await props.changeDishes(category);
-        history.push('/menu')
+    handleCategoryChange = async category => {
+        await this.props.changeDishes(category);
+        this.props.history.push('/menu')
     };
 
-    return (
-        <>
-            {tokenCheck() ?
-                <Switch>
-                    <Route exact path={'/menu'}>
-                        <Header setCategory={handleCategoryChange} name={"Меню"}/>
-                        <Menu dishes={props.dishes}/>
-                    </Route>
-                    <Route exact path={'/orders'}>
-                        <Header setCategory={handleCategoryChange} name={"Заказ"}/>
-                        <OrdersPage/>
-                    </Route>
-                    <Redirect to={'/menu'}/>
-                </Switch>
-                :
-                <Switch>
-                    <Route path={'/:id/login'} component={ConnectedLoginWrapper}/>
-                    <Route exact path={'/registration'}>
-                        <RegistrationPage/>
-                    </Route>
-                    <Route exact path={'/404'}>
-                        <h1>Пожалуйста, отсканируйте код на вашем столе</h1>
-                    </Route>
-                    <Redirect to={'/404'}/>
-                </Switch>
+    async componentDidMount() {
+        if (!this.props.token) {
+            const token = localStorage.getItem("token");
+            if (token !== null && token !== 'null') {
+                await this.props.loginToken(token);
             }
-        </>
+        }
+    }
+
+    privateRoute = (
+        <Switch>
+            <Route exact path={'/menu'}>
+                <Header setCategory={this.handleCategoryChange} name={"Меню"}/>
+                <Menu dishes={this.props.dishes}/>
+            </Route>
+            <Route exact path={'/orders'}>
+                <Header setCategory={this.handleCategoryChange} name={"Заказ"}/>
+                <OrdersPage/>
+            </Route>
+            <Redirect to={'/menu'}/>
+        </Switch>
     );
+
+    publicRoute = (
+        <Switch>
+            <Route path={'/:id/login'} component={ConnectedLoginWrapper}/>
+            <Route exact path={'/registration'}>
+                <RegistrationPage/>
+            </Route>
+            <Route exact path={'/404'}>
+                <h1>Пожалуйста, отсканируйте код на вашем столе</h1>
+            </Route>
+            <Redirect to={'/404'}/>
+        </Switch>
+    );
+
+    render() {
+
+        return (
+            <>
+                {this.props.token ? this.privateRoute : this.publicRoute }
+            </>
+        )
+    }
+
 }
 
 class LoginWrapper extends React.Component {
     constructor(props) {
         super(props);
         this.id = props.match.params.id;
-        console.log(this.id);
     }
 
     async componentDidMount() {
@@ -71,15 +84,21 @@ class LoginWrapper extends React.Component {
 
     render() {
         return <>
-            {this.props.table ?
-                <LoginPage table={this.props.table}/>
-                : null
+            {
+                this.props.table ?
+                    <LoginPage table={this.props.table}/>
+                    : null
             }
         </>
     }
 }
 
-const mapStateToProps = state => ({token: state.app.token, table: state.app.table, dishes: state.app.dishes});
+const mapStateToProps = state => ({
+    loaded: state.app.loaded,
+    token: state.app.token,
+    table: state.app.table,
+    dishes: state.app.dishes,
+});
 
 const mapDispatchToProps = dispatch => ({
     loginToken: (token) => dispatch(loginTokenAction(token)),

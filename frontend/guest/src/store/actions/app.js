@@ -4,6 +4,7 @@ export const LOGIN = "APP/LOGIN";
 export const LOGIN_TOKEN = "APP/LOGIN_TOKEN";
 export const LOGOUT = "APP/LOGOUT";
 export const SET_TABLE = "APP/SET_TABLE";
+export const SET_SESSION = "APP/SET_SESSION";
 export const SHOW_ERROR = "APP/SHOW_ERROR";
 export const SHOW_SUCCESS = "APP/SHOW_SUCCESS";
 export const ADD_DISH_TO_ORDER = "APP/ADD_DISH_TO_ORDER";
@@ -11,6 +12,8 @@ export const REMOVE_DISH_FROM_ORDER = "APP/REMOVE_DISH_FROM_ORDER";
 export const CHANGE_DISHES = "APP/CHANGE_DISHES";
 export const SHOW_LOADER = "APP/SHOW_LOADER";
 export const HIDE_LOADER = "APP/HIDE_LOADER";
+export const LOADED = "APP/LOADED";
+export const NOT_LOADED = "APP/NOT_LOADED";
 
 export const registerAction = (login, password, history) => {
     return async (dispatch) => {
@@ -55,6 +58,10 @@ export const loginAction = (login, password, tableId) => {
         if (response.ok) {
             console.log(data);
             dispatch(setCredentials(data.user.login, data.token));
+            dispatch({
+                type: SET_SESSION,
+                session: data
+            })
         } else {
             showError(data.message);
         }
@@ -63,17 +70,23 @@ export const loginAction = (login, password, tableId) => {
 
 export const loginTokenAction = (token) => {
     return async (dispatch) => {
-        const response = await fetch('http://localhost:8181/login_token', {
+        const response = await fetch('http://localhost:8181/session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'JSESSIONID': token
+                'Authorize': token
             }
         });
         if (response.ok) {
             const data = await response.json();
+            dispatch({
+                type: LOADED
+            });
             dispatch(setCredentials(data.user.login, data.token));
         } else {
+            dispatch({
+                type: LOADED
+            });
             dispatch(logoutAction());
         }
     }
@@ -102,7 +115,7 @@ export const logout = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'JSESSIONID': localStorage.getItem('token')
+                'Authorize': localStorage.getItem('token')
             },
         });
     }

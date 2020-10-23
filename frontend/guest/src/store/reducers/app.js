@@ -1,10 +1,10 @@
 import {
     ADD_DISH_TO_ORDER,
-    CHANGE_DISHES,
+    CHANGE_DISHES, LOADED,
     LOGIN,
     LOGIN_TOKEN,
     LOGOUT,
-    REMOVE_DISH_FROM_ORDER,
+    REMOVE_DISH_FROM_ORDER, SET_SESSION,
     SET_TABLE,
     SHOW_ERROR,
     SHOW_SUCCESS
@@ -17,6 +17,8 @@ const initialState = {
     token: null,
     table: undefined,
     dishes: soup,
+    session: {},
+    loaded: false,
     order: localStorage.getItem("order") ? JSON.parse(localStorage.getItem("order")) :
         {
             total: 0,
@@ -74,6 +76,10 @@ export default (state = initialState, action) => {
             return {...state, order: {total: tot, foods: ord.foods}};
         case CHANGE_DISHES:
             return {...state, dishes: action.dishes};
+        case SET_SESSION:
+            return {...state, session: action.session};
+        case LOADED:
+            return {...state, loaded: true};
         default:
             return state;
     }
