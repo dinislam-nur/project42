@@ -80,7 +80,7 @@ class OrderRepositoryTest {
                 .payed(false)
                 .status(OrderStatus.USER_CONFIRMED)
                 .foods(foods)
-                .orderTime(Timestamp.valueOf("2020-10-15 00:00:00.000000"))
+                .orderTime(Timestamp.valueOf("2020-10-15 00:00:00.200000"))
                 .totalSum(3.0)
                 .build();
     }
