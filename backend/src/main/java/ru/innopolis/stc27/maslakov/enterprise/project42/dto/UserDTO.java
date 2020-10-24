@@ -14,6 +14,4 @@ public class UserDTO {
 
     Role role;
 
-//    List<OrderDTO> orders;
-
 }

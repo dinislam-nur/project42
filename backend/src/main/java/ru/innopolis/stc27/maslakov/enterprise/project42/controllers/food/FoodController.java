@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.FoodsDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.FoodDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.food.FoodService;
@@ -24,14 +24,8 @@ public class FoodController {
 
     @PostMapping(value = "/foods/create")
     @ResponseStatus(HttpStatus.CREATED)
-    private void getFood(@RequestBody FoodsDTO foodsDTO) {
-        foodService.createOrUpdateFood(foodsDTO);
-    }
-
-    @PutMapping(value = "/foods")
-    @ResponseStatus(HttpStatus.CREATED)
-    private void update(@RequestBody FoodsDTO foodsDTO) {
-        foodService.createOrUpdateFood(foodsDTO);
+    private void getFood(@RequestBody FoodDTO foodDTO) {
+        foodService.createOrUpdateFood(foodDTO);
     }
 
     @DeleteMapping(value = "/foods/{id}")
@@ -41,7 +35,7 @@ public class FoodController {
     }
 
     @GetMapping(value = "/foods/get")
-    private FoodsDTO getFood(@RequestParam(value = "id") Long foodsDTO) {
+    private FoodDTO getFood(@RequestParam(value = "id") Long foodsDTO) {
         return foodService.getFood(foodsDTO);
     }
 }

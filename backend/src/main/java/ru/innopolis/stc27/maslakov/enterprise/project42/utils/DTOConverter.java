@@ -1,11 +1,7 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.utils;
 
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.FoodsDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SessionDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.UserDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
@@ -37,7 +33,7 @@ public class DTOConverter {
                 order.getUser().getId(),
                 order.getOrderTime(),
                 order.getStatus(),
-                order.getFoods().stream().map(Food::getId).collect(Collectors.toList()),
+                order.getFoods().stream().map(DTOConverter::convertToOrderFoodDTO).collect(Collectors.toList()),
                 order.getTable().getId(),
                 order.isPayed(),
                 order.getTotalSum()
@@ -60,13 +56,22 @@ public class DTOConverter {
                 .build();
     }
 
-    public static FoodsDTO convertToDTO(Food food) {
-        return FoodsDTO.builder()
-                .id(food.getId())
-                .name(food.getName())
-                .category(food.getFoodCategory())
-                .picture(food.getPicture())
-                .price(food.getPrice())
-                .build();
+    public static FoodDTO convertToDTO(Food food) {
+        return new FoodDTO(
+                food.getId(),
+                food.getName(),
+                food.getFoodCategory(),
+                food.getPrice(),
+                food.getPicture()
+        );
+    }
+
+    public static OrderFoodDTO convertToOrderFoodDTO(Food food) {
+        return new OrderFoodDTO(
+                food.getId(),
+                food.getName(),
+                food.getFoodCategory(),
+                food.getPrice()
+        );
     }
 }

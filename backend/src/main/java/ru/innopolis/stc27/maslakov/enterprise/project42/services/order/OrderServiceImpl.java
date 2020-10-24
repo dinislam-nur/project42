@@ -5,6 +5,7 @@ import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.PrimaryOrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
@@ -15,8 +16,6 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepo
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final FoodRepository foodRepository;
 
     @Override
-    public OrderDTO createNewOrder(OrderDTO orderDTO) {
+    public Long createNewOrder(PrimaryOrderDTO orderDTO) {
         val userId = orderDTO.getUserId();
         val user = userRepository
                 .findById(userId)
@@ -49,24 +48,19 @@ public class OrderServiceImpl implements OrderService {
                 .findAllById(orderDTO.getFoodsId())
                 .forEach(foods::add);
         final List<Food> listFoods = new ArrayList<>();
-        orderDTO.getFoodsId().forEach(id -> foods.forEach(entity -> {
-            if (entity.getId().equals(id)) {
-                listFoods.add(entity);
-            }
-        }));
+        orderDTO.getFoodsId().forEach(
+                id -> foods
+                        .stream()
+                        .filter(food -> id.equals(food.getId()))
+                        .forEachOrdered(listFoods::add)
+        );
         val currentOrder = Order.builder()
-                .id(null)
                 .user(user)
-                .orderTime(new Timestamp(Instant.now().getEpochSecond()))
                 .table(table)
                 .foods(listFoods)
-                .status(OrderStatus.USER_CONFIRMED)
-                .payed(true)
-                .totalSum(listFoods.stream().mapToDouble(Food::getPrice).sum())
                 .build();
 
-        val saved = orderRepository.save(currentOrder);
-        return DTOConverter.convertToDTO(saved);
+        return orderRepository.save(currentOrder).getId();
     }
 
     @Override
@@ -81,12 +75,12 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @PreAuthorize("hasAnyRole('ROLE_WAITER', 'ROLE_CHIEF', 'ROLE_ADMIN')")
     public void updateOrder(Long id, OrderDTO orderDTO) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Заказа с id = %d не существует", id)));
-        order.setStatus(orderDTO.getStatus());
-        order.setPayed(orderDTO.getPayed());
-        order.setTotalSum(orderDTO.getTotal());
         if (id.equals(orderDTO.getId())) {
+            Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new IllegalStateException(String.format("Заказа с id = %d не существует", id)));
+            order.setStatus(orderDTO.getStatus());
+            order.setPayed(orderDTO.getPayed());
+            order.setTotalSum(orderDTO.getTotal());
             orderRepository.save(order);
         } else {
             throw new RuntimeException("Неправильный запрос");
@@ -121,8 +115,7 @@ public class OrderServiceImpl implements OrderService {
                     .stream()
                     .map(DTOConverter::convertToDTO)
                     .collect(Collectors.toSet());
-        }
-        else if (userId != null) {
+        } else if (userId != null) {
             List<OrderDTO> orderDTOs = new ArrayList<>();
             Iterable<Order> orders = orderRepository.findByUserId(userId);
             orders.forEach(order -> orderDTOs.add(DTOConverter.convertToDTO(order)));

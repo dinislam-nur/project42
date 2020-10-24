@@ -18,14 +18,12 @@ public class OrderDTO {
 
     OrderStatus status;
 
-    List<Long> foodsId;
+    List<OrderFoodDTO> foods;
 
-    UUID tableId;
+    UUID TableId;
 
     Boolean payed;
 
-    /**
-     * Сумма заказа
-     */
     Double total;
+
 }

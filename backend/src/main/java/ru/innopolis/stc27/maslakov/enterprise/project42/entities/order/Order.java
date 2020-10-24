@@ -61,6 +61,12 @@ public class Order {
     @PrePersist
     public void prepare() {
         orderTime = new Timestamp(System.currentTimeMillis());
+        totalSum = foods
+                .stream()
+                .mapToDouble(Food::getPrice)
+                .sum();
+        payed = false;
+        status = OrderStatus.USER_CONFIRMED;
     }
 
     @Override

@@ -7,13 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.FoodsDTO;
+import org.springframework.transaction.annotation.Transactional;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.FoodDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FoodServiceImpl implements FoodService {
 
@@ -27,13 +29,13 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     @PreAuthorize("hasAnyRole('ROLE_CHIEF', 'ROLE_ADMIN')")
-    public void createOrUpdateFood(FoodsDTO foodsDTO) {
+    public void createOrUpdateFood(FoodDTO foodDTO) {
         Food food = Food.builder()
-                .id(foodsDTO.getId())
-                .name(foodsDTO.getName())
-                .picture(foodsDTO.getPicture())
-                .foodCategory(foodsDTO.getCategory())
-                .price(foodsDTO.getPrice())
+                .id(foodDTO.getId())
+                .name(foodDTO.getName())
+                .picture(foodDTO.getPicture())
+                .foodCategory(foodDTO.getCategory())
+                .price(foodDTO.getPrice())
                 .build();
         foodRepository.save(food);
     }
@@ -45,7 +47,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public FoodsDTO getFood(Long foodId) {
+    public FoodDTO getFood(Long foodId) {
         return DTOConverter.convertToDTO(
                 foodRepository.findById(foodId)
                         .orElseThrow(() -> new IllegalStateException("Блюда с id " + foodId + " в бд не существует")));
