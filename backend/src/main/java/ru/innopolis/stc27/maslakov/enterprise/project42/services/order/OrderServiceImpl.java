@@ -2,13 +2,13 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
@@ -49,13 +49,11 @@ public class OrderServiceImpl implements OrderService {
                 .findAllById(orderDTO.getFoodsId())
                 .forEach(foods::add);
         final List<Food> listFoods = new ArrayList<>();
-        orderDTO.getFoodsId().forEach(id -> {
-            foods.forEach(entity -> {
-                if (entity.getId().equals(id)) {
-                    listFoods.add(entity);
-                }
-            });
-        });
+        orderDTO.getFoodsId().forEach(id -> foods.forEach(entity -> {
+            if (entity.getId().equals(id)) {
+                listFoods.add(entity);
+            }
+        }));
         val currentOrder = Order.builder()
                 .id(null)
                 .user(user)
@@ -81,9 +79,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAnyRole('ROLE_WAITER', 'ROLE_CHIEF', 'ROLE_ADMIN')")
     public void updateOrder(Long id, OrderDTO orderDTO) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Заказа с id = %d е существует", id)));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Заказа с id = %d не существует", id)));
         order.setStatus(orderDTO.getStatus());
         order.setPayed(orderDTO.getPayed());
         order.setTotalSum(orderDTO.getTotal());
@@ -95,11 +94,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
+    @PreAuthorize("hasAnyRole('ROLE_WAITER', 'ROLE_ADMIN')")
     public Collection<OrderDTO> getOrdersForWaiters() {
         return orderRepository
                 .findOrdersByStatusBetween(OrderStatus.PREPARING, OrderStatus.DONE)
@@ -109,7 +112,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Collection<OrderDTO> getOrders(OrderStatus status, User id) {
+    @Transactional
+    public Collection<OrderDTO> getOrders(OrderStatus status, Long userId) {
         if (status != null) {
             return orderRepository
                     .findByStatus(status)
@@ -117,24 +121,18 @@ public class OrderServiceImpl implements OrderService {
                     .map(DTOConverter::convertToDTO)
                     .collect(Collectors.toSet());
         }
-        else if (id != null) {
-            List<OrderDTO> listId = new ArrayList<>();
-            Iterable<Order> all = orderRepository.findByUser(id);
-            for (Order order : all) {
-                if (order.getUser().equals(id)) {
-                    listId.add(DTOConverter.convertToDTO(order));
-                }
-            }
-            listId.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
-            return listId;
+        else if (userId != null) {
+            List<OrderDTO> orderDTOs = new ArrayList<>();
+            Iterable<Order> orders = orderRepository.findByUserId(userId);
+            orders.forEach(order -> orderDTOs.add(DTOConverter.convertToDTO(order)));
+            orderDTOs.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
+            return orderDTOs;
         } else {
-            List<OrderDTO> list = new ArrayList<>();
-            Iterable<Order> all = orderRepository.findAll();
-            for (Order order : all) {
-                list.add(DTOConverter.convertToDTO(order));
-            }
-            list.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
-            return list;
+            List<OrderDTO> orderDTOs = new ArrayList<>();
+            Iterable<Order> orders = orderRepository.findAll();
+            orders.forEach(order -> orderDTOs.add(DTOConverter.convertToDTO(order)));
+            orderDTOs.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
+            return orderDTOs;
         }
     }
 }

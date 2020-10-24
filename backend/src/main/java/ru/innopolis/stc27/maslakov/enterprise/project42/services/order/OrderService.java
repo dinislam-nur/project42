@@ -18,5 +18,5 @@ public interface OrderService {
 
     Collection<OrderDTO> getOrdersForWaiters();
 
-    Collection<OrderDTO> getOrders(OrderStatus status, User id);
+    Collection<OrderDTO> getOrders(OrderStatus status, Long userId);
 }

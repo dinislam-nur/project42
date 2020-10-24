@@ -1,6 +1,8 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
@@ -14,6 +16,9 @@ import java.util.Set;
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
 
     List<Order> findByUser(User user);
+
+    @Query("SELECT o FROM Order o WHERE o.user.id = :user_id")
+    List<Order> findByUserId(@Param("user_id") Long userId);
 
     List<Order> findByUserAndPayedFalse(User user);
 

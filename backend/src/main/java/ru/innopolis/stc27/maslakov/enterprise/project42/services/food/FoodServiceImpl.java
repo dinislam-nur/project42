@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.FoodsDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
@@ -25,6 +26,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ROLE_CHIEF', 'ROLE_ADMIN')")
     public void createOrUpdateFood(FoodsDTO foodsDTO) {
         Food food = Food.builder()
                 .id(foodsDTO.getId())
@@ -37,6 +39,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ROLE_CHIEF', 'ROLE_ADMIN')")
     public void deleteFood(Long foodId) {
         foodRepository.deleteById(foodId);
     }
@@ -47,5 +50,4 @@ public class FoodServiceImpl implements FoodService {
                 foodRepository.findById(foodId)
                         .orElseThrow(() -> new IllegalStateException("Блюда с id " + foodId + " в бд не существует")));
     }
-
 }

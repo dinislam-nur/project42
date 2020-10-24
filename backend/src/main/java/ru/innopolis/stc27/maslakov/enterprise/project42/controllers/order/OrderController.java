@@ -2,6 +2,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.controllers.order;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
@@ -15,11 +16,12 @@ import java.util.Collection;
 public class OrderController {
 
     private final OrderService orderService;
+
     @GetMapping(value = "/orders")
     public Collection<OrderDTO> orders(
             @RequestParam(value = "status", required = false) OrderStatus status,
-            @RequestParam(value = "id", required = false) User id) {
-        return orderService.getOrders(status, id);
+            @RequestParam(value = "id", required = false) Long userId) {
+        return orderService.getOrders(status, userId);
     }
 
     @GetMapping(value = "/orders/{id}")
