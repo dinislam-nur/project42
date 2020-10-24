@@ -1,7 +1,5 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.configurations.security;
 
-import lombok.val;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
