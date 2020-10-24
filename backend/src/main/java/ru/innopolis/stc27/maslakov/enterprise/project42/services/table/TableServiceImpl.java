@@ -3,6 +3,8 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.table;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
@@ -35,7 +37,8 @@ public class TableServiceImpl implements TableService {
 
     @Override
     @Transactional
-    public List<TableDTO> getTables(String status, Integer number) {
+    @PreAuthorize("hasAnyRole('ROLE_WAITER', 'ROLE_CHIEF', 'ROLE_ADMIN')")
+    public List<TableDTO> getTables(String status, Integer number) throws AccessDeniedException {
         if (number != null) {
             log.info("Запрос на получение стола по номеру #" + number);
             val table = tableRepository
@@ -63,6 +66,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public TableDTO createTable(TableDTO tableDTO) {
         log.info("Запрос на добавление стола: " + tableDTO);
         val id = tableDTO.getId();
@@ -80,6 +84,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAnyRole('ROLE_WAITER', 'ROLE_ADMIN')")
     public void updateTable(UUID id, TableDTO tableDTO) {
         log.info("Запрос на обновление записи стола: " + tableDTO + " по id #" + id);
         if (id.equals(tableDTO.getId())) {
@@ -97,6 +102,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteTable(UUID tableId) {
         log.info("Удаление стола с id #" + tableId);
         if (tableRepository.existsById(tableId)) {

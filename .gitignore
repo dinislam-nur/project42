@@ -36,3 +36,4 @@ build/
 /.mvn/
 /backend/src/main/resources/connection.properties
 /backend/app.log
+/app.log

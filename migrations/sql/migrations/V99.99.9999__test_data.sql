@@ -9,13 +9,16 @@ VALUES (uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 2);
 
 
 INSERT INTO user_roles (user_role_id, role_name)
-VALUES (1, 'CHIEF'),
-       (2, 'WAITER'),
-       (3, 'ADMIN'),
-       (4, 'GUEST');
+VALUES (1, 'ROLE_CHIEF'),
+       (2, 'ROLE_WAITER'),
+       (3, 'ROLE_ADMIN'),
+       (4, 'ROLE_GUEST');
 
 INSERT INTO users (login, password, user_role_id)
-VALUES ('user', '$2y$10$MfJEpQhrvAo0M4lJXMfFCuTOtGyy8x79PpavQ7T.GnMPorKbTFzHy', 4);
+VALUES ('user', '$2y$10$MfJEpQhrvAo0M4lJXMfFCuTOtGyy8x79PpavQ7T.GnMPorKbTFzHy', 4),
+       ('waiter', '$2y$10$RMakufv7.NMh/2oLuDKDAehDzFXx57A6caQKVMUGo2LiSgywYTpFK', 2),
+       ('chief', '$2y$10$mfLj1GyznJPkpsv5Ul.6YevE7ObXPzWW4/BEeDcqu45MMC9ikC.BK', 1),
+       ('admin', '$2y$10$9U5myFIwY/g.PBBGamh5mO3LUqaqd5eidtEvs5PfZtH/ctKQYm5Fy', 3);
 
 INSERT INTO food_categories (food_category_id, category_name)
 VALUES (1, 'DRINK'),
