@@ -2,6 +2,10 @@ import React from "react";
 import LoginForm from "../forms/login";
 import {connect} from "react-redux";
 import {loginAction} from "../../store/actions/app";
+import {Loader} from "../app/loader";
+import CardBody from "reactstrap/es/CardBody";
+import Card from "reactstrap/es/Card";
+import CardHeader from "reactstrap/es/CardHeader";
 
 const initState = {
     login: "",
@@ -29,21 +33,32 @@ class LoginPage extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>Ваш стол #{this.props.table.number}</h1>
-                <LoginForm
-                    onLoginChange={this.loginChangeHandler}
-                    onPasswordChange={this.passwordChangeHandler}
-                    onLogin={this.onLoginClick}
-                />
-            </div>
+            <>
+                {this.props.loaded ?
+                    <div style={{textAlign: "center"}}>
+                        <Card>
+                            <CardHeader>Ваш стол #{this.props.table.number}</CardHeader>
+                            <CardBody>
+                                <LoginForm
+                                    onLoginChange={this.loginChangeHandler}
+                                    onPasswordChange={this.passwordChangeHandler}
+                                    onLogin={this.onLoginClick}
+                                />
+                            </CardBody>
+                        </Card>
+                    </div>
+                    :
+                    <Loader/>
+                }
+            </>
+
         )
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        login: (login, password, tableId) => dispatch(loginAction(login, password, tableId))
+        login: (login, password, tableId) => dispatch(loginAction(login, password, tableId)),
     }
 }
 

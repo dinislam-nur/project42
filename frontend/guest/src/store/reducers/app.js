@@ -1,12 +1,12 @@
 import {
     ADD_DISH_TO_ORDER, CHANGE_CATEGORY,
-    CHANGE_DISH_PAGE, LOADED,
+    CHANGE_DISH_PAGE, HIDE_LOADER, LOADED,
     LOGIN,
     LOGIN_TOKEN,
     LOGOUT,
     REMOVE_DISH_FROM_ORDER, SET_ORDERS_HISTORY, SET_SESSION,
     SET_TABLE,
-    SHOW_ERROR,
+    SHOW_ERROR, SHOW_LOADER,
     SHOW_SUCCESS
 } from "../actions/app";
 import {AppToaster} from "../../components/app/toaster";
@@ -47,6 +47,10 @@ export default (state = initialState, action) => {
         case SHOW_SUCCESS:
             AppToaster.show({message: action.message, intent: "success"});
             return state;
+        case SHOW_LOADER:
+            return {...state, loaded: false};
+        case HIDE_LOADER:
+            return {...state, loaded: true};
         case CHANGE_CATEGORY:
             return {...state, category: action.category};
         case ADD_DISH_TO_ORDER:

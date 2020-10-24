@@ -3,6 +3,7 @@ import RegistrationForm from "../forms/registration";
 import {registerAction} from "../../store/actions/app";
 import {connect} from "react-redux";
 import {withRouter} from "react-router";
+import {Loader} from "../app/loader";
 
 const initState = {
     login: "",
@@ -26,19 +27,30 @@ class RegistrationPage extends React.Component {
             return null;
         } else {
             return (
-                <div>
-                    <RegistrationForm onConfirm={this.confirmHandler}
-                                      onLoginChange={this.loginChangeHandler}
-                                      onPasswordChange={this.passwordChangeHandler}
-                                      tableId={this.props.table.id}
-                    />
+                <div style={{textAlign: "center"}}>
+                    {console.log("reg: " + this.props.loaded)}
+                    {
+                        this.props.loaded ?
+                            <RegistrationForm onConfirm={this.confirmHandler}
+                                              onLoginChange={this.loginChangeHandler}
+                                              onPasswordChange={this.passwordChangeHandler}
+                                              tableId={this.props.table.id}
+                            />
+                            :
+                            <Loader/>
+                    }
                 </div>
             )
         }
     }
 }
 
-const mapStatePropsToProps = state => ({table: state.app.table});
+const mapStatePropsToProps = state => (
+    {
+        table: state.app.table,
+        loaded: state.app.loaded
+    }
+);
 
 const mapDispatchToProps = dispatch => {
     return {

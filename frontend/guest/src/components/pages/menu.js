@@ -3,6 +3,7 @@ import Dish from "../menu/dish";
 import {addDishToOrder, changeDishes} from "../../store/actions/app";
 import {connect} from "react-redux";
 import {MenuFooter} from "../menu/footer";
+import {Loader} from "../app/loader";
 
 
 class Menu extends React.Component {
@@ -44,7 +45,7 @@ class Menu extends React.Component {
         return (
             <div style={{paddingTop: "60px"}}>
                 {listDishes}
-                {this.props.page === null? null : <MenuFooter page={this.props.page}
+                {this.props.page === null? <Loader/> : <MenuFooter page={this.props.page}
                                                               onNextPage={this.nextPageHandler}
                                                               onPrevPage={this.prevPageHandler}
                 />}
@@ -57,7 +58,8 @@ class Menu extends React.Component {
 const mapStateToProps = state => (
     {
         page: state.app.dishPage,
-        category: state.app.category
+        category: state.app.category,
+        loaded: state.app.loaded
     }
 )
 

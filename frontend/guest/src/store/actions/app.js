@@ -13,7 +13,6 @@ export const CHANGE_CATEGORY = "APP/CHANGE_CATEGORY";
 export const SHOW_LOADER = "APP/SHOW_LOADER";
 export const HIDE_LOADER = "APP/HIDE_LOADER";
 export const LOADED = "APP/LOADED";
-export const NOT_LOADED = "APP/NOT_LOADED";
 
 export const registerAction = (login, password, history, tableId) => {
     return async (dispatch) => {
@@ -24,14 +23,15 @@ export const registerAction = (login, password, history, tableId) => {
             },
             body: JSON.stringify({login, password})
         });
+        dispatch(showLoader());
         if (response.ok) {
             dispatch(showSuccess("Пользователь успешно создан"));
             history.push('/' + tableId + '/login');
+            dispatch(hideLoader());
         } else {
             const data = await response.text();
-
+            dispatch(hideLoader());
             dispatch(showError(data))
-
         }
     }
 }
@@ -46,6 +46,7 @@ export const loginAction = (login, password, tableId) => {
             },
             body: JSON.stringify({login, password})
         });
+        dispatch(showLoader());
 
         const data = await response.json();
         console.log(data);
@@ -55,9 +56,11 @@ export const loginAction = (login, password, tableId) => {
             dispatch({
                 type: SET_SESSION,
                 session: data
-            })
+            });
+            dispatch(hideLoader());
         } else {
             showError(data.message);
+            dispatch(hideLoader());
         }
     }
 }
@@ -71,17 +74,20 @@ export const loginTokenAction = (token) => {
                 'Authorization': token
             }
         });
+        dispatch(showLoader());
         if (response.ok) {
             const data = await response.json();
             dispatch({
                 type: LOADED
             });
             dispatch(setCredentials(data.user.login, data.token));
+            dispatch(hideLoader());
         } else {
             dispatch({
                 type: LOADED
             });
             dispatch(logoutAction());
+            dispatch(hideLoader());
         }
     }
 }
@@ -97,8 +103,10 @@ export const fetchTable = (id) => {
 
         if (response.ok) {
             dispatch(setTableAction(await response.json()));
+            dispatch(hideLoader());
         } else {
             dispatch(showError("Wrong id"));
+            dispatch(hideLoader());
         }
     }
 }
@@ -171,6 +179,10 @@ export const removeDishFromOrder = (dish) => {
 
 export const changeDishes = (category, page) => {
     return async (dispatch) => {
+        dispatch({
+            type: CHANGE_DISH_PAGE,
+            dishPage: null
+        });
         const response = await fetch('http://localhost:8181/foods/' + category + '?size=3&page=' + page, {
             method: 'GET',
             headers: {
@@ -178,12 +190,15 @@ export const changeDishes = (category, page) => {
                 'Authorization': localStorage.getItem('token')
             }
         });
+        dispatch(showLoader());
         if (response.ok) {
             dispatch({
                 type: CHANGE_DISH_PAGE,
                 dishPage: await response.json()
             });
+            dispatch(hideLoader());
         } else {
+            dispatch(hideLoader());
             showError("Что-то пошло не так");
         }
     }
@@ -205,3 +220,6 @@ const setOrdersHistory = orders => ({type: SET_ORDERS_HISTORY, orders});
 export const showError = message => ({type: SHOW_ERROR, message});
 
 export const showSuccess = message => ({type: SHOW_SUCCESS, message});
+
+const showLoader = () => ({type: SHOW_LOADER});
+const hideLoader = () => ({type: HIDE_LOADER});
