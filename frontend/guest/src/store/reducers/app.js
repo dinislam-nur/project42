@@ -1,6 +1,6 @@
 import {
-    ADD_DISH_TO_ORDER,
-    CHANGE_DISHES, LOADED,
+    ADD_DISH_TO_ORDER, CHANGE_CATEGORY,
+    CHANGE_DISH_PAGE, LOADED,
     LOGIN,
     LOGIN_TOKEN,
     LOGOUT,
@@ -10,13 +10,13 @@ import {
     SHOW_SUCCESS
 } from "../actions/app";
 import {AppToaster} from "../../components/app/toaster";
-import {soup} from "../../data/data";
 
 const initialState = {
     username: null,
     token: null,
     table: undefined,
-    dishes: soup,
+    dishPage: null,
+    category: "SOUPS",
     session: {},
     loaded: false,
     order: localStorage.getItem("order") ? JSON.parse(localStorage.getItem("order")) :
@@ -36,6 +36,7 @@ export default (state = initialState, action) => {
             return {...state, token: action.token};
         case LOGOUT:
             localStorage.removeItem("token");
+            localStorage.removeItem("order");
             return {...state, username: null, token: null};
         case SET_TABLE:
             return {...state, table: action.table};
@@ -45,6 +46,8 @@ export default (state = initialState, action) => {
         case SHOW_SUCCESS:
             AppToaster.show({message: action.message, intent: "success"});
             return state;
+        case CHANGE_CATEGORY:
+            return {...state, category: action.category};
         case ADD_DISH_TO_ORDER:
             const order = JSON.parse(localStorage.getItem("order"));
             const total = state.order.total + action.dish.price;
@@ -74,8 +77,8 @@ export default (state = initialState, action) => {
                 foods: ord.foods
             }));
             return {...state, order: {total: tot, foods: ord.foods}};
-        case CHANGE_DISHES:
-            return {...state, dishes: action.dishes};
+        case CHANGE_DISH_PAGE:
+            return {...state, dishPage: action.dishPage};
         case SET_SESSION:
             return {...state, session: action.session};
         case LOADED:

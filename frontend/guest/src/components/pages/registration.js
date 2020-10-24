@@ -18,7 +18,7 @@ class RegistrationPage extends React.Component {
     loginChangeHandler = e => this.setState({...this.state, login: e.target.value});
     passwordChangeHandler = e => this.setState({...this.state, password: e.target.value});
 
-    confirmHandler = () => this.props.register(this.state.login, this.state.password, this.props.history);
+    confirmHandler = () => this.props.register(this.state.login, this.state.password, this.props.history, this.props.table.id);
 
     render() {
         if (this.props.table === null) {
@@ -42,7 +42,7 @@ const mapStatePropsToProps = state => ({table: state.app.table});
 
 const mapDispatchToProps = dispatch => {
     return {
-        register: (login, password, history) => dispatch(registerAction(login, password, history))
+        register: (login, password, history, tableId) => dispatch(registerAction(login, password, history, tableId))
     }
 }
 

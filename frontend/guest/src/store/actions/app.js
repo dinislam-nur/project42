@@ -1,5 +1,3 @@
-import {pasta, soup} from "../../data/data";
-
 export const LOGIN = "APP/LOGIN";
 export const LOGIN_TOKEN = "APP/LOGIN_TOKEN";
 export const LOGOUT = "APP/LOGOUT";
@@ -9,13 +7,14 @@ export const SHOW_ERROR = "APP/SHOW_ERROR";
 export const SHOW_SUCCESS = "APP/SHOW_SUCCESS";
 export const ADD_DISH_TO_ORDER = "APP/ADD_DISH_TO_ORDER";
 export const REMOVE_DISH_FROM_ORDER = "APP/REMOVE_DISH_FROM_ORDER";
-export const CHANGE_DISHES = "APP/CHANGE_DISHES";
+export const CHANGE_DISH_PAGE = "APP/CHANGE_DISH_PAGE";
+export const CHANGE_CATEGORY = "APP/CHANGE_CATEGORY";
 export const SHOW_LOADER = "APP/SHOW_LOADER";
 export const HIDE_LOADER = "APP/HIDE_LOADER";
 export const LOADED = "APP/LOADED";
 export const NOT_LOADED = "APP/NOT_LOADED";
 
-export const registerAction = (login, password, history) => {
+export const registerAction = (login, password, history, tableId) => {
     return async (dispatch) => {
         const response = await fetch('http://localhost:8181/register', {
             method: 'POST',
@@ -26,18 +25,12 @@ export const registerAction = (login, password, history) => {
         });
         if (response.ok) {
             dispatch(showSuccess("Пользователь успешно создан"));
-            history.push('/login');
+            history.push('/' + tableId + '/login');
         } else {
-            const data = response.json();
-            if (data.message) {
-                dispatch(showError(data.message));
-            } else if (data.login) {
-                dispatch(showError(data.login))
-            } else if (data.password) {
-                dispatch(showError(data.password))
-            } else {
-                dispatch(showError("Произошла ошибка. Попробуйте еще раз."))
-            }
+            const data = await response.text();
+
+            dispatch(showError(data))
+
         }
     }
 }
@@ -71,10 +64,10 @@ export const loginAction = (login, password, tableId) => {
 export const loginTokenAction = (token) => {
     return async (dispatch) => {
         const response = await fetch('http://localhost:8181/session', {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'Authorize': token
+                'Authorization': token
             }
         });
         if (response.ok) {
@@ -115,9 +108,10 @@ export const logout = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'Authorize': localStorage.getItem('token')
+                'Authorization': localStorage.getItem('token')
             },
         });
+        dispatch(logoutAction());
     }
 }
 
@@ -157,24 +151,30 @@ export const removeDishFromOrder = (dish) => {
     }
 }
 
-export const changeDishes = (category) => {
+export const changeDishes = (category, page) => {
     return async (dispatch) => {
-        switch (category) {
-            case "SOUP":
-                dispatch({
-                    type: CHANGE_DISHES,
-                    dishes: soup
-                });
-                break;
-            case "PASTA":
-                dispatch({
-                    type: CHANGE_DISHES,
-                    dishes: pasta
-                });
-                break;
+        const response = await fetch('http://localhost:8181/foods/' + category + '?size=3&page=' + page, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': localStorage.getItem('token')
+            }
+        });
+        if (response.ok) {
+            dispatch({
+                type: CHANGE_DISH_PAGE,
+                dishPage: await response.json()
+            });
+        } else {
+            showError("Что-то пошло не так");
         }
     }
 }
+
+export const changeCategory = category => ({
+    type: CHANGE_CATEGORY,
+    category
+})
 
 export const showError = message => ({type: SHOW_ERROR, message});
 
