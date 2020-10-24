@@ -16,8 +16,7 @@ class OrdersPage extends React.Component {
             currentOrder: true
         }
     }
-
-
+    
     render() {
         const order = this.props.order.foods.map(dish => (
             <OrdersDish dish={dish} onDelete={this.props.removeDish}/>));

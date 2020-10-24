@@ -4,7 +4,7 @@ import {
     LOGIN,
     LOGIN_TOKEN,
     LOGOUT,
-    REMOVE_DISH_FROM_ORDER, SET_SESSION,
+    REMOVE_DISH_FROM_ORDER, SET_ORDERS_HISTORY, SET_SESSION,
     SET_TABLE,
     SHOW_ERROR,
     SHOW_SUCCESS
@@ -17,6 +17,7 @@ const initialState = {
     table: undefined,
     dishPage: null,
     category: "SOUPS",
+    ordersHistory: [],
     session: {},
     loaded: false,
     order: localStorage.getItem("order") ? JSON.parse(localStorage.getItem("order")) :
@@ -81,6 +82,8 @@ export default (state = initialState, action) => {
             return {...state, dishPage: action.dishPage};
         case SET_SESSION:
             return {...state, session: action.session};
+        case SET_ORDERS_HISTORY:
+            return {...state, ordersHistory: action.orders};
         case LOADED:
             return {...state, loaded: true};
         default:

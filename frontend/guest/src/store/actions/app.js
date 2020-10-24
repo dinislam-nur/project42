@@ -3,6 +3,7 @@ export const LOGIN_TOKEN = "APP/LOGIN_TOKEN";
 export const LOGOUT = "APP/LOGOUT";
 export const SET_TABLE = "APP/SET_TABLE";
 export const SET_SESSION = "APP/SET_SESSION";
+export const SET_ORDERS_HISTORY = "APP/SET_ORDERS_HISTORY";
 export const SHOW_ERROR = "APP/SHOW_ERROR";
 export const SHOW_SUCCESS = "APP/SHOW_SUCCESS";
 export const ADD_DISH_TO_ORDER = "APP/ADD_DISH_TO_ORDER";
@@ -115,6 +116,23 @@ export const logout = () => {
     }
 }
 
+export const fetchOrdersHistory = () => {
+    return async (dispatch) => {
+        const response = await fetch('http://localhost:8181/logout', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': localStorage.getItem('token')
+            },
+        });
+        if (response.ok) {
+            dispatch(setOrdersHistory(response.json()));
+        } else {
+            showError("Что-то пошло не так");
+        }
+    }
+}
+
 const logoutAction = () => ({
     type: LOGOUT
 })
@@ -181,6 +199,8 @@ export const changeCategory = (category, history) => {
         })
     }
 }
+
+const setOrdersHistory = orders => ({type: SET_ORDERS_HISTORY, orders});
 
 export const showError = message => ({type: SHOW_ERROR, message});
 
