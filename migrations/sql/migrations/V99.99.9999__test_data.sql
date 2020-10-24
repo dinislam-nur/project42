@@ -16,6 +16,7 @@ VALUES (1, 'ROLE_CHIEF'),
 
 INSERT INTO users (login, password, user_role_id)
 VALUES ('user', '$2y$10$MfJEpQhrvAo0M4lJXMfFCuTOtGyy8x79PpavQ7T.GnMPorKbTFzHy', 4),
+       ('user1', '$2y$10$MfJEpQhrvAo0M4lJXMfFCuTOtGyy8x79PpavQ7T.GnMPorKbTFzHy', 4),
        ('waiter', '$2y$10$RMakufv7.NMh/2oLuDKDAehDzFXx57A6caQKVMUGo2LiSgywYTpFK', 2),
        ('chief', '$2y$10$mfLj1GyznJPkpsv5Ul.6YevE7ObXPzWW4/BEeDcqu45MMC9ikC.BK', 1),
        ('admin', '$2y$10$9U5myFIwY/g.PBBGamh5mO3LUqaqd5eidtEvs5PfZtH/ctKQYm5Fy', 3);
@@ -70,11 +71,15 @@ VALUES (1, 'USER_CONFIRMED'),
 INSERT INTO orders (order_time, user_id, is_payed, table_id, order_status_id, total_sum)
 VALUES (to_timestamp('15.10.2020 00:00:00.2', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 3.0),
        (to_timestamp('15.10.2020 00:00:00.1', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 3, 3.0),
-       (to_timestamp('15.10.2020 00:00:00.3', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 4, 3.0);
+       (to_timestamp('15.10.2020 00:00:00.3', 'DD.MM.YYYY HH24:MI:SS:US'), 2, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 4, 3.0);
 
 INSERT INTO foods2order (order_id, food_id)
 VALUES (1, 1),
-       (1, 2);
+       (1, 2),
+       (2, 1),
+       (2, 2),
+       (3, 1),
+       (3, 2);
 
 INSERT INTO session_statuses (session_status_id, session_status_name)
 VALUES (1, 'OPENED'),

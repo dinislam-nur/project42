@@ -113,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasPermission(#userId, 'order', 'get') || hasAnyRole('ROLE_CHIEF', 'ROLE_WAITER', 'ROLE_ADMIN')")
     public Collection<OrderDTO> getOrders(OrderStatus status, Long userId) {
         if (status != null) {
             return orderRepository
