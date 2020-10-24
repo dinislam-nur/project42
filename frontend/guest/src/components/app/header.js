@@ -7,7 +7,7 @@ import Nav from "reactstrap/es/Nav";
 import NavItem from "reactstrap/es/NavItem";
 import NavLink from "reactstrap/es/NavLink";
 import {connect} from "react-redux";
-import {logout} from "../../store/actions/app";
+import {changeCategory, logout} from "../../store/actions/app";
 import {Button} from "@blueprintjs/core";
 import Badge from "reactstrap/es/Badge";
 import {useHistory} from "react-router";
@@ -18,16 +18,30 @@ const Header = (props) => {
 
     const toggleNavbar = () => setCollapsed(!collapsed);
 
-    const pastaClickHandler = () => {
+    const history = useHistory();
+
+    const dessertClickHandler = () => {
         toggleNavbar();
-        props.setCategory("PASTA");
-    };
-    const soupClickHandler = () => {
-        toggleNavbar();
-        props.setCategory("SOUP");
+        props.changeCategory("DESSERTS", history);
     };
 
-    const history = useHistory();
+    const soupClickHandler = () => {
+        toggleNavbar();
+        props.changeCategory("SOUPS", history);
+    };
+    const saladClickHandler = () => {
+        toggleNavbar();
+        props.changeCategory("SALADS", history);
+    };
+    const hotClickHandler = () => {
+        toggleNavbar();
+        props.changeCategory("HOT_DISHES", history);
+    };
+    const drinkClickHandler = () => {
+        toggleNavbar();
+        props.changeCategory("DRINK", history);
+    };
+
 
     return (
         <div>
@@ -40,10 +54,19 @@ const Header = (props) => {
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav navbar>
                         <NavItem>
-                            <NavLink onClick={pastaClickHandler}>Паста</NavLink>
+                            <NavLink onClick={saladClickHandler}>Cалаты</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink onClick={soupClickHandler}>Суп</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink onClick={hotClickHandler}>Горячие блюда</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink onClick={drinkClickHandler}>Напитки</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink onClick={dessertClickHandler}>Десерты</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink onClick={props.logout}>Выйти</NavLink>
@@ -62,6 +85,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+    changeCategory: (category, history) => dispatch(changeCategory(category, history)),
     logout: () => dispatch(logout())
 });
 

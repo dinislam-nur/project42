@@ -171,10 +171,16 @@ export const changeDishes = (category, page) => {
     }
 }
 
-export const changeCategory = category => ({
-    type: CHANGE_CATEGORY,
-    category
-})
+export const changeCategory = (category, history) => {
+    return async (dispatch) => {
+        await dispatch(changeDishes(category, 0));
+        history.push('/menu');
+        dispatch({
+            type: CHANGE_CATEGORY,
+            category
+        })
+    }
+}
 
 export const showError = message => ({type: SHOW_ERROR, message});
 
