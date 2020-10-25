@@ -3,6 +3,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.controllers.order;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -22,10 +23,12 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping(value = "/orders")
-    public Collection<OrderDTO> orders(
+    public Page<OrderDTO> orders(
             @RequestParam(value = "status", required = false) OrderStatus status,
-            @RequestParam(value = "id", required = false) Long userId) {
-        return orderService.getOrders(status, userId);
+            @RequestParam(value = "id", required = false) Long userId,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size) {
+        return orderService.getOrders(status, userId, page, size);
     }
 
     @GetMapping(value = "/orders/{id}")

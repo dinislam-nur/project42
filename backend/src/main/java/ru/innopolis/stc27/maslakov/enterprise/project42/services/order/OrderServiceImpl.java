@@ -2,6 +2,9 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service("orderService")
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -72,7 +76,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAnyRole('ROLE_WAITER', 'ROLE_CHIEF', 'ROLE_ADMIN')")
     public void updateOrder(Long id, OrderDTO orderDTO) {
         if (id.equals(orderDTO.getId())) {
@@ -88,14 +91,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteOrder(Long id) {
         orderRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAnyRole('ROLE_WAITER', 'ROLE_ADMIN')")
     public Collection<OrderDTO> getOrdersForWaiters() {
         return orderRepository
@@ -106,27 +107,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasPermission(#userId, 'order', 'get') || hasAnyRole('ROLE_CHIEF', 'ROLE_WAITER', 'ROLE_ADMIN')")
-    public Collection<OrderDTO> getOrders(OrderStatus status, Long userId) {
+    public Page<OrderDTO> getOrders(OrderStatus status, Long userId, Integer page, Integer size) {
+        val sort = Sort.by(Sort.Direction.DESC, "orderTime");
+        val pageRequest = PageRequest.of(page, size, sort);
+        Page<Order> orders;
         if (status != null) {
-            return orderRepository
-                    .findByStatus(status)
-                    .stream()
-                    .map(DTOConverter::convertToDTO)
-                    .collect(Collectors.toSet());
+            orders = orderRepository
+                    .findByStatus(status, pageRequest);
         } else if (userId != null) {
-            List<OrderDTO> orderDTOs = new ArrayList<>();
-            Iterable<Order> orders = orderRepository.findByUserId(userId);
-            orders.forEach(order -> orderDTOs.add(DTOConverter.convertToDTO(order)));
-            orderDTOs.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
-            return orderDTOs;
+            orders = orderRepository
+                    .findByUserId(userId, pageRequest);
         } else {
-            List<OrderDTO> orderDTOs = new ArrayList<>();
-            Iterable<Order> orders = orderRepository.findAll();
-            orders.forEach(order -> orderDTOs.add(DTOConverter.convertToDTO(order)));
-            orderDTOs.sort(Comparator.comparing(OrderDTO::getTimestamp).reversed());
-            return orderDTOs;
+            orders = orderRepository
+                    .findAll(pageRequest);
         }
+        return orders.map(DTOConverter::convertToDTO);
     }
 }

@@ -22,7 +22,7 @@ VALUES ('user', '$2y$10$MfJEpQhrvAo0M4lJXMfFCuTOtGyy8x79PpavQ7T.GnMPorKbTFzHy', 
        ('admin', '$2y$10$9U5myFIwY/g.PBBGamh5mO3LUqaqd5eidtEvs5PfZtH/ctKQYm5Fy', 3);
 
 INSERT INTO food_categories (food_category_id, category_name)
-VALUES (1, 'DRINK'),
+VALUES (1, 'DRINKS'),
        (2, 'HOT_DISHES'),
        (3, 'DESSERTS'),
        (4, 'SALADS'),

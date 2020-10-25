@@ -1,5 +1,7 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +20,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
     List<Order> findByUser(User user);
 
     @Query("SELECT o FROM Order o WHERE o.user.id = :user_id")
-    List<Order> findByUserId(@Param("user_id") Long userId);
+    Page<Order> findByUserId(@Param("user_id") Long userId, Pageable pageable);
 
     List<Order> findByUserAndPayedFalse(User user);
 
@@ -26,7 +28,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
     List<Order> findByTableAndPayedFalse(Table table);
 
-    List<Order> findByStatus(OrderStatus status);
+    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
 
     List<Order> findOrdersByPayedFalse();
 

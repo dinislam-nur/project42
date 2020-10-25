@@ -17,7 +17,7 @@ public class FoodController {
 
     @GetMapping(value = "/foods/{category}")
     private Page<Food> getPageFoods(@PathVariable(value = "category") FoodCategory foodCategory,
-                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                    @RequestParam(value = "page", defaultValue = "0") Integer page,
                                     @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return foodService.getPageFoods(page, size, foodCategory);
     }
