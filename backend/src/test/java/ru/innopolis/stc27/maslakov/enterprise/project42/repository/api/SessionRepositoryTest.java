@@ -1,6 +1,8 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -20,20 +22,21 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-@SpringBootTest
+@Slf4j
 @Disabled
+@SpringBootTest
 class SessionRepositoryTest {
 
     private final SessionRepository sessionRepository;
-    private final Flyway flyway;
+    private static Flyway flyway = null;
 
     private Session answer;
 
     @Autowired
     public SessionRepositoryTest(SessionRepository sessionRepository,
-                                 Flyway flyway) {
+                                 Flyway flywayBean) {
         this.sessionRepository = sessionRepository;
-        this.flyway = flyway;
+        flyway = flywayBean;
     }
 
     @BeforeEach
@@ -45,7 +48,7 @@ class SessionRepositoryTest {
                 .user(User.builder()
                         .id(1L)
                         .login("user")
-                        .password("user")
+                        .password("$2y$10$MfJEpQhrvAo0M4lJXMfFCuTOtGyy8x79PpavQ7T.GnMPorKbTFzHy")
                         .role(Role.ROLE_GUEST)
                         .build())
                 .token("some_token")
@@ -59,10 +62,16 @@ class SessionRepositoryTest {
                 .build();
     }
 
+    @AfterAll
+    static void afterAll() {
+        flyway.clean();
+        flyway.migrate();
+    }
+
     @Test
     void findAllTest() {
         final Iterable<Session> sessions = sessionRepository.findAll();
-        sessions.forEach(session -> System.out.println(session + " - поиск всех"));
+        sessions.forEach(session -> log.info(session + " - поиск всех"));
 
         final Session result = sessions.iterator().next();
 
@@ -72,7 +81,7 @@ class SessionRepositoryTest {
     @Test
     void findByIdTest() {
         final Session result = sessionRepository.findById(1L).orElse(null);
-        System.out.println(result + " - поиск по id");
+        log.info(result + " - поиск по id");
 
         assertEquals(answer, result);
     }
@@ -80,7 +89,7 @@ class SessionRepositoryTest {
     @Test
     void findByToken() {
         final Session result = sessionRepository.findByToken("some_token").orElse(null);
-        System.out.println(result + " - поиск по token");
+        log.info(result + " - поиск по token");
 
         assertEquals(answer, result);
     }
@@ -88,7 +97,7 @@ class SessionRepositoryTest {
     @Test
     void findByUser() {
         final Session result = sessionRepository.findByUser(answer.getUser()).orElse(null);
-        System.out.println(result + " - поиск по пользователю");
+        log.info(result + " - поиск по пользователю");
 
         assertEquals(answer, result);
     }
@@ -96,7 +105,7 @@ class SessionRepositoryTest {
     @Test
     void findByStatus() {
         final List<Session> result = sessionRepository.findByStatus(SessionStatus.OPENED);
-        result.forEach(session -> System.out.println(session + " - поиск по статусу сессии"));
+        result.forEach(session -> log.info(session + " - поиск по статусу сессии"));
 
         assertEquals(answer, result.get(0));
     }
@@ -104,7 +113,7 @@ class SessionRepositoryTest {
     @Test
     void findByTableIdTest() {
         final List<Session> sessions = sessionRepository.findByTableId(answer.getTable().getId());
-        sessions.forEach(session -> System.out.println(session + " - поиск по столу"));
+        sessions.forEach(session -> log.info(session + " - поиск по столу"));
 
         assertEquals(answer, sessions.get(0));
     }
@@ -128,7 +137,7 @@ class SessionRepositoryTest {
                 .status(SessionStatus.OPENED)
                 .build();
         final Session saved = sessionRepository.save(newSession);
-        System.out.println(saved + " - запись сохранена");
+        log.info(saved + " - запись сохранена");
         newSession.setId(saved.getId());
 
         assertEquals(newSession, saved);
@@ -138,7 +147,7 @@ class SessionRepositoryTest {
     void updateTest() {
         answer.setStatus(SessionStatus.CLOSED);
         final Session updated = sessionRepository.save(answer);
-        System.out.println(updated + " - запись обновлена");
+        log.info(updated + " - запись обновлена");
 
         assertEquals(answer, updated);
     }
@@ -146,7 +155,7 @@ class SessionRepositoryTest {
     @Test
     void deleteTest() {
         sessionRepository.delete(answer);
-        System.out.println(answer + " - запись удалена");
+        log.info(answer + " - запись удалена");
         assertNull(sessionRepository.findById(answer.getId()).orElse(null));
     }
 }

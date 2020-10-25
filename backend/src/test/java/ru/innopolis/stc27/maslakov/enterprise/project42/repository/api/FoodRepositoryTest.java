@@ -1,6 +1,11 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
+import lombok.Cleanup;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -9,54 +14,55 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@Slf4j
 @Disabled
+@SpringBootTest
 class FoodRepositoryTest {
 
     private final FoodRepository foodRepository;
-    private final OrderRepository orderRepository;
-    private final Flyway flyway;
+    private static Flyway flyway = null;
 
     private List<Food> answer;
 
     @Autowired
     FoodRepositoryTest(FoodRepository foodRepository,
-                       OrderRepository orderRepository,
-                       Flyway flyway) {
+                       Flyway flyway1) {
         this.foodRepository = foodRepository;
-        this.orderRepository = orderRepository;
-        this.flyway = flyway;
+        flyway = flyway1;
     }
 
+    @SneakyThrows
     @BeforeEach
     void setUp() {
         flyway.clean();
         flyway.migrate();
+        @Cleanup val reader = new BufferedReader(
+                new FileReader("src/test/resources/food_pictures/Beef_stroganoff_with_champignons.txt"));
+        val picture = reader.readLine();
         answer = new ArrayList<Food>() {{
             add(
                     Food.builder()
                             .id(1L)
-                            .name("compot")
-                            .picture("test.ru")
-                            .price(1.0)
-                            .foodCategory(FoodCategory.DRINKS)
-                            .build()
-            );
-            add(
-                    Food.builder()
-                            .id(2L)
-                            .name("borsh")
-                            .price(2.0)
-                            .picture("test.ru")
+                            .name("Бефстроганов с шампиньонами")
+                            .picture(picture)
+                            .price(42)
                             .foodCategory(FoodCategory.HOT_DISHES)
                             .build()
             );
         }};
+    }
+
+    @AfterAll
+    static void afterAll() {
+        flyway.clean();
+        flyway.migrate();
     }
 
     @Test
@@ -90,21 +96,11 @@ class FoodRepositoryTest {
 
     @Test
     void findByNameTest() {
-        final Food compot = foodRepository.findByName("compot").orElse(null);
-        final Food borsh = foodRepository.findByName("borsh").orElse(null);
-        System.out.println(compot + " - поиск по имени");
-        System.out.println(borsh + " - поиск по имени");
+        final Food answerFood = answer.get(0);
+        final Food result = foodRepository.findByName(answerFood.getName()).orElse(null);
+        log.info(result + " - поиск по имени");
 
-        assertEquals(answer.get(0), compot);
-        assertEquals(answer.get(1), borsh);
-    }
-
-    @Test
-    void findByFoodCategoryTest() {
-        final List<Food> hotDishes = foodRepository.findByFoodCategory(FoodCategory.HOT_DISHES);
-        hotDishes.forEach(food -> System.out.println(food + " - поиск по категории блюда"));
-
-        assertEquals(answer.get(1), hotDishes.get(0));
+        assertEquals(answerFood, result);
     }
 
     @Test
@@ -119,7 +115,7 @@ class FoodRepositoryTest {
 
         final Food saved = foodRepository.save(salat);
         salat.setId(saved.getId());
-        System.out.println(saved + " - запись сохранена");
+        log.info(saved + " - запись сохранена");
 
         assertEquals(salat, saved);
     }
@@ -129,17 +125,17 @@ class FoodRepositoryTest {
         final Food compot = answer.get(0);
         compot.setPrice(1.6);
         final Food updated = foodRepository.save(compot);
-        System.out.println(updated + " - запись обновлена");
+        log.info(updated + " - запись обновлена");
 
         assertEquals(compot, updated);
     }
 
     @Test
     void deleteTest() {
-        final Food borsh = answer.get(1);
-        foodRepository.delete(borsh);
-        System.out.println(borsh + " - запись удалена");
+        final Food food = answer.get(0);
+        foodRepository.delete(food);
+        log.info(food + " - запись удалена");
 
-        assertNull(foodRepository.findById(borsh.getId()).orElse(null));
+        assertNull(foodRepository.findById(food.getId()).orElse(null));
     }
 }

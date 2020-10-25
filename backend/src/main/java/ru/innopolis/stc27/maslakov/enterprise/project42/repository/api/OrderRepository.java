@@ -17,8 +17,6 @@ import java.util.Set;
 @Repository
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
 
-    List<Order> findByUser(User user);
-
     @Query("SELECT o FROM Order o WHERE o.user.id = :user_id")
     Page<Order> findByUserId(@Param("user_id") Long userId, Pageable pageable);
 

@@ -70,12 +70,11 @@ VALUES (1, 'USER_CONFIRMED'),
 
 INSERT INTO orders (order_time, user_id, is_payed, table_id, order_status_id, total_sum)
 VALUES (to_timestamp('15.10.2020 00:00:00.2', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 3.0),
-       (to_timestamp('15.10.2020 00:00:00.1', 'DD.MM.YYYY HH24:MI:SS:US'), 1, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 3, 3.0),
+       (to_timestamp('15.10.2020 00:00:00.1', 'DD.MM.YYYY HH24:MI:SS:US'), 2, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 3, 3.0),
        (to_timestamp('15.10.2020 00:00:00.3', 'DD.MM.YYYY HH24:MI:SS:US'), 2, false, uuid('57874486-11f8-11eb-adc1-0242ac120002'), 4, 3.0);
 
 INSERT INTO foods2order (order_id, food_id)
 VALUES (1, 1),
-       (1, 2),
        (2, 1),
        (2, 2),
        (3, 1),
