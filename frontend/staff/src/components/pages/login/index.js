@@ -22,7 +22,7 @@ class LoginPage extends React.Component {
 
     render() {
         return (
-            <div className={"login-page"}>
+            <div className={"layout"}>
                 <LoginForm onLoginChange={this.loginChangeHandler} onPasswordChange={this.passwordChangeHandler}
                            onLogin={this.onLoginSubmit} type={"submit"}/>
             </div>

@@ -1,67 +1,71 @@
-import React, {useCallback} from "react";
+import React from "react";
 import {
     Switch,
     Route
 } from "react-router-dom";
-import {connect, useDispatch} from "react-redux";
+import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
 import LoginPage from "./components/pages/login";
-import { FocusStyleManager } from "@blueprintjs/core";
+import {FocusStyleManager} from "@blueprintjs/core";
 import Header from "./components/app/header";
 import {loginTokenAction} from "./store/actions/app";
-import {useHistory} from 'react-router-dom';
 import MainPage from "./components/pages/main";
+import {Loader} from "./components/app/loader";
 
 
-
-const Routes = ({token, loginToken}) => {
-
-    FocusStyleManager.onlyShowFocusOnTabs();
-    const tokenCheck = () => {
-        if (!token) {
-            const token = localStorage.getItem("token");
-            if (token) {
-                loginToken(token);
-            }
-        }
-        return token === "1234";
+class Routes extends React.Component {
+    constructor(props) {
+        console.log(props);
+        super(props);
+        FocusStyleManager.onlyShowFocusOnTabs();
     }
 
-    const history = useHistory();
-    const handleSettingsClick = useCallback(() => history.push('/settings'), [history]);
-    const handleHomeClick = useCallback(() => history.push('/'), [history]);
+    async componentDidMount() {
+        if (!this.props.token) {
+            const token = localStorage.getItem("token");
+            if (token !== null && token !== 'null') {
+                await this.props.loginToken(token);
+            }
+        }
+    }
 
-    const publicRoute = (
+
+
+    privateRoute = (
         <Switch>
-            <Route exact path={'/login'}>
-                <LoginPage/>
+            <Route exact path={'/'}>
+                <Header/>
+                <MainPage/>
             </Route>
-            <Redirect to={'/login'}/>
+            <Route exact path={'/settings'}>
+                <Header/>
+                <h1>Settings</h1>
+            </Route>
+            <Redirect to={'/'}/>
         </Switch>
     );
 
-    const privateRoute = (
-        <div>
-            <Header onSettingsClick={handleSettingsClick} onHomeClick={handleHomeClick}/>
+
+    render() {
+        const publicRoute = (
             <Switch>
-                <Route exact path={'/'}>
-                    <MainPage/>
+                <Route exact path={'/login'}>
+                    {console.log(this.props)}
+                    {this.props.loaded ? <LoginPage/> : <Loader/>}
                 </Route>
-                <Route exact path={'/settings'}>
-                    <h1>Settings</h1>
-                </Route>
-                <Redirect to={'/'}/>
+                <Redirect to={'/login'}/>
             </Switch>
-        </div>
-    )
-    return (
-        <>
-        {tokenCheck()? privateRoute : publicRoute}
-        </>
-    );
+        );
+        return (
+            <>
+                {this.props.token ? this.privateRoute : publicRoute}
+            </>
+        )
+    }
 }
 
-const mapStateToProps = state => ({token: state.app.token});
+
+const mapStateToProps = state => ({token: state.app.token, loaded: state.app.loaded});
 
 const mapDispatchToProps = dispatch => ({
     loginToken: (token) => dispatch(loginTokenAction(token))

@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import {Button, ButtonGroup, FormGroup, InputGroup} from "@blueprintjs/core";
+import Card from "reactstrap/es/Card";
+import CardBody from "reactstrap/es/CardBody";
 
 
 const LoginForm = ({onLogin, onLoginChange, onPasswordChange}) => {
@@ -12,17 +14,21 @@ const LoginForm = ({onLogin, onLoginChange, onPasswordChange}) => {
                          onMouseUp={lockClickHandler} minimal={true} tabIndex={-1}/>;
 
     return (
-        <div className={"login-form"}>
-            <FormGroup label={"Логин"}>
-                <InputGroup id={"login"} title={"Логин"} leftIcon={"user"} onChange={onLoginChange}/>
-            </FormGroup>
-            <FormGroup label={"Пароль"}>
-                <InputGroup id={"password"} title={"Пароль"} type={state.isPasswordShow ? "text" : "password"}
-                            leftElement={lock} onChange={onPasswordChange}/>
-            </FormGroup>
-            <ButtonGroup>
-                <Button id={"login"} text={"Войти"} onClick={onLogin} intent={"success"} />
-            </ButtonGroup>
+        <div className={"centre"}>
+            <Card>
+                <CardBody>
+                    <FormGroup label={"Логин"}>
+                        <InputGroup id={"login"} title={"Логин"} leftIcon={"user"} onChange={onLoginChange}/>
+                    </FormGroup>
+                    <FormGroup label={"Пароль"}>
+                        <InputGroup id={"password"} title={"Пароль"} type={state.isPasswordShow ? "text" : "password"}
+                                    leftElement={lock} onChange={onPasswordChange}/>
+                    </FormGroup>
+                    <ButtonGroup>
+                        <Button id={"login"} text={"Войти"} onClick={onLogin} intent={"success"}/>
+                    </ButtonGroup>
+                </CardBody>
+            </Card>
         </div>
     )
 }

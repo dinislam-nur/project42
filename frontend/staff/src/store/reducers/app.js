@@ -1,9 +1,11 @@
-import {LOGIN, LOGIN_TOKEN, LOGOUT, SET_TABLE, SHOW_ERROR} from "../actions/app";
+import {HIDE_LOADER, LOGIN, LOGIN_TOKEN, LOGOUT, SET_SESSION, SHOW_ERROR, SHOW_LOADER} from "../actions/app";
 import {AppToaster} from "../../components/app/toaster";
 
 const initialState = {
     username: "",
-    token: ""
+    token: "",
+    session: null,
+    loaded: true
 };
 
 export default (state = initialState, action) => {
@@ -14,11 +16,17 @@ export default (state = initialState, action) => {
         case LOGIN_TOKEN:
             return {...state, token: action.token};
         case LOGOUT:
-            localStorage.setItem("token", null);
-            return {...state, username: "", token: ""};
+            localStorage.removeItem("token");
+            return {...state, username: null, token: null};
         case SHOW_ERROR:
             AppToaster.show({message: action.message, intent: "danger"});
             return state;
+        case SET_SESSION:
+            return {...state, session: action.session};
+        case SHOW_LOADER:
+            return {...state, loaded: false};
+        case HIDE_LOADER:
+            return {...state, loaded: true};
         default:
             return state;
     }
