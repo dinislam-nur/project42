@@ -9,7 +9,9 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.dto.CredentialsDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SessionDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.SessionStatus;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
@@ -30,33 +32,36 @@ public class DBSessionService implements SessionService {
     @Override
     @Transactional
     public Optional<SessionDTO> loginWithCredentials(CredentialsDTO credentials, UUID tableId) {
-        val user = userRepository.findByLogin(credentials.getLogin()).orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
-        if (user.getRole() == Role.ROLE_GUEST) {
-            val table = tableRepository.findById(tableId).orElseThrow(() -> new IllegalArgumentException("Такого стола не существует"));
-            if (encoder.matches(credentials.getPassword(), user.getPassword())) {
-                val session = Session.builder()
-                        .status(SessionStatus.OPENED)
-                        .table(table)
-                        .token(UUID.randomUUID().toString())
-                        .user(user)
-                        .build();
-                session.willBeClosedAt();
-                sessionRepository.save(session);
-                return Optional.of(DTOConverter.convertToDTO(session));
-            }
+        boolean isAnonymous = false;
+        User user;
+        if (credentials == null) {
+            isAnonymous = true;
+            user = userRepository.findByLogin("anonymous")
+                    .orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
         } else {
-            if (encoder.matches(credentials.getPassword(), user.getPassword())) {
-                val session = Session.builder()
-                        .status(SessionStatus.OPENED)
-                        .token(UUID.randomUUID().toString())
-                        .user(user)
-                        .build();
-                session.willBeClosedAt();
-                sessionRepository.save(session);
-                return Optional.of(DTOConverter.convertToDTO(session));
+            user = userRepository.findByLogin(credentials.getLogin())
+                    .orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
+        }
+        if (isAnonymous || encoder.matches(credentials.getPassword(), user.getPassword())) {
+            if (user.getRole() == Role.ROLE_GUEST) {
+                val table = tableRepository.findById(tableId).orElseThrow(() -> new IllegalArgumentException("Такого стола не существует"));
+                return createSession(user, table);
+            } else {
+                return createSession(user, null);
             }
         }
         return Optional.empty();
+    }
+
+    public Optional<SessionDTO> createSession(User user, Table table) {
+        val session = Session.builder()
+                .status(SessionStatus.OPENED)
+                .table(table)
+                .token(UUID.randomUUID().toString())
+                .user(user)
+                .build();
+        sessionRepository.save(session);
+        return Optional.of(DTOConverter.convertToDTO(session));
     }
 
     @Override

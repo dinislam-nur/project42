@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.PrimaryOrderDTO;
@@ -13,6 +15,8 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
@@ -107,17 +111,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @PreAuthorize("hasPermission(#userId, 'order', 'get') || hasAnyRole('ROLE_CHIEF', 'ROLE_WAITER', 'ROLE_ADMIN')")
     public Page<OrderDTO> getOrders(OrderStatus status, Long userId, Integer page, Integer size) {
+        val user = ((Session) SecurityContextHolder.getContext().getAuthentication().getDetails()).getUser();
         val sort = Sort.by(Sort.Direction.DESC, "orderTime");
         val pageRequest = PageRequest.of(page, size, sort);
         Page<Order> orders;
-        if (status != null) {
-            orders = orderRepository
-                    .findByStatus(status, pageRequest);
-        } else if (userId != null) {
+        if (user.getRole().equals(Role.ROLE_GUEST)) {
             orders = orderRepository
                     .findByUserId(userId, pageRequest);
+        } else if (status != null) {
+            orders = orderRepository
+                    .findByStatus(status, pageRequest);
         } else {
             orders = orderRepository
                     .findAll(pageRequest);

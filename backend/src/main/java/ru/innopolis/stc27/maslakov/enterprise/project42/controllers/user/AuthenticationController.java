@@ -22,7 +22,7 @@ public class AuthenticationController {
     private final SessionService sessionService;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(@RequestBody CredentialsDTO credentials,
+    public ResponseEntity login(@RequestBody(required = false) CredentialsDTO credentials,
                                 @RequestHeader(value = "TABLE_ID", required = false) UUID tableId) {
         val session = sessionService.loginWithCredentials(credentials, tableId);
         return session.isPresent() ?

@@ -118,7 +118,6 @@ class OrderServiceImplTest {
            add(2L);
         }};
         val inputDTO = new PrimaryOrderDTO(
-                null,
                 1L,
                 foodsId,
                 UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002")
@@ -129,7 +128,6 @@ class OrderServiceImplTest {
         assertEquals(stuffAnswer.getId(), resultId);
 
         val inputDTOWithNotExistUser = new PrimaryOrderDTO(
-                null,
                 3L,
                 foodsId,
                 UUID.fromString("57874486-11f8-11eb-adc1-0242ac120002")
@@ -137,7 +135,6 @@ class OrderServiceImplTest {
         assertThrows(IllegalStateException.class, () -> orderService.createNewOrder(inputDTOWithNotExistUser));
 
         val inputDTOWithNotExistTable = new PrimaryOrderDTO(
-                null,
                 1L,
                 foodsId,
                 UUID.randomUUID()

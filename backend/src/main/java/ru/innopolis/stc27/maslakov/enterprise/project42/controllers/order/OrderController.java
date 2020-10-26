@@ -25,10 +25,9 @@ public class OrderController {
     @GetMapping(value = "/orders")
     public Page<OrderDTO> orders(
             @RequestParam(value = "status", required = false) OrderStatus status,
-            @RequestParam(value = "id", required = false) Long userId,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return orderService.getOrders(status, userId, page, size);
+        return orderService.getOrders(status, page, size);
     }
 
     @GetMapping(value = "/orders/{id}")
