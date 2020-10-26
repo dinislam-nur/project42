@@ -17,6 +17,8 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepo
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,7 +29,6 @@ public class DBSessionService implements SessionService {
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
     private final TableRepository tableRepository;
-
 
     @Override
     @Transactional
@@ -45,23 +46,39 @@ public class DBSessionService implements SessionService {
         if (isAnonymous || encoder.matches(credentials.getPassword(), user.getPassword())) {
             if (user.getRole() == Role.ROLE_GUEST) {
                 val table = tableRepository.findById(tableId).orElseThrow(() -> new IllegalArgumentException("Такого стола не существует"));
-                return createSession(user, table);
+                return getSessionDTO(user, table);
             } else {
-                return createSession(user, null);
+                return getSessionDTO(user, null);
             }
         }
         return Optional.empty();
     }
 
-    public Optional<SessionDTO> createSession(User user, Table table) {
-        val session = Session.builder()
+    private Optional<SessionDTO> getSessionDTO(User user, Table table) {
+        val session = sessionRepository
+                .findByUser(user)
+                .filter(this::deleteSessionIfOverdue)
+                .orElseGet(() -> createSession(user, table));
+        return Optional.of(DTOConverter.convertToDTO(session));
+    }
+
+    private Session createSession(User user, Table table) {
+        val newSession = Session.builder()
                 .status(SessionStatus.OPENED)
                 .table(table)
                 .token(UUID.randomUUID().toString())
                 .user(user)
                 .build();
-        sessionRepository.save(session);
-        return Optional.of(DTOConverter.convertToDTO(session));
+        sessionRepository.save(newSession);
+        return newSession;
+    }
+
+    private boolean deleteSessionIfOverdue(Session oldSession) {
+        val notOverdue = oldSession.getTimeout().after(Timestamp.valueOf(LocalDateTime.now()));
+        if (!notOverdue) {
+            sessionRepository.delete(oldSession);
+        }
+        return notOverdue;
     }
 
     @Override
