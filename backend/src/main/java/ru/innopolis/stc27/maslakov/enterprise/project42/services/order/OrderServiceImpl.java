@@ -111,14 +111,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderDTO> getOrders(OrderStatus status, Long userId, Integer page, Integer size) {
+    public Page<OrderDTO> getOrders(OrderStatus status, Integer page, Integer size) {
         val user = ((Session) SecurityContextHolder.getContext().getAuthentication().getDetails()).getUser();
         val sort = Sort.by(Sort.Direction.DESC, "orderTime");
         val pageRequest = PageRequest.of(page, size, sort);
         Page<Order> orders;
         if (user.getRole().equals(Role.ROLE_GUEST)) {
-            orders = orderRepository
-                    .findByUserId(userId, pageRequest);
+            if (user.getLogin().equals("anonymous")) {
+                orders = Page.empty();
+            } else {
+                orders = orderRepository
+                        .findByUserId(user.getId(), pageRequest);
+            }
         } else if (status != null) {
             orders = orderRepository
                     .findByStatus(status, pageRequest);
