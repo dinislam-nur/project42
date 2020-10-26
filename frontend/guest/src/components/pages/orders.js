@@ -28,7 +28,7 @@ class OrdersPage extends React.Component {
             <OrdersDish dish={dish} onDelete={this.props.removeDish}/>));
         const currentOrderBody = (<>
             {order.length === 0 ? <EmptyOrder/> : order}
-            <OrdersFooter total={this.props.order.total} onConfirm={onConfirmClickHandler}/>
+            <OrdersFooter total={this.props.order.total} onConfirm={onConfirmClickHandler} orderLength={this.props.order.foods.length}/>
         </>)
 
         return (
