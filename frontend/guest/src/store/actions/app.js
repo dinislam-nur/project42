@@ -16,6 +16,7 @@ export const LOADED = "APP/LOADED";
 
 export const registerAction = (login, password, history, tableId) => {
     return async (dispatch) => {
+        dispatch(showLoader());
         const response = await fetch('http://localhost:8181/register', {
             method: 'POST',
             headers: {
@@ -23,7 +24,6 @@ export const registerAction = (login, password, history, tableId) => {
             },
             body: JSON.stringify({login, password})
         });
-        dispatch(showLoader());
         if (response.ok) {
             dispatch(showSuccess("Пользователь успешно создан"));
             history.push('/' + tableId + '/login');
@@ -38,6 +38,7 @@ export const registerAction = (login, password, history, tableId) => {
 
 export const loginAction = (login, password, tableId) => {
     return async (dispatch) => {
+        dispatch(showLoader());
         const response = await fetch('http://localhost:8181/login', {
             method: 'POST',
             headers: {
@@ -46,10 +47,8 @@ export const loginAction = (login, password, tableId) => {
             },
             body: JSON.stringify({login, password})
         });
-        dispatch(showLoader());
 
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
             console.log(data);
             dispatch(setCredentials(data.user.login, data.token));
@@ -67,6 +66,7 @@ export const loginAction = (login, password, tableId) => {
 
 export const loginTokenAction = (token) => {
     return async (dispatch) => {
+        dispatch(showLoader());
         const response = await fetch('http://localhost:8181/session', {
             method: 'GET',
             headers: {
@@ -74,7 +74,6 @@ export const loginTokenAction = (token) => {
                 'Authorization': token
             }
         });
-        dispatch(showLoader());
         if (response.ok) {
             const data = await response.json();
             dispatch({
@@ -113,6 +112,7 @@ export const fetchTable = (id) => {
 
 export const logout = () => {
     return async (dispatch) => {
+        dispatch(showLoader());
         const response = await fetch('http://localhost:8181/logout', {
             method: 'POST',
             headers: {
@@ -121,6 +121,7 @@ export const logout = () => {
             },
         });
         dispatch(logoutAction());
+        dispatch(hideLoader());
     }
 }
 

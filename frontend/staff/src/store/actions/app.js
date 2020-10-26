@@ -1,3 +1,5 @@
+import {AppToaster} from "../../components/app/toaster";
+
 export const LOGIN = "APP/LOGIN";
 export const LOGIN_TOKEN = "APP/LOGIN_TOKEN";
 export const LOGOUT = "APP/LOGOUT";
@@ -8,6 +10,7 @@ export const SET_SESSION = "APP/SET_SESSION";
 
 export const loginAction = (login, password) => {
     return async (dispatch) => {
+        dispatch(showLoader());
         const response = await fetch('http://localhost:8181/login', {
             method: 'POST',
             headers: {
@@ -15,7 +18,6 @@ export const loginAction = (login, password) => {
             },
             body: JSON.stringify({login, password})
         });
-        dispatch(showLoader());
 
         const data = await response.json();
         console.log(data);
@@ -27,13 +29,13 @@ export const loginAction = (login, password) => {
             });
             dispatch(hideLoader());
         } else {
-            showError(data.message);
+            AppToaster.show({message: "Неправильный логин или пароль", intent: "danger"});
             dispatch(hideLoader());
         }
     }
 }
 
-export const loginTokenAction =  (token) => {
+export const loginTokenAction = (token) => {
     return async (dispatch) => {
         const response = await fetch('http://localhost:8181/session', {
             method: 'GET',
@@ -81,7 +83,7 @@ export const showError = message => ({type: SHOW_ERROR, message});
 
 const setCredentials = (login, token) => ({
     type: LOGIN,
-    username:login,
+    username: login,
     token
 })
 
