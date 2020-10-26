@@ -9,6 +9,7 @@ import OrdersPage from "./components/pages/orders";
 import Header from "./components/app/header";
 import {FocusStyleManager} from "@blueprintjs/core";
 import {Loader} from "./components/app/loader";
+import Alert from "reactstrap/es/Alert";
 
 class Routes extends React.Component {
 
@@ -50,7 +51,6 @@ class Routes extends React.Component {
     );
 
 
-
     render() {
         const publicRoute = (
             <Switch>
@@ -59,14 +59,17 @@ class Routes extends React.Component {
                     <RegistrationPage/>
                 </Route>
                 <Route exact path={'/404'}>
-                    {this.props.loaded? <h1>Пожалуйста, отсканируйте код на вашем столе</h1> : <Loader/>}
+                    {this.props.loaded ?
+                        <Alert color="danger">
+                            Пожалуйста, отсканируйте код на вашем столе
+                        </Alert> : <Loader/>}
                 </Route>
                 <Redirect to={'/404'}/>
             </Switch>
         );
         return (
             <>
-                {this.props.token ? this.privateRoute : publicRoute  }
+                {this.props.token ? this.privateRoute : publicRoute}
             </>
         )
     }
