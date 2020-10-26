@@ -1,6 +1,6 @@
 import {
     ADD_DISH_TO_ORDER, CHANGE_CATEGORY,
-    CHANGE_DISH_PAGE, HIDE_LOADER, LOADED,
+    CHANGE_DISH_PAGE, CLEAR_ORDER, HIDE_LOADER, LOADED,
     LOGIN,
     LOGIN_TOKEN,
     LOGOUT,
@@ -17,9 +17,9 @@ const initialState = {
     table: undefined,
     dishPage: null,
     category: "SOUPS",
-    ordersHistory: [],
-    session: {},
-    loaded: false,
+    ordersHistory: null,
+    session: null,
+    loaded: true,
     order: localStorage.getItem("order") ? JSON.parse(localStorage.getItem("order")) :
         {
             total: 0,
@@ -82,6 +82,9 @@ export default (state = initialState, action) => {
                 foods: ord.foods
             }));
             return {...state, order: {total: tot, foods: ord.foods}};
+        case CLEAR_ORDER:
+            localStorage.removeItem('order');
+            return {...state, order: {total: 0, foods: []}};
         case CHANGE_DISH_PAGE:
             return {...state, dishPage: action.dishPage};
         case SET_SESSION:

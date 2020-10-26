@@ -13,7 +13,7 @@ export const OrdersFooter = (props) => {
                     <CardTitle><b>Сумма к оплате:</b></CardTitle>
                     <CardSubtitle>{props.total}₽</CardSubtitle>
                 </div>
-                <Button intent={"success"} style={{width: "30%", float: "right"}}>Оплатить</Button>
+                <Button intent={"success"} style={{width: "30%", float: "right"}} onClick={props.onConfirm}>Подтвердить</Button>
             </CardBody>
         </Card>
     )

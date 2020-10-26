@@ -34,6 +34,13 @@ code {
 
 }
 
+.history_card {
+  margin: auto;
+  width: 90%;
+  padding: 5px;
+
+}
+
 .del_butt {
   width: 50%;
   margin-left: auto;
@@ -76,3 +83,22 @@ code {
   margin-right: 50%;
 }
 
+
+div.card_layout {
+  margin: auto;
+  width: 90%;
+  padding: 10px;
+  text-align: center;
+}
+div.layout {
+  text-align: center;
+}
+
+div.centre {
+  text-align: left;
+  width: 200px;
+  background-color: #eee;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

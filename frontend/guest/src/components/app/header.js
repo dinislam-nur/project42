@@ -39,7 +39,7 @@ const Header = (props) => {
     };
     const drinkClickHandler = () => {
         toggleNavbar();
-        props.changeCategory("DRINK", history);
+        props.changeCategory("DRINKS", history);
     };
 
 

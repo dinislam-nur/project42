@@ -3,9 +3,10 @@ import Card from "reactstrap/es/Card";
 import CardBody from "reactstrap/es/CardBody";
 import CardTitle from "reactstrap/es/CardTitle";
 import CardSubtitle from "reactstrap/es/CardSubtitle";
-import {Collapse} from "bootstrap/js/src";
-import {addDishToOrder, changeDishes} from "../../store/actions/app";
+import {addDishToOrder, fetchOrdersHistory} from "../../store/actions/app";
 import {connect} from "react-redux";
+import Collapse from "reactstrap/es/Collapse";
+import {Button, ButtonGroup} from "@blueprintjs/core";
 
 
 class OrdersHistory extends React.Component {
@@ -13,12 +14,40 @@ class OrdersHistory extends React.Component {
         super(props);
     }
 
+    async componentDidMount() {
+        if (this.props.page === null) {
+            await this.props.loadHistoryPage(0);
+        }
+    }
+
+    prevPageHandler = () => {
+        console.log(this.props.page.pageable.pageNumber);
+        this.props.loadHistoryPage(this.props.page.pageable.pageNumber - 1);
+    }
+
+    nextPageHandler = () => {
+        console.log(this.props.page.pageable.pageNumber);
+        this.props.loadHistoryPage(this.props.page.pageable.pageNumber + 1);
+    }
+
     render() {
-        const orders = props.orders.map(order => <Order order={order}/>);
+        let list = null;
+        if(this.props.page !== null) {
+            list = this.props.page.content.map(order => <Order order={order}/>)
+        }
         return (
-            <div>
-                {orders}
-            </div>
+            <>
+                {
+                    this.props.page !== null?
+                        <div>
+                            {list}
+                        <HistoryFooter onPrevPage={this.prevPageHandler}
+                    onNextPage={this.nextPageHandler}
+                    page={this.props.page}/>
+                        </div>: null
+                }
+
+            </>
         )
     }
 
@@ -30,7 +59,7 @@ const Order = (props) => {
         <CardSubtitle><b>{dish.name}</b>: {dish.price}₽</CardSubtitle>
     ));
     return (
-        <div className={'dish_card'}>
+        <div className={'history_card'}>
             <Card>
                 <CardBody>
                     <CardTitle onClick={() => setOpen(!open)}><b>Заказ №{props.order.id}</b></CardTitle>
@@ -43,19 +72,30 @@ const Order = (props) => {
     )
 }
 
+const HistoryFooter = props => {
+    return (
+        <div style={{textAlign: "center"}}>
+            <ButtonGroup style={{display: "inline-block"}}>
+                <Button icon={'chevron-left'} onClick={props.onPrevPage} disabled={props.page.first}/>
+                <Button minimal active={false}>{props.page.number + 1}</Button>
+                <Button icon={'chevron-right'} onClick={props.onNextPage} disabled={props.page.last}/>
+            </ButtonGroup>
+        </div>
+    )
+}
 
 const mapStateToProps = state => (
     {
-        page: state.app.dishPage,
         category: state.app.category,
-        orders: state.app.ordersHistory
+        page: state.app.ordersHistory,
+        loaded: state.app.loaded,
     }
 )
 
 
 const mapDispatchToProps = dispatch => ({
     addDish: dish => dispatch(addDishToOrder(dish)),
-    loadPage: (category, page) => dispatch(changeDishes(category, page))
+    loadHistoryPage: page => dispatch(fetchOrdersHistory(page))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrdersHistory);

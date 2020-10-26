@@ -4,6 +4,7 @@ export const LOGOUT = "APP/LOGOUT";
 export const SET_TABLE = "APP/SET_TABLE";
 export const SET_SESSION = "APP/SET_SESSION";
 export const SET_ORDERS_HISTORY = "APP/SET_ORDERS_HISTORY";
+export const CLEAR_ORDER = "APP/CLEAR_ORDER";
 export const SHOW_ERROR = "APP/SHOW_ERROR";
 export const SHOW_SUCCESS = "APP/SHOW_SUCCESS";
 export const ADD_DISH_TO_ORDER = "APP/ADD_DISH_TO_ORDER";
@@ -79,6 +80,10 @@ export const loginTokenAction = (token) => {
             dispatch({
                 type: LOADED
             });
+            dispatch({
+                type: SET_SESSION,
+                session: data
+            });
             dispatch(setCredentials(data.user.login, data.token));
             dispatch(hideLoader());
         } else {
@@ -125,9 +130,11 @@ export const logout = () => {
     }
 }
 
-export const fetchOrdersHistory = () => {
+export const fetchOrdersHistory = (pageNumber) => {
     return async (dispatch) => {
-        const response = await fetch('http://localhost:8181/logout', {
+        dispatch(showLoader());
+        console.log(pageNumber)
+        const response = await fetch('http://localhost:8181/orders?size=5&page=' + pageNumber, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -135,8 +142,10 @@ export const fetchOrdersHistory = () => {
             },
         });
         if (response.ok) {
-            dispatch(setOrdersHistory(response.json()));
+            dispatch(setOrdersHistory(await response.json()));
+            dispatch(hideLoader());
         } else {
+            dispatch(hideLoader());
             showError("Что-то пошло не так");
         }
     }
@@ -184,6 +193,7 @@ export const changeDishes = (category, page) => {
             type: CHANGE_DISH_PAGE,
             dishPage: null
         });
+        dispatch(showLoader());
         const response = await fetch('http://localhost:8181/foods/' + category + '?size=3&page=' + page, {
             method: 'GET',
             headers: {
@@ -191,7 +201,6 @@ export const changeDishes = (category, page) => {
                 'Authorization': localStorage.getItem('token')
             }
         });
-        dispatch(showLoader());
         if (response.ok) {
             dispatch({
                 type: CHANGE_DISH_PAGE,
@@ -213,6 +222,40 @@ export const changeCategory = (category, history) => {
             type: CHANGE_CATEGORY,
             category
         })
+    }
+}
+
+export const uploadOrder = (tableId, order) => {
+    return async (dispatch) => {
+        dispatch(showLoader());
+        const body = {
+            foodsId: order,
+            tableId
+        };
+
+        const response = await fetch('http://localhost:8181/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': localStorage.getItem('token')
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (response.ok) {
+            dispatch(showSuccess("Заказ успешно отправлен"))
+            dispatch(clearOrder());
+            dispatch(hideLoader());
+        } else {
+            dispatch(hideLoader());
+            showError("Ошибка при добавлении заказа");
+        }
+    }
+}
+
+const clearOrder = () => {
+    return {
+        type: CLEAR_ORDER
     }
 }
 

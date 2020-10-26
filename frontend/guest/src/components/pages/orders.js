@@ -1,5 +1,5 @@
 import React from "react";
-import {addDishToOrder, removeDishFromOrder} from "../../store/actions/app";
+import {addDishToOrder, removeDishFromOrder, uploadOrder} from "../../store/actions/app";
 import {connect} from "react-redux";
 
 import Card from "reactstrap/es/Card";
@@ -8,6 +8,8 @@ import CardTitle from "reactstrap/es/CardTitle";
 import CardSubtitle from "reactstrap/es/CardSubtitle";
 import {OrdersFooter} from "../orders/footer";
 import {Button, ButtonGroup} from "@blueprintjs/core";
+import {Loader} from "../app/loader";
+import OrdersHistory from "../orders/history";
 
 class OrdersPage extends React.Component {
     constructor(props) {
@@ -16,33 +18,47 @@ class OrdersPage extends React.Component {
             currentOrder: true
         }
     }
-    
+
+    onConfirmClickHandler = () => {
+        const foodsId = this.props.order.foods.map(food => food.id);
+        this.props.uploadOrder(this.props.session.table.id, foodsId);
+    }
+
     render() {
         const order = this.props.order.foods.map(dish => (
             <OrdersDish dish={dish} onDelete={this.props.removeDish}/>));
         const currentOrderBody = (<>
             {order.length === 0 ? <EmptyOrder/> : order}
-            <OrdersFooter total={this.props.order.total}/>
+            <OrdersFooter total={this.props.order.total} onConfirm={this.onConfirmClickHandler}/>
         </>)
+
         return (
             <>
+
                 <div style={{paddingTop: "60px"}}>
                     <div className={"orders_page_buttongroup"}>
                         <ButtonGroup className={"orders_page_buttongroup"}>
                             <Button active={this.state.currentOrder}
-                                    onClick={() => this.setState({...this.state, currentOrder: true})}>Заказ</Button>
+                                    onClick={() => this.setState({
+                                        ...this.state,
+                                        currentOrder: true
+                                    })}>Заказ</Button>
                             <Button active={!this.state.currentOrder}
-                                    onClick={() => this.setState({...this.state, currentOrder: false})}>История</Button>
+                                    onClick={() => this.setState({
+                                        ...this.state,
+                                        currentOrder: false
+                                    })}>История</Button>
                         </ButtonGroup>
                     </div>
                     {
                         this.state.currentOrder ?
-                            currentOrderBody
+                            this.props.loaded ?
+                                currentOrderBody :
+                                <Loader style={{marginTop: "160px", zIndex: "1000"}}/>
                             :
-                            null
+                            (this.props.loaded ? <OrdersHistory/> : <Loader/>)
                     }
                 </div>
-
             </>
         )
     }
@@ -76,13 +92,16 @@ const EmptyOrder = (props) => {
 
 const mapStateToProps = state => {
     return {
-        order: state.app.order
+        order: state.app.order,
+        session: state.app.session,
+        loaded: state.app.loaded
     }
 }
 
 const mapDispatchToProps = dispatch => ({
     addDish: dish => dispatch(addDishToOrder(dish)),
-    removeDish: dish => dispatch(removeDishFromOrder(dish))
+    removeDish: dish => dispatch(removeDishFromOrder(dish)),
+    uploadOrder: (tableId, order) => dispatch(uploadOrder(tableId, order))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrdersPage);

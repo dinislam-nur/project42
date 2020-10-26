@@ -25,12 +25,12 @@ class Menu extends React.Component {
     };
 
     prevPageHandler = () => {
-        this.props.loadPage(this.props.category, this.state.page - 1);
+        this.props.loadPage(this.props.category, this.props.page.pageable.pageNumber + 1);
         this.setState({...this.state, page: this.state.page - 1});
     }
 
     nextPageHandler = () => {
-        this.props.loadPage(this.props.category, this.state.page + 1);
+        this.props.loadPage(this.props.category, this.props.page.pageable.pageNumber + 1);
         this.setState({...this.state, page: this.state.page + 1});
     }
 
