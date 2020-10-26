@@ -45,7 +45,12 @@ const RegistrationForm = (props) => {
                     </FormGroup>
                     <ButtonGroup>
                         <Button color={"primary"} active={!state.isPasswordEquals}
-                                onClick={props.onConfirm}>Зарегистрироваться</Button>
+                                disabled={state.isPasswordEquals}
+                                onClick={() => {
+                                    if (state.isPasswordEquals) {
+                                        props.onConfirm()
+                                    }
+                                }}>Зарегистрироваться</Button>
                         <Button onClick={handleOnCancelClick}>Отмена</Button>
                     </ButtonGroup>
                     {state.isPasswordEquals ? null :

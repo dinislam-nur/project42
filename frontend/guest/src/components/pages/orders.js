@@ -19,17 +19,16 @@ class OrdersPage extends React.Component {
         }
     }
 
-    onConfirmClickHandler = () => {
-        const foodsId = this.props.order.foods.map(food => food.id);
-        this.props.uploadOrder(this.props.session.table.id, foodsId);
-    }
-
     render() {
+        const onConfirmClickHandler = () => {
+            const foodsId = this.props.order.foods.map(food => food.id);
+            this.props.uploadOrder(this.props.session.table.id, foodsId);
+        }
         const order = this.props.order.foods.map(dish => (
             <OrdersDish dish={dish} onDelete={this.props.removeDish}/>));
         const currentOrderBody = (<>
             {order.length === 0 ? <EmptyOrder/> : order}
-            <OrdersFooter total={this.props.order.total} onConfirm={this.onConfirmClickHandler}/>
+            <OrdersFooter total={this.props.order.total} onConfirm={onConfirmClickHandler}/>
         </>)
 
         return (

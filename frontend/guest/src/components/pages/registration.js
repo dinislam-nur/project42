@@ -22,7 +22,7 @@ class RegistrationPage extends React.Component {
     confirmHandler = () => this.props.register(this.state.login, this.state.password, this.props.history, this.props.table.id);
 
     render() {
-        if (this.props.table === null) {
+        if (this.props.table === undefined) {
             this.props.history.push('/404');
             return null;
         } else {
