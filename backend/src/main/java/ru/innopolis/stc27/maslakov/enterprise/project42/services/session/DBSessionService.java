@@ -40,7 +40,7 @@ public class DBSessionService implements SessionService {
             user = userRepository.findByLogin("anonymous")
                     .orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
         } else {
-            user = userRepository.findByLogin(credentials.getLogin())
+            user = userRepository.findByLogin(credentials.getLogin().toLowerCase())
                     .orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
         }
         if (isAnonymous || encoder.matches(credentials.getPassword(), user.getPassword())) {

@@ -12,6 +12,6 @@ public class PrimaryOrderDTO {
 
     List<Long> foodsId;
 
-    UUID TableId;
+    UUID tableId;
 
 }

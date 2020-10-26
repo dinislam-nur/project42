@@ -38,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long createNewOrder(PrimaryOrderDTO orderDTO) {
-        val userId = orderDTO.getUserId();
+        val userId = ((Session) SecurityContextHolder.getContext().getAuthentication().getDetails()).getUser().getId();
         val user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new IllegalStateException(

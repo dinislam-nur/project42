@@ -24,7 +24,7 @@ public class DBRegisterService implements RegisterService {
     public Optional<User> signup(SignupDTO data) {
         val encryptedPassword = encoder.encode(data.getPassword());
         val user = User.builder()
-                .login(data.getLogin())
+                .login(data.getLogin().toLowerCase())
                 .password(encryptedPassword)
                 .role(data.getRole() == null ? Role.ROLE_GUEST : data.getRole())
                 .build();

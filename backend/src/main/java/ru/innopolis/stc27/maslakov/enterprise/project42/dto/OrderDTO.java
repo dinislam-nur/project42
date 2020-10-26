@@ -20,7 +20,7 @@ public class OrderDTO {
 
     List<OrderFoodDTO> foods;
 
-    UUID TableId;
+    UUID tableId;
 
     Boolean payed;
 
