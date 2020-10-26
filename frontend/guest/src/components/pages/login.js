@@ -1,11 +1,12 @@
 import React from "react";
 import LoginForm from "../forms/login";
 import {connect} from "react-redux";
-import {loginAction} from "../../store/actions/app";
+import {anonLogin, loginAction} from "../../store/actions/app";
 import {Loader} from "../app/loader";
 import CardBody from "reactstrap/es/CardBody";
 import Card from "reactstrap/es/Card";
 import CardHeader from "reactstrap/es/CardHeader";
+import Button from "reactstrap/es/Button";
 
 const initState = {
     login: "",
@@ -46,6 +47,12 @@ class LoginPage extends React.Component {
                                 />
                             </CardBody>
                         </Card>
+                        <Card>
+                            <CardHeader>Войти без регистрации</CardHeader>
+                            <CardBody>
+                                <Button color={"primary"} onClick={()=>this.props.anonLogin(this.props.tableId)}>Войти</Button>
+                            </CardBody>
+                        </Card>
                     </div>
                     :
                     <Loader/>
@@ -56,10 +63,18 @@ class LoginPage extends React.Component {
     }
 }
 
+const mapStateToProps = state => (
+    {
+        loaded: state.app.loaded,
+        tableId: state.app.table.id
+    }
+)
+
 const mapDispatchToProps = dispatch => {
     return {
         login: (login, password, tableId) => dispatch(loginAction(login, password, tableId)),
+        anonLogin: (tableId) => dispatch(anonLogin(tableId))
     }
 }
 
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

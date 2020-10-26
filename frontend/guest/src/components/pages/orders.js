@@ -1,5 +1,5 @@
 import React from "react";
-import {addDishToOrder, removeDishFromOrder, uploadOrder} from "../../store/actions/app";
+import {addDishToOrder, fetchOrdersHistory, removeDishFromOrder, uploadOrder} from "../../store/actions/app";
 import {connect} from "react-redux";
 
 import Card from "reactstrap/es/Card";
@@ -36,18 +36,20 @@ class OrdersPage extends React.Component {
             <>
 
                 <div style={{paddingTop: "60px"}}>
-                    <div className={"orders_page_buttongroup"}>
-                        <ButtonGroup className={"orders_page_buttongroup"}>
+                    <div className={"card_layout"}>
+                        <ButtonGroup className={"centre"} style={{padding: "0"}}>
                             <Button active={this.state.currentOrder}
                                     onClick={() => this.setState({
                                         ...this.state,
                                         currentOrder: true
                                     })}>Заказ</Button>
                             <Button active={!this.state.currentOrder}
-                                    onClick={() => this.setState({
+                                    onClick={() => {
+                                        this.props.fetchHistory();
+                                        this.setState({
                                         ...this.state,
                                         currentOrder: false
-                                    })}>История</Button>
+                                    })}}>История</Button>
                         </ButtonGroup>
                     </div>
                     {
@@ -101,7 +103,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     addDish: dish => dispatch(addDishToOrder(dish)),
     removeDish: dish => dispatch(removeDishFromOrder(dish)),
-    uploadOrder: (tableId, order) => dispatch(uploadOrder(tableId, order))
+    uploadOrder: (tableId, order) => dispatch(uploadOrder(tableId, order)),
+    fetchHistory: () => dispatch(fetchOrdersHistory(0))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrdersPage);

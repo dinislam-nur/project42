@@ -65,6 +65,33 @@ export const loginAction = (login, password, tableId) => {
     }
 }
 
+export const anonLogin = (tableId) => {
+    return async (dispatch) => {
+        dispatch(showLoader());
+        const response = await fetch('http://localhost:8181/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'TABLE_ID': tableId
+            }
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data);
+            dispatch(setCredentials(data.user.login, data.token));
+            dispatch({
+                type: SET_SESSION,
+                session: data
+            });
+            dispatch(hideLoader());
+        } else {
+            showError(data.message);
+            dispatch(hideLoader());
+        }
+    }
+}
+
 export const loginTokenAction = (token) => {
     return async (dispatch) => {
         dispatch(showLoader());
