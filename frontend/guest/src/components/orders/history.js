@@ -22,12 +22,10 @@ class OrdersHistory extends React.Component {
     }
 
     prevPageHandler = () => {
-        console.log(this.props.page.pageable.pageNumber);
         this.props.loadHistoryPage(this.props.page.pageable.pageNumber - 1);
     }
 
     nextPageHandler = () => {
-        console.log(this.props.page.pageable.pageNumber);
         this.props.loadHistoryPage(this.props.page.pageable.pageNumber + 1);
     }
 

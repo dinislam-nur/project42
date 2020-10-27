@@ -28,7 +28,6 @@ class RegistrationPage extends React.Component {
         } else {
             return (
                 <div style={{textAlign: "center"}}>
-                    {console.log("reg: " + this.props.loaded)}
                     {
                         this.props.loaded ?
                             <RegistrationForm onConfirm={this.confirmHandler}

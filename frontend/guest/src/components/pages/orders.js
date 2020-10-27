@@ -22,7 +22,7 @@ class OrdersPage extends React.Component {
     render() {
         const onConfirmClickHandler = () => {
             const foodsId = this.props.order.foods.map(food => food.id);
-            this.props.uploadOrder(this.props.session.table.id, foodsId);
+            this.props.uploadOrder(this.props.tableId, foodsId);
         }
         const order = this.props.order.foods.map(dish => (
             <OrdersDish dish={dish} onDelete={this.props.removeDish}/>));
@@ -95,7 +95,8 @@ const mapStateToProps = state => {
     return {
         order: state.app.order,
         session: state.app.session,
-        loaded: state.app.loaded
+        loaded: state.app.loaded,
+        tableId: state.app.tableId
     }
 }
 

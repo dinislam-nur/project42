@@ -15,6 +15,9 @@ export const SHOW_LOADER = "APP/SHOW_LOADER";
 export const HIDE_LOADER = "APP/HIDE_LOADER";
 export const LOADED = "APP/LOADED";
 
+const host = "http://limitless-escarpment-67687.herokuapp.com/";
+
+
 export const registerAction = (login, password, history, tableId) => {
     return async (dispatch) => {
         dispatch(showLoader());
@@ -51,8 +54,7 @@ export const loginAction = (login, password, tableId) => {
 
         const data = await response.json();
         if (response.ok) {
-            console.log(data);
-            dispatch(setCredentials(data.user.login, data.token));
+            dispatch(setCredentials(data.user.login, data.token, tableId));
             dispatch({
                 type: SET_SESSION,
                 session: data
@@ -78,7 +80,6 @@ export const anonLogin = (tableId) => {
 
         const data = await response.json();
         if (response.ok) {
-            console.log(data);
             dispatch(setCredentials(data.user.login, data.token));
             dispatch({
                 type: SET_SESSION,
@@ -111,7 +112,7 @@ export const loginTokenAction = (token) => {
                 type: SET_SESSION,
                 session: data
             });
-            dispatch(setCredentials(data.user.login, data.token));
+            dispatch(setCredentials(data.user.login, data.token, data.table.id));
             dispatch(hideLoader());
         } else {
             dispatch({
@@ -160,7 +161,6 @@ export const logout = () => {
 export const fetchOrdersHistory = (pageNumber) => {
     return async (dispatch) => {
         dispatch(showLoader());
-        console.log(pageNumber)
         const response = await fetch('http://localhost:8181/orders?size=5&page=' + pageNumber, {
             method: 'GET',
             headers: {
@@ -187,11 +187,12 @@ export const setTableAction = table => ({
     table
 })
 
-const setCredentials = (login, token) => {
+const setCredentials = (login, token, tableId) => {
     return {
         type: LOGIN,
         username: login,
-        token
+        token,
+        tableId
     }
 }
 

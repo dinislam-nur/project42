@@ -1,5 +1,5 @@
 import React from "react";
-import {Callout, Divider} from "@blueprintjs/core";
+import {Divider} from "@blueprintjs/core";
 import Col from "reactstrap/es/Col";
 import Row from "reactstrap/es/Row";
 import Container from "reactstrap/es/Container";

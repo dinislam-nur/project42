@@ -15,6 +15,7 @@ const initialState = {
     username: null,
     token: null,
     table: undefined,
+    tableId: null,
     dishPage: null,
     category: "SOUPS",
     ordersHistory: null,
@@ -31,8 +32,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case LOGIN:
             localStorage.setItem("token", action.token);
-            console.log(action)
-            return {...state, username: action.username, token: action.token};
+            return {...state, username: action.username, token: action.token, tableId: action.tableId};
         case LOGIN_TOKEN:
             return {...state, token: action.token};
         case LOGOUT:
