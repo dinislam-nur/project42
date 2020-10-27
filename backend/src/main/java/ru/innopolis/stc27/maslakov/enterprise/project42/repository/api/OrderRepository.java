@@ -31,4 +31,5 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
     List<Order> findOrdersByPayedFalse();
 
     Set<Order> findOrdersByStatusBetween(OrderStatus from, OrderStatus to);
+
 }

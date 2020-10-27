@@ -8,8 +8,6 @@ import java.util.UUID;
 @Value
 public class PrimaryOrderDTO {
 
-    Long userId;
-
     List<Long> foodsId;
 
     UUID tableId;

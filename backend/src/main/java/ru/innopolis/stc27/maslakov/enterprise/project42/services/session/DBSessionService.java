@@ -12,6 +12,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
+import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
@@ -25,6 +26,8 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class DBSessionService implements SessionService {
+    public static final String ANON_PASSWORD = "anonymous";
+
     private final BCryptPasswordEncoder encoder;
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
@@ -37,15 +40,20 @@ public class DBSessionService implements SessionService {
         User user;
         if (credentials == null) {
             isAnonymous = true;
-            user = userRepository.findByLogin("anonymous")
-                    .orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
+            user = User.builder()
+                    .login(UUID.randomUUID().toString())
+                    .password(ANON_PASSWORD)
+                    .role(Role.ROLE_GUEST)
+                    .build();
+            user = userRepository.save(user);
         } else {
             user = userRepository.findByLogin(credentials.getLogin().toLowerCase())
                     .orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
         }
         if (isAnonymous || encoder.matches(credentials.getPassword(), user.getPassword())) {
             if (user.getRole() == Role.ROLE_GUEST) {
-                val table = tableRepository.findById(tableId).orElseThrow(() -> new IllegalArgumentException("Такого стола не существует"));
+                val table = tableRepository.findById(tableId)
+                        .orElseThrow(() -> new IllegalArgumentException("Такого стола не существует"));
                 return getSessionDTO(user, table);
             } else {
                 return getSessionDTO(user, null);
@@ -84,8 +92,17 @@ public class DBSessionService implements SessionService {
     @Override
     @Transactional
     public boolean logout(String token) {
-        Optional<Session> session = sessionRepository.findByToken(token);
-        session.ifPresent(sessionRepository::delete);
+        sessionRepository.findByToken(token)
+                .ifPresent(this::deleteAnonymousOrSession);
         return true;
+    }
+
+    private void deleteAnonymousOrSession(Session session) {
+        val user = session.getUser();
+        if (ANON_PASSWORD.equals(user.getPassword())) {
+            userRepository.delete(user);
+        } else {
+            sessionRepository.delete(session);
+        }
     }
 }

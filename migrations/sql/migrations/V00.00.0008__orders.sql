@@ -14,3 +14,6 @@ CREATE TABLE orders
     CONSTRAINT fk_orders_tables_table_id FOREIGN KEY (table_id) REFERENCES tables (table_id) ON DELETE CASCADE,
     CONSTRAINT fk_orders_order_statuses FOREIGN KEY (order_status_id) REFERENCES order_statuses (order_status_id)
 );
+
+-- index
+CREATE INDEX orders_order_time_index ON orders (order_time);

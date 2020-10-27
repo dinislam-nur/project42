@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +15,10 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.FoodRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
-import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
-import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 import java.util.*;
@@ -32,40 +30,28 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
-    private final TableRepository tableRepository;
     private final FoodRepository foodRepository;
 
     @Override
     public Long createNewOrder(PrimaryOrderDTO orderDTO) {
-        val userId = ((Session) SecurityContextHolder.getContext().getAuthentication().getDetails()).getUser().getId();
-        val user = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Пользователя с id #" + userId + " не найдено в базе"));
+        val user = ((Session) SecurityContextHolder.getContext().getAuthentication().getDetails()).getUser();
 
-        val tableId = orderDTO.getTableId();
-
-        val table = tableRepository
-                .findById(tableId)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Стола с id #" + tableId + " не найдено в базе"));
+        val table = Table.builder()
+                .id(orderDTO.getTableId())
+                .build();
 
         final List<Food> foods = new ArrayList<>();
-        foodRepository
-                .findAllById(orderDTO.getFoodsId())
-                .forEach(foods::add);
-        final List<Food> listFoods = new ArrayList<>();
         orderDTO.getFoodsId().forEach(
-                id -> foods
-                        .stream()
-                        .filter(food -> id.equals(food.getId()))
-                        .forEachOrdered(listFoods::add)
+                id -> foods.add(Food.builder()
+                        .id(id)
+                        .price(foodRepository.getPriceById(id))
+                        .build())
         );
+
         val currentOrder = Order.builder()
                 .user(user)
                 .table(table)
-                .foods(listFoods)
+                .foods(foods)
                 .build();
 
         return orderRepository.save(currentOrder).getId();
@@ -117,12 +103,8 @@ public class OrderServiceImpl implements OrderService {
         val pageRequest = PageRequest.of(page, size, sort);
         Page<Order> orders;
         if (user.getRole().equals(Role.ROLE_GUEST)) {
-            if (user.getLogin().equals("anonymous")) {
-                orders = Page.empty();
-            } else {
                 orders = orderRepository
                         .findByUserId(user.getId(), pageRequest);
-            }
         } else if (status != null) {
             orders = orderRepository
                     .findByStatus(status, pageRequest);
