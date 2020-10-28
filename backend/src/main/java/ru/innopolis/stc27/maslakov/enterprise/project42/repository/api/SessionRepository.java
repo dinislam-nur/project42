@@ -5,7 +5,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
-//import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.SessionStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
 import java.util.List;
@@ -19,8 +18,6 @@ public interface SessionRepository extends PagingAndSortingRepository<Session, L
 
     @Query(value = "SELECT s FROM Session s WHERE s.table.id = :table_id")
     List<Session> findByTableId(@Param("table_id") UUID tableId);
-
-//    List<Session> findByStatus(SessionStatus sessionStatus);
 
     Optional<Session> findByToken(String token);
 }

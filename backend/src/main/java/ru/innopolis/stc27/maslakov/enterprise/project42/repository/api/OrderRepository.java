@@ -8,10 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
-import java.util.List;
 import java.util.Set;
 
 @Repository
