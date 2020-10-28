@@ -22,6 +22,8 @@ public class OrderDTO {
 
     UUID tableId;
 
+    Integer tableNumber;
+
     Boolean payed;
 
     Double total;

@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.CredentialsDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.ErrorMessageDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.session.SessionService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -22,16 +22,19 @@ public class AuthenticationController {
     private final SessionService sessionService;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(@RequestBody(required = false) CredentialsDTO credentials,
-                                @RequestHeader(value = "TABLE_ID", required = false) UUID tableId) {
+    public ResponseEntity<Object> login(@RequestBody(required = false) @Valid CredentialsDTO credentials,
+                                        @RequestHeader(value = "TABLE_ID", required = false) UUID tableId) {
         val session = sessionService.loginWithCredentials(credentials, tableId);
-        return session.isPresent() ?
-                ResponseEntity.ok(session.get()) : ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Неправильный логин или пароль.");
+        return session
+                .<ResponseEntity<Object>>map(ResponseEntity::ok)
+                .orElseGet(
+                        () -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .body("Неправильный логин или пароль.")
+                );
     }
 
     @GetMapping(value = "/session")
-    public ResponseEntity loginToken() {
+    public ResponseEntity<Object> loginToken() {
         val authentication = SecurityContextHolder.getContext().getAuthentication();
         val details = authentication.getDetails();
         return details instanceof Session ? ResponseEntity.ok(details) :
@@ -39,7 +42,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public ResponseEntity logout() {
+    public ResponseEntity<String> logout() {
         val authentication = SecurityContextHolder.getContext().getAuthentication();
         val session = (Session) authentication.getDetails();
         return sessionService.logout(session.getToken()) ? ResponseEntity.ok().build() :

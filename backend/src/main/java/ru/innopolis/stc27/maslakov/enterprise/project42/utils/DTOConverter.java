@@ -35,6 +35,7 @@ public class DTOConverter {
                 order.getStatus(),
                 order.getFoods().stream().map(DTOConverter::convertToOrderFoodDTO).collect(Collectors.toList()),
                 order.getTable().getId(),
+                order.getTable().getNumber(),
                 order.isPayed(),
                 order.getTotalSum()
         );

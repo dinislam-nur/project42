@@ -4,15 +4,14 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.PrimaryOrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.OrderDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.order.OrderService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collection;
 
@@ -42,7 +41,7 @@ public class OrderController {
 
     @PostMapping(value = "/orders")
     public ResponseEntity<String> createOrder(
-            @RequestBody @NonNull PrimaryOrderDTO orderDTO) {
+            @RequestBody @Valid PrimaryOrderDTO orderDTO) {
         val id = orderService.createNewOrder(orderDTO);
         return ResponseEntity
                 .created(URI.create("/orders/" + id))

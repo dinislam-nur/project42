@@ -9,6 +9,8 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.food.FoodService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class FoodController {
@@ -24,7 +26,7 @@ public class FoodController {
 
     @PostMapping(value = "/foods/create")
     @ResponseStatus(HttpStatus.CREATED)
-    private void getFood(@RequestBody FoodDTO foodDTO) {
+    private void getFood(@RequestBody @Valid FoodDTO foodDTO) {
         foodService.createOrUpdateFood(foodDTO);
     }
 

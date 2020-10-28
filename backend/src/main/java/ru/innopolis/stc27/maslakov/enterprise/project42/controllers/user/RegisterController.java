@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.ErrorMessageDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SignupDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SignupGuestDTO;
+import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SignupStaffDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.register.RegisterService;
 
@@ -21,15 +21,15 @@ public class RegisterController {
 
     @ResponseBody
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ErrorMessageDTO> register(@Valid @RequestBody SignupDTO data) {
+    public ResponseEntity<String> register(@Valid @RequestBody SignupGuestDTO data) {
         Optional<User> user = registerService.signup(data);
         return user.isPresent() ?
                 ResponseEntity.ok().build() : ResponseEntity.badRequest()
-                .body(new ErrorMessageDTO("Пользователь с таким именем уже существует."));
+                .body("Пользователь с таким именем уже существует.");
     }
 
     @PostMapping(value = "/staff/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> staffRegister(@Valid @RequestBody SignupDTO data) {
+    public ResponseEntity<String> staffRegister(@Valid @RequestBody SignupStaffDTO data) {
         Optional<User> user = registerService.signup(data);
         return user.isPresent() ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }

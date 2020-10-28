@@ -41,7 +41,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         try {
             Session session = sessionRepository.findByToken(token).orElseThrow(() -> new IllegalStateException("Session not found"));
-            if (session.getTimeout().after(Timestamp.valueOf(LocalDateTime.now()))) {
+            if (session.getTimeout().before(Timestamp.valueOf(LocalDateTime.now()))) {
                 sessionRepository.delete(session);
                 throw new IllegalStateException("Недействительная сессия");
             }

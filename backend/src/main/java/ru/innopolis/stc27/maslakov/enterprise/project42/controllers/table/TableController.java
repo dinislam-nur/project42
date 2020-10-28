@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.table.TableService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class TableController {
     }
 
     @PostMapping(path = "/tables")
-    public ResponseEntity<String> create(@RequestBody @NonNull TableDTO tableDTO) {
+    public ResponseEntity<String> create(@RequestBody @Valid TableDTO tableDTO) {
         val table = tableService.createTable(tableDTO);
         return ResponseEntity
                 .created(
