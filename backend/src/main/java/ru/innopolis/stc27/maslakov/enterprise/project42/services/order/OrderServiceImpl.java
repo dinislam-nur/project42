@@ -1,6 +1,7 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.services.order;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

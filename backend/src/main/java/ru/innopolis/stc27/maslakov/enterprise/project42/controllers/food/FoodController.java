@@ -24,9 +24,9 @@ public class FoodController {
         return foodService.getPageFoods(page, size, foodCategory);
     }
 
-    @PostMapping(value = "/foods/create")
+    @PostMapping(value = "/foods")
     @ResponseStatus(HttpStatus.CREATED)
-    private void getFood(@RequestBody @Valid FoodDTO foodDTO) {
+    private void saveFood(@RequestBody @Valid FoodDTO foodDTO) {
         foodService.createOrUpdateFood(foodDTO);
     }
 

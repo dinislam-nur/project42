@@ -14,7 +14,7 @@ public class OrderStatusAttributeConverter implements AttributeConverter<OrderSt
         switch (status) {
             case USER_CONFIRMED:
                 return 1;
-            case CANCELLED:
+            case CANCELED:
                 return 2;
             case PREPARING:
                 return 3;
@@ -36,7 +36,7 @@ public class OrderStatusAttributeConverter implements AttributeConverter<OrderSt
             case 1:
                 return OrderStatus.USER_CONFIRMED;
             case 2:
-                return OrderStatus.CANCELLED;
+                return OrderStatus.CANCELED;
             case 3:
                 return OrderStatus.PREPARING;
             case 4:
