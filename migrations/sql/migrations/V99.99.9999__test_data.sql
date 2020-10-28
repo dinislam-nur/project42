@@ -80,9 +80,5 @@ VALUES (1, 1),
        (3, 1),
        (3, 2);
 
-INSERT INTO session_statuses (session_status_id, session_status_name)
-VALUES (1, 'OPENED'),
-       (2, 'CLOSED');
-
-INSERT INTO sessions (session_status_id, token, timeout, table_id, user_id)
-VALUES (1, 'some_token', to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1);
+INSERT INTO sessions (token, timeout, table_id, user_id)
+VALUES ('some_token', to_timestamp('15.10.2020 00:00:00.000000', 'DD.MM.YYYY HH24:MI:SS:US'), uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1);

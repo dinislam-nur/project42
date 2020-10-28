@@ -20,15 +20,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
     @Query("SELECT o FROM Order o WHERE o.user.id = :user_id")
     Page<Order> findByUserId(@Param("user_id") Long userId, Pageable pageable);
 
-    List<Order> findByUserAndPayedFalse(User user);
-
-    List<Order> findByTable(Table table);
-
-    List<Order> findByTableAndPayedFalse(Table table);
-
     Page<Order> findByStatus(OrderStatus status, Pageable pageable);
-
-    List<Order> findOrdersByPayedFalse();
 
     Set<Order> findOrdersByStatusBetween(OrderStatus from, OrderStatus to);
 

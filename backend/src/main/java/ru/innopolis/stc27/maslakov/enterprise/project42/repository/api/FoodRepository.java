@@ -16,8 +16,6 @@ public interface FoodRepository extends PagingAndSortingRepository<Food, Long> {
 
     Page<Food> findAllByFoodCategory(FoodCategory foodCategory, Pageable pageable);
 
-    Optional<Food> findByName(String name);
-
     @Query("SELECT f.price FROM Food f WHERE f.id = :id")
     Double getPriceById(@Param("id") Long id);
 

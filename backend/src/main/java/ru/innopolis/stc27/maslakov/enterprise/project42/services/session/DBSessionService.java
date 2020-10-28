@@ -8,11 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.CredentialsDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SessionDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.SessionStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
-import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.OrderRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.UserRepository;
@@ -72,7 +70,6 @@ public class DBSessionService implements SessionService {
 
     private Session createSession(User user, Table table) {
         val newSession = Session.builder()
-                .status(SessionStatus.OPENED)
                 .table(table)
                 .token(UUID.randomUUID().toString())
                 .user(user)
