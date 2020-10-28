@@ -27,7 +27,7 @@ public class AuthenticationController {
         val session = sessionService.loginWithCredentials(credentials, tableId);
         return session.isPresent() ?
                 ResponseEntity.ok(session.get()) : ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorMessageDTO("Неправильный логин или пароль."));
+                .body("Неправильный логин или пароль.");
     }
 
     @GetMapping(value = "/session")

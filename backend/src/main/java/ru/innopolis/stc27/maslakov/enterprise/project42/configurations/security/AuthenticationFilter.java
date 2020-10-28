@@ -16,6 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Slf4j
 @AllArgsConstructor
@@ -38,7 +40,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            Session session = sessionRepository.findByToken(token).orElseThrow(() -> new IllegalArgumentException("Session not found"));
+            Session session = sessionRepository.findByToken(token).orElseThrow(() -> new IllegalStateException("Session not found"));
+            if (session.getTimeout().after(Timestamp.valueOf(LocalDateTime.now()))) {
+                sessionRepository.delete(session);
+                throw new IllegalStateException("Недействительная сессия");
+            }
             TokenAuthentication authRequest = new TokenAuthentication(session);
             Authentication authResult = this.authenticationManager.authenticate(authRequest);
             SecurityContextHolder.getContext().setAuthentication(authResult);

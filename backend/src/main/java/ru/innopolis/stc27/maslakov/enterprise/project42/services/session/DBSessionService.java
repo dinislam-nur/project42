@@ -47,12 +47,12 @@ public class DBSessionService implements SessionService {
             user = userRepository.save(user);
         } else {
             user = userRepository.findByLogin(credentials.getLogin().toLowerCase())
-                    .orElseThrow(() -> new IllegalArgumentException("Неправильный логин или пароль"));
+                    .orElseThrow(() -> new IllegalStateException("Неправильный логин или пароль"));
         }
         if (isAnonymous || encoder.matches(credentials.getPassword(), user.getPassword())) {
             if (user.getRole() == Role.ROLE_GUEST) {
                 val table = tableRepository.findById(tableId)
-                        .orElseThrow(() -> new IllegalArgumentException("Такого стола не существует"));
+                        .orElseThrow(() -> new IllegalStateException("Такого стола не существует"));
                 openTable(table);
                 return getSessionDTO(user, table);
             } else {

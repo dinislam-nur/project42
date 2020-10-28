@@ -61,10 +61,4 @@ public class OrderController {
         orderService.deleteOrder(id);
     }
 
-    @ResponseBody
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(AccessDeniedException.class)
-    public String accessDenied(AccessDeniedException exception) {
-        return exception.getMessage();
-    }
 }

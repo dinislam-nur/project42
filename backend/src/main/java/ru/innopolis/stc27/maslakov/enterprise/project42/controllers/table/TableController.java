@@ -4,9 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.services.table.TableService;
@@ -58,26 +56,4 @@ public class TableController {
         tableService.deleteTable(tableId);
     }
 
-    @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(IllegalStateException.class)
-    public String tableNotFoundStateHandler(IllegalStateException exception) {
-        return exception.getMessage();
-    }
-
-    @ResponseBody
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(AccessDeniedException.class)
-    public String accessDenied(AccessDeniedException exception) {
-        return exception.getMessage();
-    }
-
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RuntimeException.class)
-    public String badRequestHandler() {
-        val message = "Некорректный запрос";
-        log.warn(message);
-        return message;
-    }
 }
