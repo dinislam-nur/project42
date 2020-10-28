@@ -2,6 +2,7 @@ import React from "react";
 import LoginForm from "../../forms/login";
 import {connect} from "react-redux";
 import {loginAction} from "../../../store/actions/app";
+import {Loader} from "../../app/loader";
 
 const initState = {
     username: "",
@@ -23,13 +24,21 @@ class LoginPage extends React.Component {
     render() {
         return (
             <div className={"layout"}>
-                <LoginForm onLoginChange={this.loginChangeHandler} onPasswordChange={this.passwordChangeHandler}
-                           onLogin={this.onLoginSubmit} type={"submit"}/>
+                {this.props.loaded ?
+                    <LoginForm onLoginChange={this.loginChangeHandler} onPasswordChange={this.passwordChangeHandler}
+                               onLogin={this.onLoginSubmit} type={"submit"}/> :
+                    <Loader/>
+                }
             </div>
         )
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        orders: state.app.loaded
+    }
+}
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -37,4 +46,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

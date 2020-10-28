@@ -1,9 +1,19 @@
-import {HIDE_LOADER, LOGIN, LOGIN_TOKEN, LOGOUT, SET_SESSION, SHOW_ERROR, SHOW_LOADER} from "../actions/app";
+import {
+    HIDE_LOADER,
+    LOGIN,
+    LOGIN_TOKEN,
+    LOGOUT,
+    SET_ORDERS,
+    SET_SESSION,
+    SHOW_ERROR,
+    SHOW_LOADER
+} from "../actions/app";
 import {AppToaster} from "../../components/app/toaster";
 
 const initialState = {
     username: "",
     token: "",
+    orders: null,
     session: null,
     loaded: true
 };
@@ -27,6 +37,8 @@ export default (state = initialState, action) => {
             return {...state, loaded: false};
         case HIDE_LOADER:
             return {...state, loaded: true};
+        case SET_ORDERS:
+            return {...state, orders: action.orders};
         default:
             return state;
     }

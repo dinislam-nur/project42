@@ -86,7 +86,7 @@ const OrdersDish = (props) => {
 const EmptyOrder = (props) => {
     return (
         <Card>
-            <CardTitle className={"empty_order"}><b>Заказ пустой 😔</b></CardTitle>
+            <CardTitle className={"empty_order"}><b>Заказ пустой <span role="img" aria-label="donut">😔</span></b></CardTitle>
         </Card>
     )
 }
