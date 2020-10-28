@@ -9,6 +9,7 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.dto.CredentialsDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.SessionDTO;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
+import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
@@ -52,12 +53,20 @@ public class DBSessionService implements SessionService {
             if (user.getRole() == Role.ROLE_GUEST) {
                 val table = tableRepository.findById(tableId)
                         .orElseThrow(() -> new IllegalArgumentException("Такого стола не существует"));
+                openTable(table);
                 return getSessionDTO(user, table);
             } else {
                 return getSessionDTO(user, null);
             }
         }
         return Optional.empty();
+    }
+
+    private void openTable(Table table) {
+        if (table.getStatus().equals(TableStatus.NOT_RESERVED)) {
+            table.setStatus(TableStatus.RESERVED);
+            tableRepository.save(table);
+        }
     }
 
     private Optional<SessionDTO> getSessionDTO(User user, Table table) {
@@ -94,7 +103,7 @@ public class DBSessionService implements SessionService {
         return true;
     }
 
-    private void deleteAnonymousOrSession(Session session) {
+    public void deleteAnonymousOrSession(Session session) {
         val user = session.getUser();
         if (ANON_PASSWORD.equals(user.getPassword())) {
             userRepository.delete(user);

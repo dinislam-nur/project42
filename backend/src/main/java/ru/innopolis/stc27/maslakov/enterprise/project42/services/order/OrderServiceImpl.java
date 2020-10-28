@@ -41,17 +41,21 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         final List<Food> foods = new ArrayList<>();
+        foodRepository
+                .findAllById(orderDTO.getFoodsId())
+                .forEach(foods::add);
+        final List<Food> listFoodsForOrder = new ArrayList<>();
         orderDTO.getFoodsId().forEach(
-                id -> foods.add(Food.builder()
-                        .id(id)
-                        .price(foodRepository.getPriceById(id))
-                        .build())
+                id -> foods
+                        .stream()
+                        .filter(food -> id.equals(food.getId()))
+                        .forEachOrdered(listFoodsForOrder::add)
         );
 
         val currentOrder = Order.builder()
                 .user(user)
                 .table(table)
-                .foods(foods)
+                .foods(listFoodsForOrder)
                 .build();
 
         return orderRepository.save(currentOrder).getId();

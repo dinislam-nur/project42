@@ -8,10 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.innopolis.stc27.maslakov.enterprise.project42.dto.TableDTO;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.session.Session;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.TableStatus;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.SessionRepository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.repository.api.TableRepository;
+import ru.innopolis.stc27.maslakov.enterprise.project42.services.session.SessionService;
 import ru.innopolis.stc27.maslakov.enterprise.project42.utils.DTOConverter;
 
 import java.util.*;
@@ -24,6 +24,7 @@ public class TableServiceImpl implements TableService {
 
     private final TableRepository tableRepository;
     private final SessionRepository sessionRepository;
+    private final SessionService sessionService;
 
     @Override
     @Transactional
@@ -91,9 +92,9 @@ public class TableServiceImpl implements TableService {
             tableRepository.save(DTOConverter.convertDTO(tableDTO));
             if (tableDTO.getStatus().equals(TableStatus.NOT_RESERVED)) {
                 log.info("Удаление всех сессий по столу c id #" + id);
-                final List<Session> sessions = sessionRepository
-                        .findByTableId(id);
-                sessions.forEach(sessionRepository::delete);
+                sessionRepository
+                        .findByTableId(id)
+                        .forEach(sessionService::deleteAnonymousOrSession);
             }
         } else {
             throw new RuntimeException("Не совпадают id обращения и id стола");
