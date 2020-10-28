@@ -22,10 +22,6 @@ public class Session {
     @SequenceGenerator(name = "SESSION_ID_GENERATOR", allocationSize = 1, sequenceName = "sessions_session_id_seq")
     private Long id;
 
-//    @Column(name = "session_status_id", nullable = false)
-//    @Convert(converter = SessionStatusAttributeConverter.class)
-//    private SessionStatus status;
-
     @Column(name = "token", nullable = false)
     private String token;
 
