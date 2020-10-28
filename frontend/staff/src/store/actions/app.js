@@ -7,7 +7,7 @@ export const SHOW_ERROR = "APP/SHOW_ERROR";
 export const SHOW_LOADER = "APP/SHOW_LOADER";
 export const HIDE_LOADER = "APP/HIDE_LOADER";
 export const SET_SESSION = "APP/SET_SESSION";
-export const SET_ORDERS = "APP/SET_ORDERS";
+export const SET_CONFIRM_ORDERS = "APP/SET_CONFIRM_ORDERS";
 
 const host = "https://project42db.herokuapp.com";
 
@@ -134,7 +134,7 @@ export const updateOrder = order => {
             },
             body: JSON.stringify(order)
         });
-        if (await response.ok) {
+        if (response.ok) {
             dispatch(fetchConfirmOrders(0));
             dispatch(hideLoader());
         } else {
@@ -146,7 +146,7 @@ export const updateOrder = order => {
 
 
 const setOrdersHistory = (orders) => ({
-    type: SET_ORDERS,
+    type: SET_CONFIRM_ORDERS,
     orders
 })
 

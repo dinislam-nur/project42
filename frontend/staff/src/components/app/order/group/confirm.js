@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {fetchConfirmOrders, updateOrder} from "../../../../store/actions/app";
 import {connect} from "react-redux";
 import CardColumns from "reactstrap/es/CardColumns";
-import {Button, ButtonGroup, Dialog} from "@blueprintjs/core";
+import {Button, ButtonGroup, Dialog, Intent} from "@blueprintjs/core";
 import {Loader} from "../../loader";
 import CardSubtitle from "reactstrap/es/CardSubtitle";
 import Card from "reactstrap/es/Card";
@@ -28,19 +28,30 @@ class OrdersConfirmGroup extends React.Component {
 
     render() {
         let list = null;
+        let orderColumns = (
+            <Card>
+                <CardTitle><b>Заказов нет <span role="img" aria-label="donut">😔</span></b></CardTitle>
+            </Card>
+        );
         if (this.props.orders !== null) {
             list = this.props.orders.content.map(order => <Order order={order} onConfirm={this.props.updateOrder}/>)
+            if (this.props.orders.content.length !== 0) {
+                orderColumns = (<CardColumns style={{width: "80%"}} className={"orders_centre"}>{list}</CardColumns>);
+            }
         }
         return (
             <div className={"layout"}>
-                {this.props.loaded?<CardColumns style={{width: "80%"}} className={"orders_centre"}>{list}</CardColumns>:<Loader/>}
+                <h1>Ожидают подтверждения:</h1>
+                {this.props.loaded ?
+                    orderColumns : <Loader/>}
                 {
-                    this.props.orders !== null ?
+                    this.props.orders === null || this.props.orders.content.length === 0 ?
+                        null
+                        :
                         <HistoryFooter onPrevPage={this.prevPageHandler}
                                        onNextPage={this.nextPageHandler}
                                        page={this.props.orders}
                         />
-                        : null
                 }
             </div>
         )
@@ -61,7 +72,7 @@ const HistoryFooter = props => {
 
 const mapStateToProps = state => {
     return {
-        orders: state.app.orders,
+        orders: state.app.confirmOrders,
         loaded: state.app.loaded
     }
 }
@@ -96,9 +107,16 @@ const Order = (props) => {
             break;
     }
 
-    const onConfirm = ()=>{
-        props.order.status = 'PREPARING';
-        props.onConfirm(props.order);
+    const onConfirm = () => {
+        const order = JSON.parse(JSON.stringify(props.order));
+        order.status = 'PREPARING';
+        props.onConfirm(order);
+    }
+
+    const onCancel = () => {
+        const order = JSON.parse(JSON.stringify(props.order));
+        order.status = 'CANCELED';
+        props.onConfirm(order);
     }
 
     const list = props.order.foods.map((dish) => (
@@ -108,6 +126,7 @@ const Order = (props) => {
         <Card onClick={() => setOpen(true)} color={intent}>
             <CardHeader>
                 <CardTitle><b>Заказ №{props.order.id}</b></CardTitle>
+                <CardSubtitle><b>Стол №{props.order.id}</b></CardSubtitle>
             </CardHeader>
             <Dialog
                 icon="info-sign"
@@ -119,8 +138,11 @@ const Order = (props) => {
                 <Card style={{padding: "10px"}}>
                     {list}
                 </Card>
+                <ButtonGroup>
+                    <Button onClick={onConfirm} intent={Intent.SUCCESS}>Подтвердить</Button>
+                    <Button onClick={onCancel} intent={Intent.DANGER}>Отмена</Button>
+                </ButtonGroup>
             </Dialog>
-            <Button onClick={onConfirm}>Подтвердить</Button>
         </Card>
     )
 }

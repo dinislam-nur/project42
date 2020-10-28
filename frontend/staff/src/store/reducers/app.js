@@ -3,7 +3,7 @@ import {
     LOGIN,
     LOGIN_TOKEN,
     LOGOUT,
-    SET_ORDERS,
+    SET_CONFIRM_ORDERS,
     SET_SESSION,
     SHOW_ERROR,
     SHOW_LOADER
@@ -13,7 +13,7 @@ import {AppToaster} from "../../components/app/toaster";
 const initialState = {
     username: "",
     token: "",
-    orders: null,
+    confirmOrders: null,
     session: null,
     loaded: true
 };
@@ -37,8 +37,8 @@ export default (state = initialState, action) => {
             return {...state, loaded: false};
         case HIDE_LOADER:
             return {...state, loaded: true};
-        case SET_ORDERS:
-            return {...state, orders: action.orders};
+        case SET_CONFIRM_ORDERS:
+            return {...state, confirmOrders: action.orders};
         default:
             return state;
     }
