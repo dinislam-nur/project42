@@ -34,7 +34,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@Disabled
 @SpringBootTest
 class OrderRepositoryTest {
 

@@ -14,7 +14,6 @@ import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@Disabled
 @SpringBootTest
 class UserRepositoryTest {
 

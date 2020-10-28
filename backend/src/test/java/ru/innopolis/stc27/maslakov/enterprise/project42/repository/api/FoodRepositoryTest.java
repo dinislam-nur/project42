@@ -22,7 +22,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@Disabled
 @SpringBootTest
 class FoodRepositoryTest {
 
