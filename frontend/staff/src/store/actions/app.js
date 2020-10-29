@@ -8,6 +8,7 @@ export const SHOW_LOADER = "APP/SHOW_LOADER";
 export const HIDE_LOADER = "APP/HIDE_LOADER";
 export const SET_SESSION = "APP/SET_SESSION";
 export const SET_CONFIRM_ORDERS = "APP/SET_CONFIRM_ORDERS";
+export const SET_PREPARING_ORDERS = "APP/SET_PREPARING_ORDERS";
 
 const host = "https://project42db.herokuapp.com";
 
@@ -93,7 +94,7 @@ export const fetchOrdersForWaiters = () => {
             },
         });
         if (response.ok) {
-            dispatch(setOrdersHistory(await response.json()));
+            // dispatch(setOrdersHistory(await response.json()));
             dispatch(hideLoader());
         } else {
             dispatch(hideLoader());
@@ -102,10 +103,10 @@ export const fetchOrdersForWaiters = () => {
     }
 }
 
-export const fetchConfirmOrders = (page) => {
+export const fetchOrders = (status, page) => {
     return async (dispatch) => {
         dispatch(showLoader());
-        const response = await fetch(host + '/orders?size=9&page=' + page + '&status=USER_CONFIRMED', {
+        const response = await fetch(host + '/orders?size=9&page=' + page + '&status=' + status, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -113,7 +114,14 @@ export const fetchConfirmOrders = (page) => {
             },
         });
         if (response.ok) {
-            dispatch(setOrdersHistory(await response.json()));
+            switch (status) {
+                case "PREPARING":
+                    dispatch(setPreparingOrders(await response.json()));
+                    break;
+                case "USER_CONFIRMED":
+                    dispatch(setConfirmOrders(await response.json()));
+                    break;
+            }
             dispatch(hideLoader());
         } else {
             dispatch(hideLoader());
@@ -135,7 +143,8 @@ export const updateOrder = order => {
             body: JSON.stringify(order)
         });
         if (response.ok) {
-            dispatch(fetchConfirmOrders(0));
+            dispatch(fetchOrders('PREPARING', 0));
+            dispatch(fetchOrders('USER_CONFIRMED', 0));
             dispatch(hideLoader());
         } else {
             dispatch(hideLoader());
@@ -145,8 +154,12 @@ export const updateOrder = order => {
 }
 
 
-const setOrdersHistory = (orders) => ({
+const setConfirmOrders = (orders) => ({
     type: SET_CONFIRM_ORDERS,
+    orders
+})
+const setPreparingOrders = (orders) => ({
+    type: SET_PREPARING_ORDERS,
     orders
 })
 

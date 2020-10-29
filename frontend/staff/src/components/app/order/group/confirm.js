@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {fetchConfirmOrders, updateOrder} from "../../../../store/actions/app";
+import {fetchOrders, updateOrder} from "../../../../store/actions/app";
 import {connect} from "react-redux";
 import CardColumns from "reactstrap/es/CardColumns";
 import {Button, ButtonGroup, Dialog, Intent} from "@blueprintjs/core";
@@ -9,21 +9,21 @@ import Card from "reactstrap/es/Card";
 import CardHeader from "reactstrap/es/CardHeader";
 import CardTitle from "reactstrap/es/CardTitle";
 
-class OrdersConfirmGroup extends React.Component {
+class DisconnectedOrdersConfirmGroup extends React.Component {
     constructor(props) {
         super(props);
     }
 
     async componentDidMount() {
-        await this.props.fetchConfirmOrders(0);
+        await this.props.fetchOrders(this.props.status, 0);
     }
 
     prevPageHandler = () => {
-        this.props.fetchConfirmOrders(this.props.orders.pageable.pageNumber - 1);
+        this.props.fetchOrders(this.props.status, this.props.confirmOrders.pageable.pageNumber - 1);
     }
 
     nextPageHandler = () => {
-        this.props.fetchConfirmOrders(this.props.orders.pageable.pageNumber + 1);
+        this.props.fetchOrders(this.props.status, this.props.confirmOrders.pageable.pageNumber + 1);
     }
 
     render() {
@@ -33,9 +33,10 @@ class OrdersConfirmGroup extends React.Component {
                 <CardTitle><b>Заказов нет <span role="img" aria-label="donut">😔</span></b></CardTitle>
             </Card>
         );
-        if (this.props.orders !== null) {
-            list = this.props.orders.content.map(order => <Order order={order} onConfirm={this.props.updateOrder}/>)
-            if (this.props.orders.content.length !== 0) {
+        if (this.props.confirmOrders !== null) {
+            list = this.props.confirmOrders.content.map(order => <Order order={order}
+                                                                        onConfirm={this.props.updateOrder} confirm={true}/>)
+            if (this.props.confirmOrders.content.length !== 0) {
                 orderColumns = (<CardColumns style={{width: "80%"}} className={"orders_centre"}>{list}</CardColumns>);
             }
         }
@@ -45,12 +46,63 @@ class OrdersConfirmGroup extends React.Component {
                 {this.props.loaded ?
                     orderColumns : <Loader/>}
                 {
-                    this.props.orders === null || this.props.orders.content.length === 0 ?
+                    this.props.confirmOrders === null || this.props.confirmOrders.content.length === 0 ?
                         null
                         :
                         <HistoryFooter onPrevPage={this.prevPageHandler}
                                        onNextPage={this.nextPageHandler}
-                                       page={this.props.orders}
+                                       page={this.props.confirmOrders}
+                        />
+                }
+            </div>
+        )
+    }
+}
+
+
+class DisconnectedOrdersPreparingGroup extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    async componentDidMount() {
+        await this.props.fetchOrders(this.props.status, 0);
+    }
+
+    prevPageHandler = () => {
+        this.props.fetchOrders(this.props.status, this.props.preparingOrders.pageable.pageNumber - 1);
+    }
+
+    nextPageHandler = () => {
+        this.props.fetchOrders(this.props.status, this.props.preparingOrders.pageable.pageNumber + 1);
+    }
+
+    render() {
+        let list = null;
+        let orderColumns = (
+            <Card>
+                <CardTitle><b>Заказов нет <span role="img" aria-label="donut">😔</span></b></CardTitle>
+            </Card>
+        );
+        if (this.props.preparingOrders !== null) {
+            list = this.props.preparingOrders.content.map(order => <Order order={order}
+                                                                        onConfirm={this.props.updateOrder}/>)
+            if (this.props.preparingOrders.content.length !== 0) {
+                orderColumns = (<CardColumns style={{width: "80%"}} className={"orders_centre"}>{list}</CardColumns>);
+            }
+        }
+        return (
+            <div className={"layout"}>
+                <h1>Готовятся:</h1>
+                {this.props.loaded ?
+                    orderColumns : <Loader/>}
+                {
+                    this.props.preparingOrders === null || this.props.preparingOrders.content.length === 0 ?
+                        null
+                        :
+                        <HistoryFooter onPrevPage={this.prevPageHandler}
+                                       onNextPage={this.nextPageHandler}
+                                       page={this.props.preparingOrders}
                         />
                 }
             </div>
@@ -70,46 +122,17 @@ const HistoryFooter = props => {
     )
 }
 
-const mapStateToProps = state => {
-    return {
-        orders: state.app.confirmOrders,
-        loaded: state.app.loaded
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-    fetchConfirmOrders: (page) => dispatch(fetchConfirmOrders(page)),
-    updateOrder: order => dispatch(updateOrder(order))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(OrdersConfirmGroup);
-
-
 const Order = (props) => {
 
     const [open, setOpen] = useState(false);
 
-
-    let intent;
-
-    switch (props.order.status) {
-        case "DONE":
-            intent = "success";
-            break;
-        case "USER_CONFIRMED":
-            intent = "warning";
-            break;
-        case "PREPARING":
-            intent = "primary";
-            break;
-        default:
-            intent = "primary";
-            break;
-    }
-
     const onConfirm = () => {
         const order = JSON.parse(JSON.stringify(props.order));
-        order.status = 'PREPARING';
+        if (order.status === 'USER_CONFIRMED') {
+            order.status = 'PREPARING';
+        } else if (order.status === 'PREPARING') {
+            order.status = 'DONE';
+        }
         props.onConfirm(order);
     }
 
@@ -123,10 +146,10 @@ const Order = (props) => {
         <CardSubtitle style={{marginTop: "5px"}}><b>{dish.name}</b>: {dish.price}₽</CardSubtitle>
     ));
     return (
-        <Card onClick={() => setOpen(true)} color={intent}>
+        <Card onClick={() => setOpen(true)}>
             <CardHeader>
                 <CardTitle><b>Заказ №{props.order.id}</b></CardTitle>
-                <CardSubtitle><b>Стол №{props.order.id}</b></CardSubtitle>
+                <CardSubtitle><b>Стол №{props.order.tableNumber}</b></CardSubtitle>
             </CardHeader>
             <Dialog
                 icon="info-sign"
@@ -139,10 +162,27 @@ const Order = (props) => {
                     {list}
                 </Card>
                 <ButtonGroup>
-                    <Button onClick={onConfirm} intent={Intent.SUCCESS}>Подтвердить</Button>
-                    <Button onClick={onCancel} intent={Intent.DANGER}>Отмена</Button>
+                    <Button onClick={onConfirm} intent={Intent.SUCCESS}>{props.confirm? 'Подтвердить заказ' : 'Заказ готов'}</Button>
+                    <Button onClick={onCancel} intent={Intent.DANGER}>Отменить заказ</Button>
                 </ButtonGroup>
             </Dialog>
         </Card>
     )
 }
+
+
+const mapStateToProps = state => {
+    return {
+        confirmOrders: state.app.confirmOrders,
+        preparingOrders: state.app.preparingOrders,
+        loaded: state.app.loaded
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    fetchOrders: (status, page) => dispatch(fetchOrders(status, page)),
+    updateOrder: order => dispatch(updateOrder(order))
+});
+
+export const OrdersConfirmGroup = connect(mapStateToProps, mapDispatchToProps)(DisconnectedOrdersConfirmGroup);
+export const OrdersPreparingGroup = connect(mapStateToProps, mapDispatchToProps)(DisconnectedOrdersPreparingGroup);

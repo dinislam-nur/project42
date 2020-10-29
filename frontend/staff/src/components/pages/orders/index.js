@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
-import OrdersConfirmGroup from "../../app/order/group/confirm";
+import {OrdersConfirmGroup, OrdersPreparingGroup} from "../../app/order/group/confirm";
+import {Loader} from "../../app/loader";
 
 
 class OrdersPage extends React.Component {
@@ -9,18 +10,23 @@ class OrdersPage extends React.Component {
     }
 
     render() {
-        return <OrdersConfirmGroup status={'USER_CONFIRMED'}/>
+        return (
+            <div>
+                <OrdersConfirmGroup status={'USER_CONFIRMED'}/>
+                <OrdersPreparingGroup status={'PREPARING'}/>
+            </div>
+        )
     }
 
 }
 
 const mapStateToProps = state => {
     return {
-        orders: state.app.orders
+        orders: state.app.orders,
+        loaded: state.app.loaded
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-});
+const mapDispatchToProps = dispatch => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrdersPage);

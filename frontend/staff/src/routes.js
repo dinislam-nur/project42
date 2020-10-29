@@ -50,7 +50,6 @@ class Routes extends React.Component {
         const publicRoute = (
             <Switch>
                 <Route exact path={'/login'}>
-                    {console.log(this.props)}
                     {this.props.loaded ? <LoginPage/> : <Loader/>}
                 </Route>
                 <Redirect to={'/login'}/>

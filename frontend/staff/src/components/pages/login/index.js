@@ -36,7 +36,7 @@ class LoginPage extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        orders: state.app.loaded
+        loaded: state.app.loaded
     }
 }
 
