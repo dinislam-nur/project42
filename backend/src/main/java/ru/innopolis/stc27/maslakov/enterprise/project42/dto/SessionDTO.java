@@ -1,16 +1,21 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Value;
 
-@Value
-public class SessionDTO {
+import java.util.UUID;
 
-    Long id;
+@Value
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class SessionDTO {
 
     String token;
 
     UserDTO user;
 
-    TableDTO table;
+    UUID tableId;
 
 }

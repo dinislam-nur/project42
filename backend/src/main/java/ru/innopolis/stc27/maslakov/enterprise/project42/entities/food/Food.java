@@ -1,6 +1,5 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.entities.food;
 
-
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,6 +31,7 @@ public class Food {
     @Convert(converter = FoodCategoryAttributeConverter.class)
     @Column(name = "food_category_id")
     private FoodCategory foodCategory;
+
 }
 
 

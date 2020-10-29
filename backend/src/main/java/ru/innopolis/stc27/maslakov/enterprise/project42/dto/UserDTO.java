@@ -1,11 +1,11 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.dto;
 
+import lombok.Builder;
 import lombok.Value;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.Role;
 
-import java.util.List;
-
 @Value
+@Builder
 public class UserDTO {
 
     Long id;
@@ -13,7 +13,5 @@ public class UserDTO {
     String login;
 
     Role role;
-
-    List<OrderDTO> orders;
 
 }

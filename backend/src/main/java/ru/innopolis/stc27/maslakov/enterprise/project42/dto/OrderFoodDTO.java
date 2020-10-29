@@ -4,7 +4,7 @@ import lombok.Value;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
 
 @Value
-public class FoodsDTO {
+public class OrderFoodDTO {
 
     Long id;
 
@@ -14,5 +14,4 @@ public class FoodsDTO {
 
     Double price;
 
-    String picture;
 }

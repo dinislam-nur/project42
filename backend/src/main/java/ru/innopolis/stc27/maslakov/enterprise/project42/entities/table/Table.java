@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -18,8 +20,8 @@ public class Table {
     @Id
     @Column(name = "table_id", nullable = false)
     @GeneratedValue(generator = "TABLE_ID_GENERATOR", strategy = GenerationType.AUTO)
-    @SequenceGenerator(name = "TABLE_ID_GENERATOR", allocationSize = 1, sequenceName = "tables_table_id_seq")
-    private Long id;
+    @GenericGenerator(name = "TABLE_ID_GENERATOR", strategy = "uuid2")
+    private UUID id;
 
     @Column(name = "number", nullable = false)
     private int number;
@@ -27,4 +29,9 @@ public class Table {
     @Convert(converter = TableStatusAttributeConverter.class)
     @Column(name = "table_status_id")
     private TableStatus status;
+
+    @PrePersist
+    public void defaultStatus() {
+        status = TableStatus.NOT_RESERVED;
+    }
 }
