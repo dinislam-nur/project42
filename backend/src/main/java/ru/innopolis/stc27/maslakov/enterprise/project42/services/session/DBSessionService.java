@@ -2,6 +2,7 @@ package ru.innopolis.stc27.maslakov.enterprise.project42.services.session;
 
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class DBSessionService implements SessionService {
             user = userRepository.save(user);
         } else {
             user = userRepository.findByLogin(credentials.getLogin().toLowerCase())
-                    .orElseThrow(() -> new IllegalStateException("Неправильный логин или пароль"));
+                    .orElseThrow(() -> new BadCredentialsException("Неправильный логин или пароль"));
         }
         if (isAnonymous || encoder.matches(credentials.getPassword(), user.getPassword())) {
             if (user.getRole() == Role.ROLE_GUEST) {
