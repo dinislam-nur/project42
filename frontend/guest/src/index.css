@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.dish_pic {
+  padding-top: 15px;
+  max-width: 90%;
+  margin: auto;
+}
+
+.quantity {
+  padding: 5px;
+}
+
+.dish_card_body {
+  padding: 2px 16px;
+  margin: auto;
+}
+
+.dish_card {
+  margin: auto;
+  width: 90%;
+  padding: 10px;
+
+}
+
+.history_card {
+  margin: auto;
+  width: 90%;
+  padding: 5px;
+
+}
+
+.del_butt {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+}
+
+.quantity {
+  float: left;
+  padding-bottom: 2px;
+}
+
+.orders_page_card_button {
+  float: right;
+  width: 30%;
+  margin: auto;
+}
+
+.orders_page_card_body {
+  float: left;
+  width: 70%;
+}
+
+.orders_page_buttongroup {
+  margin-left: 20%;
+  margin-right: 30%;
+  padding-top: 1px;
+  padding-bottom: 3px;
+}
+
+.empty_order{
+  padding-top: 20px;
+  padding-bottom: 15px;
+  margin-left: 32%;
+  margin-right: 30%;
+}
+
+.dish_card_button {
+  margin-left: 30%;
+  margin-right: 50%;
+}
+
+
+div.card_layout {
+  margin: auto;
+  width: 90%;
+  padding: 10px;
+  text-align: center;
+}
+div.layout {
+  text-align: center;
+}
+
+.order_layout {
+  text-align: center;
+  margin-top: 60px;
+  width: 100%;
+}
+
+div.centre {
+  text-align: center;
+  width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
