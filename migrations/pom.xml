@@ -7,12 +7,10 @@
     <parent>
         <artifactId>project42</artifactId>
         <groupId>ru.innopolis.stc27.maslakov.enterprise</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>migrations</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-
 
     <description>Database migrations</description>
 

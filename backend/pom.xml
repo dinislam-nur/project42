@@ -10,9 +10,9 @@
     </parent>
     <groupId>ru.innopolis.stc27.maslakov.enterprise</groupId>
     <artifactId>backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>backend</name>
-    <description>Demo project for Spring Boot</description>
+    <description>"Inna-rest" - Innopolis education project for restaurants</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>ru.innopolis.stc27.maslakov.enterprise</groupId>
             <artifactId>migrations</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
