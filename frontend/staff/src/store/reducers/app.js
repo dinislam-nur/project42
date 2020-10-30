@@ -5,6 +5,7 @@ import {
     LOGOUT,
     SET_CONFIRM_ORDERS,
     SET_PREPARING_ORDERS,
+    SET_WAITERS_ORDERS,
     SET_SESSION,
     SHOW_ERROR,
     SHOW_LOADER
@@ -16,6 +17,7 @@ const initialState = {
     token: "",
     confirmOrders: null,
     preparingOrders: null,
+    waitersOrders: null,
     session: null,
     loaded: true
 };
@@ -43,6 +45,8 @@ export default (state = initialState, action) => {
             return {...state, confirmOrders: action.orders};
         case SET_PREPARING_ORDERS:
             return {...state, preparingOrders: action.orders};
+        case SET_WAITERS_ORDERS:
+            return {...state, waitersOrders: action.orders};
         default:
             return state;
     }

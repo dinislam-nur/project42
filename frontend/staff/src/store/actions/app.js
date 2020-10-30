@@ -9,6 +9,7 @@ export const HIDE_LOADER = "APP/HIDE_LOADER";
 export const SET_SESSION = "APP/SET_SESSION";
 export const SET_CONFIRM_ORDERS = "APP/SET_CONFIRM_ORDERS";
 export const SET_PREPARING_ORDERS = "APP/SET_PREPARING_ORDERS";
+export const SET_WAITERS_ORDERS = "APP/SET_WAITERS_ORDERS";
 
 const host = "https://project42db.herokuapp.com";
 
@@ -83,30 +84,11 @@ export const logout = () => {
     }
 }
 
-export const fetchOrdersForWaiters = () => {
-    return async (dispatch) => {
-        dispatch(showLoader());
-        const response = await fetch(host + '/orders/for_waiters', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-                'Authorization': localStorage.getItem('token')
-            },
-        });
-        if (response.ok) {
-            // dispatch(setOrdersHistory(await response.json()));
-            dispatch(hideLoader());
-        } else {
-            dispatch(hideLoader());
-            showError("Что-то пошло не так");
-        }
-    }
-}
 
-export const fetchOrders = (status, page) => {
+export const fetchOrders = (status, page, size) => {
     return async (dispatch) => {
         dispatch(showLoader());
-        const response = await fetch(host + '/orders?size=9&page=' + page + '&status=' + status, {
+        const response = await fetch(host + '/orders?size=' + size + '&page=' + page + '&status=' + status, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -120,6 +102,14 @@ export const fetchOrders = (status, page) => {
                     break;
                 case "USER_CONFIRMED":
                     dispatch(setConfirmOrders(await response.json()));
+                    break;
+                case "DONE":
+                    dispatch(
+                        {
+                            type: SET_WAITERS_ORDERS,
+                            orders: await response.json()
+                        }
+                    );
                     break;
             }
             dispatch(hideLoader());
@@ -143,8 +133,29 @@ export const updateOrder = order => {
             body: JSON.stringify(order)
         });
         if (response.ok) {
-            dispatch(fetchOrders('PREPARING', 0));
-            dispatch(fetchOrders('USER_CONFIRMED', 0));
+            dispatch(fetchOrders('PREPARING', 0, 9));
+            dispatch(fetchOrders('USER_CONFIRMED', 0, 9));
+            dispatch(hideLoader());
+        } else {
+            dispatch(hideLoader());
+            showError("Что-то пошло не так");
+        }
+    }
+}
+
+export const updateWaitersOrder = order => {
+    return async dispatch => {
+        dispatch(showLoader());
+        const response = await fetch(host + '/orders/' + order.id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': localStorage.getItem('token')
+            },
+            body: JSON.stringify(order)
+        });
+        if (response.ok) {
+            dispatch(fetchOrders('DONE', 0, 9));
             dispatch(hideLoader());
         } else {
             dispatch(hideLoader());
