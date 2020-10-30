@@ -1,7 +1,9 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.entities.food;
 
 public enum FoodCategory {
-    DRINK,
+    DRINKS,
     HOT_DISHES,
-    SOMETHING_ELSE
+    DESSERTS,
+    SALADS,
+    SOUPS
 }

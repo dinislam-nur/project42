@@ -1,32 +1,24 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.OrderStatus;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.table.Table;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.users.User;
 
-import java.util.List;
+import java.util.Set;
 
-public interface OrderRepository {
+@Repository
+public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
 
-    List<Order> findAll();
+    @Query("SELECT o FROM Order o WHERE o.user.id = :user_id")
+    Page<Order> findByUserId(@Param("user_id") Long userId, Pageable pageable);
 
-    Order findById(int id);
+    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
 
-    List<Order> findByGuest(User user);
+    Set<Order> findOrdersByStatusBetween(OrderStatus from, OrderStatus to);
 
-    List<Order> findNotPayedByGuest(User user);
-
-    List<Order> findByTable(Table table);
-
-    List<Order> findNotPayedByTable(Table table);
-
-    List<Order> findByFood(Food food);
-
-    List<Order> findByStatus(OrderStatus status);
-
-    Order save(Order order);
-
-    Order delete(Order order);
 }

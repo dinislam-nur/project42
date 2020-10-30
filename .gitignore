@@ -34,3 +34,7 @@ build/
 /mvnw
 /mvnw.cmd
 /.mvn/
+/backend/src/main/resources/connection.properties
+/backend/app.log
+/app.log
+/backend/app.log.2020-10-24.0.gz

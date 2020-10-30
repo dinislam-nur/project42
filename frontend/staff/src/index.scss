@@ -1,0 +1,14 @@
+@import "~@blueprintjs/core/src/blueprint.scss";
+@import "components/pages/login/index";
+@import "components/forms/login/index";
+@import "components/app/order/index";
+
+div.layout {
+  text-align: center;
+}
+
+div.orders_centre {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}

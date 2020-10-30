@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+server:
+  error:
+    include-stacktrace: never
+
+logging:
+  file:
+    name: app.log

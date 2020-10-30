@@ -1,25 +1,15 @@
 package ru.innopolis.stc27.maslakov.enterprise.project42.repository.api;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.Food;
 import ru.innopolis.stc27.maslakov.enterprise.project42.entities.food.FoodCategory;
-import ru.innopolis.stc27.maslakov.enterprise.project42.entities.order.Order;
 
-import java.util.List;
-import java.util.Optional;
+@Repository
+public interface FoodRepository extends PagingAndSortingRepository<Food, Long> {
 
-public interface FoodRepository {
+    Page<Food> findAllByFoodCategory(FoodCategory foodCategory, Pageable pageable);
 
-    List<Food> findAll();
-
-    Food findById(int id);
-
-    Optional<Food> findByName(String name);
-
-    List<Food> findByCategory(FoodCategory category);
-
-    List<Food> findByOrder(Order order);
-
-    Food save(Food food);
-
-    Food delete(Food candidate);
 }
