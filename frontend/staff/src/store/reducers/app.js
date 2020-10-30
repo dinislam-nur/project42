@@ -5,9 +5,10 @@ import {
     LOGOUT,
     SET_CONFIRM_ORDERS,
     SET_PREPARING_ORDERS,
+    SET_WAITERS_ORDERS,
     SET_SESSION,
     SHOW_ERROR,
-    SHOW_LOADER
+    SHOW_LOADER, SET_TABLES
 } from "../actions/app";
 import {AppToaster} from "../../components/app/toaster";
 
@@ -16,8 +17,10 @@ const initialState = {
     token: "",
     confirmOrders: null,
     preparingOrders: null,
+    waitersOrders: null,
     session: null,
-    loaded: true
+    loaded: true,
+    tables: null
 };
 
 export default (state = initialState, action) => {
@@ -43,6 +46,10 @@ export default (state = initialState, action) => {
             return {...state, confirmOrders: action.orders};
         case SET_PREPARING_ORDERS:
             return {...state, preparingOrders: action.orders};
+        case SET_WAITERS_ORDERS:
+            return {...state, waitersOrders: action.orders};
+        case SET_TABLES:
+            return {...state, tables: action.tables};
         default:
             return state;
     }

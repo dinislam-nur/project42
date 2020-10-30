@@ -15,15 +15,15 @@ class DisconnectedOrdersConfirmGroup extends React.Component {
     }
 
     async componentDidMount() {
-        await this.props.fetchOrders(this.props.status, 0);
+        await this.props.fetchOrders(this.props.status, 0, 9);
     }
 
     prevPageHandler = () => {
-        this.props.fetchOrders(this.props.status, this.props.confirmOrders.pageable.pageNumber - 1);
+        this.props.fetchOrders(this.props.status, this.props.confirmOrders.pageable.pageNumber - 1, 9);
     }
 
     nextPageHandler = () => {
-        this.props.fetchOrders(this.props.status, this.props.confirmOrders.pageable.pageNumber + 1);
+        this.props.fetchOrders(this.props.status, this.props.confirmOrders.pageable.pageNumber + 1, 9);
     }
 
     render() {
@@ -35,7 +35,8 @@ class DisconnectedOrdersConfirmGroup extends React.Component {
         );
         if (this.props.confirmOrders !== null) {
             list = this.props.confirmOrders.content.map(order => <Order order={order}
-                                                                        onConfirm={this.props.updateOrder} confirm={true}/>)
+                                                                        onConfirm={this.props.updateOrder}
+                                                                        confirm={true}/>)
             if (this.props.confirmOrders.content.length !== 0) {
                 orderColumns = (<CardColumns style={{width: "80%"}} className={"orders_centre"}>{list}</CardColumns>);
             }
@@ -66,15 +67,15 @@ class DisconnectedOrdersPreparingGroup extends React.Component {
     }
 
     async componentDidMount() {
-        await this.props.fetchOrders(this.props.status, 0);
+        await this.props.fetchOrders(this.props.status, 0, 9);
     }
 
     prevPageHandler = () => {
-        this.props.fetchOrders(this.props.status, this.props.preparingOrders.pageable.pageNumber - 1);
+        this.props.fetchOrders(this.props.status, this.props.preparingOrders.pageable.pageNumber - 1, 9);
     }
 
     nextPageHandler = () => {
-        this.props.fetchOrders(this.props.status, this.props.preparingOrders.pageable.pageNumber + 1);
+        this.props.fetchOrders(this.props.status, this.props.preparingOrders.pageable.pageNumber + 1, 9);
     }
 
     render() {
@@ -86,7 +87,7 @@ class DisconnectedOrdersPreparingGroup extends React.Component {
         );
         if (this.props.preparingOrders !== null) {
             list = this.props.preparingOrders.content.map(order => <Order order={order}
-                                                                        onConfirm={this.props.updateOrder}/>)
+                                                                          onConfirm={this.props.updateOrder}/>)
             if (this.props.preparingOrders.content.length !== 0) {
                 orderColumns = (<CardColumns style={{width: "80%"}} className={"orders_centre"}>{list}</CardColumns>);
             }
@@ -162,7 +163,8 @@ const Order = (props) => {
                     {list}
                 </Card>
                 <ButtonGroup>
-                    <Button onClick={onConfirm} intent={Intent.SUCCESS}>{props.confirm? 'Подтвердить заказ' : 'Заказ готов'}</Button>
+                    <Button onClick={onConfirm}
+                            intent={Intent.SUCCESS}>{props.confirm ? 'Подтвердить заказ' : 'Заказ готов'}</Button>
                     <Button onClick={onCancel} intent={Intent.DANGER}>Отменить заказ</Button>
                 </ButtonGroup>
             </Dialog>
@@ -180,7 +182,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    fetchOrders: (status, page) => dispatch(fetchOrders(status, page)),
+    fetchOrders: (status, page, size) => dispatch(fetchOrders(status, page, size)),
     updateOrder: order => dispatch(updateOrder(order))
 });
 

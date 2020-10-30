@@ -2,35 +2,31 @@ import React from "react";
 import {Button, Navbar} from "@blueprintjs/core";
 import {logout} from "../../../store/actions/app";
 import {connect} from "react-redux";
+import { useHistory } from "react-router-dom";
 
-class Header extends React.Component {
+const Header = props => {
 
-    constructor(props) {
-        console.log(props)
-        super(props);
-    }
+    const history = useHistory()
 
-    homeClick = () => this.props.history.push('/');
+    const homeClick = () => history.push('/');
 
-    render() {
         return (
             <Navbar>
                 <Navbar.Group align={"left"}>
                     <Navbar.Heading>Staff</Navbar.Heading>
                     <Navbar.Divider/>
-                    <Button id={"home"} icon="home" minimal={true} onClick={this.homeClick}/>
-                    {/*<Button id={"orders"} icon="list-columns" minimal={true}/>*/}
+                    <Button id={"home"} icon="home" minimal={true} onClick={homeClick}/>
+                    <Button id={"waiters"} icon="tick-circle" minimal={true} onClick={()=>history.push('/waiters')}/>
+                    <Button id={"tables"} icon="layout-grid" minimal={true} onClick={()=>history.push('/tables')}/>
                 </Navbar.Group>
                 <Navbar.Group align={"right"}>
-                    <Button id={"settings"} icon="cog" minimal={true}
-                            onClick={() => this.props.history.push('/settings')}/>
                     <Navbar.Divider/>
                     <Button id={"exit"} icon="log-out" minimal={true} onClick={() => this.props.logout()}/>
                 </Navbar.Group>
 
             </Navbar>
         );
-    }
+
 }
 
 
