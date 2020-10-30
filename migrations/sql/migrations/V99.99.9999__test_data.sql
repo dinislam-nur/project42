@@ -5,7 +5,21 @@ VALUES (1, 'RESERVED'),
        (2, 'NOT_RESERVED');
 
 INSERT INTO tables (table_id, number, table_status_id)
-VALUES (uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 2);
+VALUES  (uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 2),
+        (uuid('be81dd0a-e79d-4882-b24b-de483661c5da'), 2, 2),
+        (uuid('c0f606c1-62f5-4ab0-ae94-e09a698c6b86'), 3, 2),
+        (uuid('700af2b0-d503-4471-bd9a-e7293b98655e'), 4, 2),
+        (uuid('411021fc-7cef-470e-ac2a-fcf8a4846747'), 5, 2),
+        (uuid('a38138d7-f60f-4d39-a220-482db7008770'), 6, 2),
+        (uuid('372eba8d-0ecf-4e31-9012-203a3c84591e'), 7, 2),
+        (uuid('c9d29418-0dbc-4878-a7de-8ce3197db0d2'), 8, 2),
+        (uuid('86d92302-a4c4-4fdd-9454-1e321a854afe'), 9, 2),
+        (uuid('70e9bfde-533d-4344-95d5-9903cb1b0bc9'), 10, 2),
+        (uuid('2002d527-3f08-40a4-ac8d-bb1333057421'), 11, 2),
+        (uuid('cfc4c30a-f6e6-4c2a-b6c6-cff1c43126ee'), 12, 2),
+        (uuid('ba8774b0-0da0-4f01-b6cf-dc882fa10a83'), 13, 2),
+        (uuid('b78311ab-a17e-42ff-9ba0-22bc22149f33'), 14, 2),
+        (uuid('bf01dcf3-e5fd-4e53-a4fc-2b3c18885faa'), 15, 2);
 
 
 INSERT INTO user_roles (user_role_id, role_name)
