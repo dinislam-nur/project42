@@ -20,6 +20,7 @@ VALUES  (uuid('57874486-11f8-11eb-adc1-0242ac120002'), 1, 2),
         (uuid('ba8774b0-0da0-4f01-b6cf-dc882fa10a83'), 13, 2),
         (uuid('b78311ab-a17e-42ff-9ba0-22bc22149f33'), 14, 2),
         (uuid('bf01dcf3-e5fd-4e53-a4fc-2b3c18885faa'), 15, 2);
+        (uuid('bb4b238c-e1c0-4b67-9fdd-b5e57f1cf881'), 42, 2);
 
 
 INSERT INTO user_roles (user_role_id, role_name)
