@@ -10,6 +10,7 @@ export const SET_SESSION = "APP/SET_SESSION";
 export const SET_CONFIRM_ORDERS = "APP/SET_CONFIRM_ORDERS";
 export const SET_PREPARING_ORDERS = "APP/SET_PREPARING_ORDERS";
 export const SET_WAITERS_ORDERS = "APP/SET_WAITERS_ORDERS";
+export const SET_TABLES = "APP/SET_TABLES";
 
 const host = "https://project42db.herokuapp.com";
 
@@ -156,6 +157,53 @@ export const updateWaitersOrder = order => {
         });
         if (response.ok) {
             dispatch(fetchOrders('DONE', 0, 9));
+            dispatch(hideLoader());
+        } else {
+            dispatch(hideLoader());
+            showError("Что-то пошло не так");
+        }
+    }
+}
+
+export const fetchOpenTables = () => {
+    return async dispatch => {
+        dispatch(showLoader());
+        const response = await fetch(host + '/tables?status=RESERVED', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': localStorage.getItem('token')
+            }
+        });
+        if (response.ok) {
+            dispatch(
+                {
+                    type: SET_TABLES,
+                    tables: await response.json()
+                }
+            )
+            dispatch(hideLoader());
+        } else {
+            dispatch(hideLoader());
+            showError("Что-то пошло не так");
+        }
+    }
+}
+
+export const closeTable = table => {
+    return async dispatch => {
+        dispatch(showLoader());
+        table.status = 'NOT_RESERVED';
+        const response = await fetch(host + '/tables/' + table.id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': localStorage.getItem('token')
+            },
+            body: JSON.stringify(table)
+        });
+        if (response.ok) {
+            dispatch(fetchOpenTables());
             dispatch(hideLoader());
         } else {
             dispatch(hideLoader());

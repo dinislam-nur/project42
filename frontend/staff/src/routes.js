@@ -12,6 +12,7 @@ import {loginTokenAction} from "./store/actions/app";
 import MainPage from "./components/pages/main";
 import {Loader} from "./components/app/loader";
 import {WaitersPage} from "./components/pages/waiters";
+import TablePage from "./components/pages/tables";
 
 
 class Routes extends React.Component {
@@ -41,6 +42,10 @@ class Routes extends React.Component {
             <Route exact path={'/waiters'}>
                 <Header/>
                 <WaitersPage/>
+            </Route>
+            <Route exact path={'/tables'}>
+                <Header/>
+                <TablePage/>
             </Route>
             <Redirect to={'/'}/>
         </Switch>

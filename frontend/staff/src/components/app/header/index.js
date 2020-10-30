@@ -17,6 +17,7 @@ const Header = props => {
                     <Navbar.Divider/>
                     <Button id={"home"} icon="home" minimal={true} onClick={homeClick}/>
                     <Button id={"waiters"} icon="tick-circle" minimal={true} onClick={()=>history.push('/waiters')}/>
+                    <Button id={"tables"} icon="layout-grid" minimal={true} onClick={()=>history.push('/tables')}/>
                 </Navbar.Group>
                 <Navbar.Group align={"right"}>
                     <Navbar.Divider/>
